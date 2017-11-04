@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Klick</string>
+    <string name="prefs_name">Klick Setting</string>
+    <string name="quick_start_conf_title">Quick Start Setting</string>
+    <string name="klick_lock_screen">Klick Lock Screen</string>
+    <string name="klick_lock_screen_info">Enable this to let Klick can lock screen</string>
+
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="clear">Clear</string>
+    <string name="label_more_actions">Quick Start</string>
+    <string name="label_music_vol_ctrl">Music</string>
+    <string name="label_sys_vol_ctrl">System</string>
+    <string name="slip">slip </string>
+    <string name="then">-></string>
+    <string name="blank"> </string>
+
+    <string name="action_home">Home</string>
+    <string name="action_back">Back</string>
+    <string name="action_menu">Menu (Need Root)</string>
+    <string name="action_app_switch">Recent APPs</string>
+    <string name="action_lock_screen">Lock Screen</string>
+    <string name="action_expend_status_bar">Expend Status Bar</string>
+    <string name="action_torch">Torch</string>
+    <string name="action_adjust_music_vol">Adjust Music Volume</string>
+    
+    <string name="label_customize_icon">Customize Klick Floating Icon</string>
+    <string name="info_customize_icon">Default</string>
+    <string name="icon_file_not_valid">Icon file is not valid</string>
+    <string name="use_default_icon">Use the default icon?</string>
+    
+    <string name="label_customize_icon_bg">Customize Klick Floating Icon Background</string>
+    <string name="info_customize_icon_bg">Default</string>
+    <string name="use_default_bg">Use the default background?</string>
+    
+    <string name="label_customize_icon_size">Icon Size</string>
+    <string name="label_customize_icon_opacity">Icon Opacity</string>
+
+    <string name="label_gesture_home">Home</string>
+    <string name="label_gesture_back">Back</string>
+    <string name="label_gesture_menu">Menu</string>
+    <string name="label_gesture_app_switch">Open APP Switch</string>
+    <string name="label_gesture_app_switch_backward">Switch App Backward</string>
+    <string name="label_gesture_app_switch_forward">Switch App Forward</string>
+    <string name="label_gesture_lock_screen">Lock Screen</string>
+    <string name="label_gesture_expand_status_bar">Expand Status Bar</string>
+    <string name="label_gesture_show_more_actions_global_action">Show Global Actions</string>
+    <string name="label_gesture_show_more_actions_quick_action">Show App Quick Actions</string>
+    <string name="label_gesture_show_more_actions_quick_launch">Show App Quick Launch</string>
+    <string name="label_gesture_adjust_music_volume">Adjust Music Volume</string>
+    <string name="label_gesture_open_camera">Open Camera</string>
+    <string name="label_gesture_open_dict">Open Dictionary</string>
+    <string name="label_gesture_not_set">No Set</string>
+
+    <string name="gesture_single_tap">Single Tap</string>
+    <string name="gesture_double_tap">Double Tap</string>
+    <string name="gesture_long_press">Long Press</string>
+    <string name="gesture_slip_in">Slip In</string>
+    <string name="gesture_slip_out">Slip Out</string>
+    <string name="gesture_slip_up">Slip Up</string>
+    <string name="gesture_slip_down">Slip Down</string>
+    <string name="gesture_slip_in_short">In</string>
+    <string name="gesture_slip_out_short">Out</string>
+    <string name="gesture_slip_up_short">Up</string>
+    <string name="gesture_slip_down_short">Down</string>
+
+    <string name="label_exit">Exit</string>
+    <string name="exit_info">Exit Klick</string>
+    
+    <string name="label_reorder_apps">Auto Reorder APPs</string>
+    <string name="reorder_apps_info">The most used APP will be placed in the front.</string>
+    <string name="default_notification_msg">Tap to open the setting.</string>
+    <string name="default_notification_ticker">Restore Klick floating icon.</string>
+    <string name="unhide_klick_notification_msg">Tap to restore the Klick.</string>
+    <string name="unhide_klick_notification_ticker">Hide the Klick floating icon.</string>
+    
+    <string name="label_app_list_include_recent_task">Include the Recent Task in the APP List</string>
+    <string name="value_app_list_include_recent_task">Not Include</string>
+    <string-array name="values_app_list_include_recent_task">
+    	<item>Not Include</item>
+    	<item>Include in the Front of List</item>
+    	<item>Merge into APP List</item>
+    </string-array>
+    
+    <string name="label_face_right_left_switch_klick_anchor_side">Turn the Phone\'s face to Right/Left to Switch the Anchor Side of Klick Icon</string>
+    <string name="info_face_right_left_switch_klick_anchor_side">Face Up -> Face Right/Left -> Face Up</string>
+    
+    <string name="label_lock_phone">Auto Lock the Screen</string>
+    <string name="info_lock_phone">Not set</string>
+    <string name="info_lock_phone_on_head">Turn the Phone to on it\'s Head to Lock the Screen</string>
+    <string name="info_lock_phone_face_down">Turn the Phone\'s Face Down to Lock the Screen</string>
+    
+    <string name="label_show_first_page_app_by_default">Show the First Page of APP List by Default</string>
+    <string name="info_show_first_page_app_by_default">The Second Page of Quick Start will be Showed by Default</string>
+    
+    <string name="label_auto_hide_floating_icon">Auto Hide Klick Floating Icon</string>
+    <string name="info_auto_hide_floating_icon">When dragging the floating icon close to the Status Bar</string>
+    
+    <string name="label_shake_switch_flash_light">Shake to Switch Flash Light When Screen is ON and Locked</string>
+    <string name="info_shake_switch_flash_light">Turn ON: Face Up -> Face Down -> Face Up\nTurn OFF: Shake fast</string>
+    
+    <string name="group_customize_icon">Floating Icon</string>
+    <string name="group_customize_gesture">Gesture</string>
+    <string name="group_customize_gesture_info">Slip In: Slip to the center horizontal of screen\nSlip Out: Slip out the screen</string>
+    <string name="group_customize_more_actions">Quick Start</string>
+    <string name="group_customize_auto">Auto</string>
+    <string name="group_customize_feedback">Feedback</string>
+    <string name="group_customize_about">About</string>
+    
+    <string name="cat_selected">Selected</string>
+    <string name="cat_candidate">Candidate</string>
+    <string name="cat_excluded">Excluded</string>
+
+    <string-array name="icon_choices">
+        <item>Pick from Gallery</item>
+        <item>Build in Icon 1</item>
+        <item>Build in Icon 2</item>
+        <item>Build in Icon 3</item>
+    </string-array>
+    
+    <string-array name="bg_choices">
+        <item>Pick from Gallery</item>
+        <item>Transparent</item>
+        <item>Build in Background</item>
+    </string-array>
+
+    <string name="label_feedback_vibrate">Vibrate Feedback</string>
+    <string name="label_long_click_feedback_vibrate">Vibrate Feedback for Long Press</string>
+    <string name="label_feedback_sound">Sound Feedback</string>
+
+    <string name="need_root">Need root</string>
+    
+    <string name="label_long_click_threshold">Long Press Threshold</string>
+    <string name="label_double_click_threshold">Double Tap Threshold</string>
+    <string name="label_double_click_threshold_tips">It will delay action of Single Tap</string>
+    <string name="label_flash_light_on_max_seconds">Auto Close Flash Light after </string>
+    <string name="label_gesture_detect_sensitivity">Gesture Detect Sensitivity</string>
+    
+    <string name="turn_flashlight_on_failed">Failed to turn on the flashlight</string>
+    <string name="camera">Camera</string>
+    
+    <string name="accessibility">Simulates the operations including back, home, open recent APP and notifications.</string>
+    <string name="enable_klick_accessibility_service">Please enable the Klick Accessibility Service.</string>
+    <string name="enable_klick_device_admin">Please enable the Klick Device Admin.</string>
+
+    <string name="no_gesture_set">Please set the action gesture first</string>
+    <string name="double_tap_threshold_not_set">Note: Double tap threshold not set</string>
+    <string name="long_press_threshold_not_set">Note: Long press threshold not set</string>
+
+    <string name="milli_second">ms</string>
+    <string name="percentage">%</string>
+    <string name="second">s</string>
+    <string name="pixels">px</string>
+
+    <string name="label_about">About Klick - Version: %1$S</string>
+    <string name="about_text">Email: Kingway.W.Jin@gmail.com\n\n\
+Klick simulates keys include Home, Back and APP Switch. \
+And Klick provides the following functions.\n\
+1. Lock screen;\n\
+2. Change the sound mode and vibrate mode;\n\
+3. Torch;\n\
+4. Expend status bar;\n\
+5. Quick launch application (can include the recent tasks, and long press to hide the APP);\n\
+6. Hide Klick if drag the floating icon to the screen\'s top edge.\n</string>
+
+    <string name="label_donate">Donate - Tap to copy the account.</string>
+    <string name="donate_text">Alipay Account：kingway.w.jin@gmail.com</string>
+    <string name="copy_account">Copied Alipay account：\nkingway.w.jin@gmail.com</string>
+</resources>

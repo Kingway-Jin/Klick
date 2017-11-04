@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/title_view"
+	android:layout_width="fill_parent"
+	android:layout_height="50dp"
+	android:paddingTop="1dp"
+	android:paddingBottom="1dp"
+	android:paddingLeft="20dip"
+	android:paddingRight="20dip"
+	android:orientation="horizontal"
+	android:gravity="bottom">
+	<TextView
+	    android:id="@+id/title_text_view"
+		android:layout_width = "match_parent"
+		android:layout_height = "match_parent"
+		android:minHeight = "50dip"
+		android:gravity = "bottom"
+		android:textStyle="bold"
+		android:textSize="16sp"
+		/>
+</LinearLayout>

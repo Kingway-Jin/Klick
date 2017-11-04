@@ -1,0 +1,33 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+android {
+    signingConfigs {
+        ReleaseKey {
+            keyPassword '..CaparKlick++'
+            storeFile file('/home/koder/keystore/Klick/klick-release-key.keystore')
+            storePassword '..CaparKlick++'
+        }
+    }
+    compileSdkVersion 21
+    buildToolsVersion '26.0.2'
+    defaultConfig {
+        applicationId "im.kingway.jin.klick"
+        minSdkVersion 21
+        targetSdkVersion 21
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-project.txt'
+        }
+    }
+    productFlavors {
+    }
+}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+}
+repositories {
+    mavenCentral()
+}

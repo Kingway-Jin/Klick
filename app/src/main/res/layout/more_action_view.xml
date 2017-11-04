@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:windowIsFloating="true"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:id="@+id/other_handle"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_weight="1.0">
+    <LinearLayout android:id="@+id/vol_bar"
+        android:padding="4dip"
+        android:visibility="invisible"
+        android:layout_marginTop="60dip"
+        android:background="@drawable/vol_bar_bg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView android:id="@+id/label_vol_bar"
+            android:textSize="12sp"
+            android:layout_width="wrap_content"
+            android:layout_height="16dip"
+            android:text="@string/label_music_vol_ctrl"/>
+        <ImageView android:layout_width="24dip"
+            android:layout_height="16dip"
+            android:paddingLeft="4dip"
+            android:paddingRight="4dip"
+            android:src="@drawable/vol"
+            />
+        <ProgressBar android:id="@+id/vol_progress_bar"
+            android:layout_width="150dip"
+            android:layout_height="16dip"
+            android:max="100"
+            android:progress="50"
+            style="?android:attr/progressBarStyleHorizontal"/>
+    </LinearLayout>
+    <im.kingway.jin.klick.MyWorkspaceView
+        android:id="@+id/view_flipper"
+        android:background="@drawable/view_flipper_bg"
+        android:layout_marginTop="16dip"
+        android:layout_width="260dip"
+        android:layout_height="260dip">
+        <LinearLayout
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="10dip"
+            android:layout_width="260dip"
+            android:layout_height="260dip">
+
+            <TextView
+                android:id="@+id/quick_action_app_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="TEXT"
+                android:textStyle="bold" />
+            <ListView
+                android:id="@+id/quick_action_list"
+                android:layout_width="match_parent"
+                android:background="@color/transparent"
+                android:layout_height="match_parent">
+
+            </ListView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="260dip"
+            android:layout_height="260dip"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="10dip">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/lockimage"
+                    android:layout_width="70dip"
+                    android:layout_height="70dip"
+                    android:layout_gravity="center"
+                    android:layout_margin="5dip"
+                    android:background="@drawable/selector_more_action_bg1"
+                    android:padding="20dip"
+                    android:src="@drawable/lock"></ImageView>
+
+                <ImageView
+                    android:id="@+id/volimage"
+                    android:layout_width="70dip"
+                    android:layout_height="70dip"
+                    android:layout_gravity="center"
+                    android:layout_margin="5dip"
+                    android:background="@drawable/selector_more_action_bg1"
+                    android:padding="20dip"
+                    android:src="@drawable/vol"></ImageView>
+
+                <ImageView
+                    android:id="@+id/flashlightimage"
+                    android:layout_width="70dip"
+                    android:layout_height="70dip"
+                    android:layout_gravity="center"
+                    android:layout_margin="5dip"
+                    android:background="@drawable/selector_more_action_bg1"
+                    android:padding="20dip"
+                    android:src="@drawable/selector_flashlight_button"></ImageView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/backimage"
+                    android:layout_width="70dip"
+                    android:layout_height="70dip"
+                    android:layout_gravity="center"
+                    android:layout_margin="5dip"
+                    android:background="@drawable/selector_more_action_bg1"
+                    android:padding="20dip"
+                    android:src="@drawable/back"></ImageView>
+
+                <ImageView
+                    android:id="@+id/homeimage"
+                    android:layout_width="70dip"
+                    android:layout_height="70dip"
+                    android:layout_gravity="center"
+                    android:layout_margin="5dip"
+                    android:background="@drawable/selector_more_action_bg1"
+                    android:padding="20dip"
+                    android:src="@drawable/home"></ImageView>
+
+                <ImageView
+                    android:id="@+id/settingimage"
+                    android:layout_width="70dip"
+                    android:layout_height="70dip"
+                    android:layout_gravity="center"
+                    android:layout_margin="5dip"
+                    android:background="@drawable/selector_more_action_bg1"
+                    android:padding="20dip"
+                    android:src="@drawable/setting"></ImageView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/appswitchimage"
+                    android:layout_width="70dip"
+                    android:layout_height="70dip"
+                    android:layout_gravity="center"
+                    android:layout_margin="5dip"
+                    android:background="@drawable/selector_more_action_bg1"
+                    android:padding="20dip"
+                    android:src="@drawable/app_switch"></ImageView>
+
+                <ImageView
+                    android:id="@+id/expendstatusbarimage"
+                    android:layout_width="70dip"
+                    android:layout_height="70dip"
+                    android:layout_gravity="center"
+                    android:layout_margin="5dip"
+                    android:background="@drawable/selector_more_action_bg1"
+                    android:padding="20dip"
+                    android:src="@drawable/expend_status_bar"></ImageView>
+
+                <ImageView
+                    android:id="@+id/cameraimage"
+                    android:layout_width="70dip"
+                    android:layout_height="70dip"
+                    android:layout_gravity="center"
+                    android:layout_margin="5dip"
+                    android:background="@drawable/selector_more_action_bg1"
+                    android:padding="20dip"
+                    android:src="@drawable/camera"></ImageView>
+            </LinearLayout>
+        </LinearLayout>
+    </im.kingway.jin.klick.MyWorkspaceView>
+</LinearLayout>

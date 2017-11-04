@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">悬浮键Klick</string>
+    <string name="prefs_name">悬浮键Klick设置</string>
+    <string name="quick_start_conf_title">快速启动设置</string>
+    <string name="klick_lock_screen">悬浮键Klick锁屏</string>
+    <string name="klick_lock_screen_info">开启后悬浮键Klick可以使用锁屏功能</string>
+    
+    <string name="ok">好的</string>
+    <string name="cancel">取消</string>
+    <string name="clear">清除</string>
+    <string name="label_more_actions">快速启动</string>
+    <string name="label_music_vol_ctrl">音乐</string>
+    <string name="label_sys_vol_ctrl">系统</string>
+    <string name="slip">划</string>
+    <string name="then">-></string>
+    <string name="blank"> </string>
+    
+    <string name="action_home">主页</string>
+    <string name="action_back">返回</string>
+    <string name="action_menu">菜单（需root权限）</string>
+    <string name="action_app_switch">最近任务列表</string>
+    <string name="action_lock_screen">锁屏</string>
+    <string name="action_expend_status_bar">打开通知栏</string>
+    <string name="action_torch">手电筒</string>
+    <string name="action_adjust_music_vol">调节音乐音量</string>
+    
+    <string name="label_customize_icon">自定义悬浮键Klick图标</string>
+    <string name="info_customize_icon">默认</string>
+    <string name="icon_file_not_valid">图标文件无效</string>
+    <string name="use_default_icon">使用默认图标？</string>
+    
+    <string name="label_customize_icon_bg">自定义悬浮键Klick背景</string>
+    <string name="info_customize_icon_bg">默认</string>
+    <string name="use_default_bg">使用默认背景？</string>
+    
+    <string name="label_customize_icon_size">浮标大小</string>
+    <string name="label_customize_icon_opacity">浮标不透明程度</string>
+
+    <string name="label_gesture_home">回到桌面</string>
+    <string name="label_gesture_back">后退</string>
+    <string name="label_gesture_menu">打开菜单</string>
+    <string name="label_gesture_app_switch">开启App切换</string>
+    <string name="label_gesture_app_switch_backward">切换到前一个App</string>
+    <string name="label_gesture_app_switch_forward">切换到后一个App</string>
+    <string name="label_gesture_lock_screen">锁屏</string>
+    <string name="label_gesture_expand_status_bar">打开状态栏</string>
+    <string name="label_gesture_show_more_actions_global_action">显示全局快捷键</string>
+    <string name="label_gesture_show_more_actions_quick_action">显示App快捷操作</string>
+    <string name="label_gesture_show_more_actions_quick_launch">显示快速启动App</string>
+    <string name="label_gesture_adjust_music_volume">调整音乐音量</string>
+    <string name="label_gesture_open_camera">打开相机</string>
+    <string name="label_gesture_open_dict">打开词典</string>
+    <string name="label_gesture_not_set">还没设置</string>
+
+    <string name="gesture_single_tap">单击</string>
+    <string name="gesture_double_tap">双击</string>
+    <string name="gesture_long_press">长按</string>
+    <string name="gesture_slip_in">划进</string>
+    <string name="gesture_slip_out">划出</string>
+    <string name="gesture_slip_up">划上</string>
+    <string name="gesture_slip_down">划下</string>
+    <string name="gesture_slip_in_short">进</string>
+    <string name="gesture_slip_out_short">出</string>
+    <string name="gesture_slip_up_short">上</string>
+    <string name="gesture_slip_down_short">下</string>
+
+    <string name="label_exit">退出</string>
+    <string name="exit_info">退出悬浮键Klick</string>
+    
+    <string name="label_reorder_apps">自动排序应用</string>
+    <string name="reorder_apps_info">常用的应用排在前面</string>
+    <string name="default_notification_msg">点击打开设置页面</string>
+    <string name="default_notification_ticker">悬浮键Klick已恢复显示。</string>
+    <string name="unhide_klick_notification_msg">悬浮键Klick已被隐藏。点击取消隐藏。</string>
+    <string name="unhide_klick_notification_ticker">悬浮键Klick已被隐藏。</string>
+    
+    <string name="label_app_list_include_recent_task">在快速启动中加入最近使用的应用</string>
+    <string name="value_app_list_include_recent_task">不添加最近使用的应用</string>
+    <string-array name="values_app_list_include_recent_task">
+    	<item>不添加最近使用的应用</item>
+    	<item>添加最近使用的应用到前端</item>
+    	<item>合并最近使用的应用</item>
+    </string-array>
+
+    <string name="label_face_right_left_switch_klick_anchor_side">左右倾侧手机自动切换浮标停靠边缘</string>
+    <string name="info_face_right_left_switch_klick_anchor_side">屏幕向上 -> 屏幕向右/左 -> 屏幕向上</string>
+    
+    <string name="label_lock_phone">自动锁屏</string>
+    <string name="info_lock_phone">还没设置</string>
+    <string name="info_lock_phone_on_head">将手机倒立来锁屏</string>
+    <string name="info_lock_phone_face_down">翻转手机使屏幕向下来锁屏</string>
+    
+    <string name="label_show_first_page_app_by_default">默认显示第二页快速启动</string>
+    <string name="info_show_first_page_app_by_default">即是默认显示应用列表的第一页</string>
+    
+    <string name="label_auto_hide_floating_icon">自动隐藏悬浮键Klick</string>
+    <string name="info_auto_hide_floating_icon">当拖动浮标接近状态栏时</string>
+    
+    <string name="label_shake_switch_flash_light">屏幕点亮且锁住时手势开/关闪光灯</string>
+    <string name="info_shake_switch_flash_light">打开：屏幕向上 -> 屏幕向下 -> 屏幕向上\n关闭：快速摇晃手机</string>
+    
+    <string name="group_customize_icon">浮标</string>
+    <string name="group_customize_gesture">手势</string>
+    <string name="group_customize_gesture_info">划进：在左右方向上向屏幕中轴线划动\n划出：在左右方向上划出屏幕</string>
+    <string name="group_customize_more_actions">快速启动</string>
+    <string name="group_customize_auto">自动</string>
+    <string name="group_customize_feedback">反馈</string>
+    <string name="group_customize_about">关于</string>
+    
+    <string name="cat_selected">选中应用</string>
+    <string name="cat_candidate">候选应用</string>
+    <string name="cat_excluded">隐藏应用</string>
+
+    <string-array name="icon_choices">
+        <item>从图库中选择</item>
+        <item>内置图标之一</item>
+        <item>内置图标之二</item>
+        <item>内置图标之三</item>
+    </string-array>
+    
+    <string-array name="bg_choices">
+        <item>从图库中选择</item>
+        <item>透明背景</item>
+        <item>内置背景</item>
+    </string-array>
+
+    <string name="label_feedback_vibrate">震动反馈</string>
+    <string name="label_long_click_feedback_vibrate">长按震动反馈</string>
+    <string name="label_feedback_sound">声音反馈</string>
+
+    <string name="need_root">需要Root权限</string>
+    
+    <string name="label_long_click_threshold">长按触发时间</string>
+    <string name="label_double_click_threshold">双击检测时间</string>
+    <string name="label_double_click_threshold_tips">注意：双击检测时间越小，单击响应速度越快</string>
+    <string name="label_flash_light_on_max_seconds">自动关闭闪光灯</string>
+    <string name="label_gesture_detect_sensitivity">手势检测敏感度</string>
+    
+    <string name="turn_flashlight_on_failed">无法打开闪关灯</string>
+    <string name="camera">相机</string>
+    
+    <string name="accessibility">模拟返回、回到主屏幕、打开最近访问的应用列表和通知栏等操作。</string>
+    <string name="enable_klick_accessibility_service">请在【无障碍】开启悬浮键Klick辅助服务。</string>
+    <string name="enable_klick_device_admin">请在【设备管理器】开启悬浮键Klick锁屏管理器。</string>
+
+    <string name="no_gesture_set">请先设置动作手势</string>
+    <string name="double_tap_threshold_not_set">注意：双击触发时间还没有设置</string>
+    <string name="long_press_threshold_not_set">注意：长按触发时间还没有设置</string>
+
+    <string name="milli_second">毫秒</string>
+    <string name="percentage">%</string>
+    <string name="second">秒</string>
+    <string name="pixels">像素</string>
+
+    <string name="label_about">关于悬浮键Klick - 版本%1$S</string>
+    <string name="about_text">联系作者: Kingway.W.Jin@gmail.com\n\n悬浮键Klick模拟主页键、返回键和任务切换键。悬浮键Klick还能 1、锁屏；2、改变声音模式和震动模式；3、手电筒；4、打开通知栏；5、快速启动应用（可包含最近任务，可长按隐藏应用）；6、靠近屏幕上边缘时自动隐藏。\n</string>
+    
+    <string name="label_donate">捐赠 - 点击这里 复制 支付宝帐号</string>
+    <string name="donate_text">支付宝帐号：kingway.w.jin@gmail.com</string>
+    <string name="copy_account">已复制支付宝帐号：\nkingway.w.jin@gmail.com</string>
+</resources>

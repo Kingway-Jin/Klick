@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:clipChildren="false"
+    android:padding="10dip"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+    </LinearLayout>
+
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/rbSingleTap"
+            android:layout_width="81dp"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="@string/gesture_single_tap" />
+
+        <RadioButton
+            android:layout_width="81dp"
+            android:layout_height="wrap_content"
+            android:text="@string/gesture_double_tap"
+            android:id="@+id/rbDoubleTap"
+            android:layout_gravity="right"
+            android:checked="false"/>
+
+        <RadioButton
+            android:layout_width="81dp"
+            android:layout_height="wrap_content"
+            android:text="@string/gesture_long_press"
+            android:id="@+id/rbLongPress"
+            android:checked="false"/>
+    </RadioGroup>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txt_gesture"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
+            android:paddingTop="20dp"
+            android:gravity="center"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/txt_gesture_tips"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:textColor="@color/red"
+            android:gravity="center"
+            android:textSize="13sp" />
+    </LinearLayout>
+    <LinearLayout
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:layout_width="65dp"
+            android:layout_height="wrap_content"
+            android:text="@string/gesture_slip_in"
+            android:id="@+id/btnIn"/>
+
+        <Button
+            android:layout_width="65dp"
+            android:layout_height="wrap_content"
+            android:text="@string/gesture_slip_out"
+            android:id="@+id/btnOut"/>
+
+        <Button
+            android:layout_width="65dp"
+            android:layout_height="wrap_content"
+            android:text="@string/gesture_slip_up"
+            android:id="@+id/btnUp"/>
+
+        <Button
+            android:layout_width="65dp"
+            android:layout_height="wrap_content"
+            android:text="@string/gesture_slip_down"
+            android:id="@+id/btnDown"/>
+    </LinearLayout>
+</LinearLayout>

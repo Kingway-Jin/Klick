@@ -956,7 +956,7 @@ class MoreActionsView(private val mApp: KlickApplication, private var mFloatingV
             mSession = session
             try {
                 mSession!!.setRepeatingRequest(mBuilder!!.build(), null, null)
-            } catch (e: CameraAccessException) {
+            } catch (e: Exception) {
                 e.printStackTrace()
             }
 

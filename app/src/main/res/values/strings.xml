@@ -74,6 +74,7 @@
     <string name="default_notification_ticker">Restore Klick floating icon.</string>
     <string name="unhide_klick_notification_msg">Tap to restore the Klick.</string>
     <string name="unhide_klick_notification_ticker">Hide the Klick floating icon.</string>
+    <string name="quick_action_notification_ticker">Click</string>
     
     <string name="label_app_list_include_recent_task">Include the Recent Task in the APP List</string>
     <string name="value_app_list_include_recent_task">Not Include</string>

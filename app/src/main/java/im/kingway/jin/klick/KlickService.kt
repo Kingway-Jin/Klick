@@ -1,12 +1,9 @@
 package im.kingway.jin.klick
 
-import android.app.Notification
-import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
 import android.app.admin.DevicePolicyManager
 import android.content.*
-import android.graphics.BitmapFactory
 import android.media.AudioManager
 import android.os.IBinder
 import android.util.Log
@@ -15,8 +12,6 @@ import android.widget.Toast
 class KlickService : Service() {
     private var mReceiver: BroadcastReceiver? = null
     private var mFloatingView: FloatingView? = null
-    private var mNotificationBuilder: Notification.Builder? = null
-    private var mNotificationManager: NotificationManager? = null
     private var mDevicePolicyManager: DevicePolicyManager? = null
     private var mApp: KlickApplication? = null
     private var lockScreenComponentName: ComponentName? = null
@@ -26,16 +21,6 @@ class KlickService : Service() {
         mApp = application as KlickApplication
         sharedInstance = this
 
-        mNotificationBuilder = Notification.Builder(mApp!!.applicationContext)
-        mNotificationBuilder!!.setSmallIcon(R.drawable.small_notification_icon)
-                .setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.klick))
-                .setContentTitle(resources.getString(R.string.app_name))
-                .setAutoCancel(true)
-                .setOngoing(true)
-                .setPriority(Notification.PRIORITY_MAX)
-                .setWhen(System.currentTimeMillis())
-
-        mNotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         mDevicePolicyManager = getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
         lockScreenComponentName = ComponentName(mApp!!.applicationContext, LockScreenReceiver::class.java)
 
@@ -52,9 +37,6 @@ class KlickService : Service() {
         super.onDestroy()
 
         stopForeground(true)
-        mNotificationManager!!.cancelAll()
-        mNotificationManager = null
-        mNotificationBuilder = null
 
         unregisterReceiver(mReceiver)
         mReceiver = null
@@ -209,11 +191,9 @@ class KlickService : Service() {
 
     private fun runForeground(ticker: String, msg: String?, pIntent: PendingIntent) {
         if (msg == null)
-            mNotificationManager!!.cancelAll()
+            mApp!!.cancelAllNotification()
         else {
-            mNotificationBuilder!!.setTicker(ticker).setContentText(msg).setContentIntent(pIntent)
-            val n = mNotificationBuilder!!.build()
-            mNotificationManager!!.notify(KlickApplication.DEFAULT_NOTIFICATION, n)
+            mApp!!.showNotification(ticker, msg, pIntent)
         }
     }
 

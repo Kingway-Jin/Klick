@@ -1,8 +1,6 @@
 package im.kingway.jin.klick
 
-import android.app.Activity
-import android.app.ActivityManager
-import android.app.Application
+import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -10,6 +8,7 @@ import android.content.pm.ActivityInfo
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.content.pm.PackageManager.NameNotFoundException
+import android.graphics.BitmapFactory
 import android.graphics.Rect
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
@@ -36,6 +35,8 @@ class KlickApplication : Application() {
     private var mTelephonyManager: TelephonyManager? = null
     private var mVibrator: Vibrator? = null
     private var mActivityManager: ActivityManager? = null
+    private var mNotificationManager: NotificationManager? = null
+    private var mNotificationBuilder: Notification.Builder? = null
 
     var mAppsMap: MutableMap<String, AppItem> = HashMap()
     var mSelectedPackage: MutableSet<String> = HashSet()
@@ -116,6 +117,15 @@ class KlickApplication : Application() {
         mTelephonyManager = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
         mActivityManager = getSystemService(Activity.ACTIVITY_SERVICE) as ActivityManager
         mWindowManager!!.defaultDisplay.getRectSize(screenRect)
+        mNotificationBuilder = Notification.Builder(this)
+        mNotificationBuilder!!.setSmallIcon(R.drawable.small_notification_icon)
+                .setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.klick))
+                .setContentTitle(resources.getString(R.string.app_name))
+                .setAutoCancel(true)
+                .setOngoing(true)
+                .setPriority(Notification.PRIORITY_MAX)
+                .setWhen(System.currentTimeMillis())
+        mNotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         LONG_PRESS_THRESHOLD = sharedPrefs!!.getInt(SETTING_LONG_PRESS_THRESHOLD, 300)
         DOUBLE_TAP_THRESHOLD = sharedPrefs!!.getInt(SETTING_DOUBLE_TAP_THRESHOLD, 0)
@@ -149,6 +159,17 @@ class KlickApplication : Application() {
 
         reloadAllApps()
         reloadSelectedApps()
+    }
+
+    fun cancelAllNotification() {
+        mNotificationManager!!.cancelAll()
+    }
+
+    fun showNotification(ticker: String, msg: String?, pIntent: PendingIntent?) {
+        mNotificationManager!!.cancel(KlickApplication.DEFAULT_NOTIFICATION)
+        mNotificationBuilder!!.setTicker(ticker).setContentText(msg).setContentIntent(pIntent)
+        val n = mNotificationBuilder!!.build()
+        mNotificationManager!!.notify(KlickApplication.DEFAULT_NOTIFICATION, n)
     }
 
     fun reloadAllApps() {

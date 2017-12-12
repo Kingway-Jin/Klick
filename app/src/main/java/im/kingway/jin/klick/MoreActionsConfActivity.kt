@@ -48,7 +48,8 @@ class MoreActionsConfActivity : Activity() {
             }
 
             mAppAdapter = object : CategoryAdapter() {
-                override fun getTitleView(caption: String, index: Int, convertView: View, parent: ViewGroup): View {
+                override fun getTitleView(caption: String, index: Int, convertView: View?,
+                                          parent: ViewGroup): View {
                     val titleView: LinearLayout
 
                     if (convertView == null || convertView.id != R.id.title_view) {

@@ -283,4 +283,12 @@ object Utils {
 
         return false
     }
+
+    fun getSharedprefsKeys(context: Context, subStr: String): List<String> {
+        Log.d(TAG, "getSharedprefsKeys: " + subStr)
+        val sharedPref = context.getSharedPreferences(context.packageName, Context.MODE_PRIVATE)
+        val allEntries = sharedPref.getAll()
+        Log.d(TAG, "getSharedprefsKeys: " + allEntries)
+        return allEntries.keys.filter { it.contains(subStr) }
+    }
 }

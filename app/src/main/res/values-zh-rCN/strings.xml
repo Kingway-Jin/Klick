@@ -74,6 +74,7 @@
     <string name="default_notification_ticker">悬浮键Klick已恢复显示。</string>
     <string name="unhide_klick_notification_msg">悬浮键Klick已被隐藏。点击取消隐藏。</string>
     <string name="unhide_klick_notification_ticker">悬浮键Klick已被隐藏。</string>
+    <string name="quick_action_notification_ticker">点击</string>
     
     <string name="label_app_list_include_recent_task">在快速启动中加入最近使用的应用</string>
     <string name="value_app_list_include_recent_task">不添加最近使用的应用</string>

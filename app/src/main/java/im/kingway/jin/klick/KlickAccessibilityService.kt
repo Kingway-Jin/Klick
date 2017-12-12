@@ -14,7 +14,7 @@ class KlickAccessibilityService : AccessibilityService() {
             val quickActionItemList = LinkedList<QuickActionItem>()
 
             val nodeInfoList = LinkedList<AccessibilityNodeInfo>()
-            nodeInfoList.add(rootInActiveWindow)
+            nodeInfoList.add(currentRootInActiveWindow!!)
 
             while (nodeInfoList.size > 0) {
                 val nodeInfo = nodeInfoList.removeAt(0)
@@ -38,26 +38,26 @@ class KlickAccessibilityService : AccessibilityService() {
         }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent) {
-        currentAppPackageName = event.packageName.toString()
-        recentAppPackageName.remove(currentAppPackageName)
-        recentAppPackageName.add(0, currentAppPackageName)
+        val currentAppPackageName = event.packageName.toString()
+        Log.d(TAG, "currentAppPackageName: $currentAppPackageName")
+        if (mApp!!.mAppsMap.containsKey(currentAppPackageName) && !isExcludedApp(currentAppPackageName)) {
+            currentRootInActiveWindow = rootInActiveWindow
+            recentAppPackageName.remove(currentAppPackageName)
+            recentAppPackageName.add(0, currentAppPackageName)
 
-        saveRecentAppPackageName()
+            saveRecentAppPackageName()
 
-        if (currentAppPackageName != switchToAppPackageName) {
-            recentAppPackageNameSnapshot.clear()
+            val intent = Intent()
+            intent.action = KlickApplication.ACTION_HIDE_MORE_ACTION_VIEW
+            applicationContext.sendBroadcast(intent)
         }
-        switchToAppPackageName = ""
-
-        val intent = Intent()
-        intent.action = KlickApplication.ACTION_HIDE_MORE_ACTION_VIEW
-        applicationContext.sendBroadcast(intent)
     }
 
     private fun loadRecentAppPackageName() {
         recentAppPackageName.clear()
         val pkgs = (application as KlickApplication).sharedPrefs!!.getString("RECENT_APP_PACKAGE_NAME", "")
-        val pkgArray = pkgs!!.split(";".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()
+        val pkgArray = pkgs!!.split(";".toRegex()).dropLastWhile({ it.isEmpty() })
+                .toTypedArray().filter { !isExcludedApp(it) }
         recentAppPackageName.addAll(pkgArray)
     }
 
@@ -79,18 +79,20 @@ class KlickAccessibilityService : AccessibilityService() {
         }
     }
 
-    private fun findClickableNodeByText(text: String): AccessibilityNodeInfo? {
+    fun findClickableNodeByText(text: String): AccessibilityNodeInfo? {
         val nodeInfoList = LinkedList<AccessibilityNodeInfo>()
-        nodeInfoList.add(rootInActiveWindow)
+        nodeInfoList.add(currentRootInActiveWindow!!)
 
         while (nodeInfoList.size > 0) {
             val nodeInfo = nodeInfoList.removeAt(0)
 
-            if (nodeInfo.text != null && text == nodeInfo.text) {
-                return getClickableParent(nodeInfo)
-            }
-            for (j in 0 until nodeInfo.childCount) {
-                nodeInfoList.add(nodeInfo.getChild(j))
+            if (nodeInfo != null) {
+                if (text == nodeInfo.text) {
+                    return getClickableParent(nodeInfo)
+                }
+                for (j in 0 until nodeInfo.childCount) {
+                    nodeInfoList.add(nodeInfo.getChild(j))
+                }
             }
         }
         return null
@@ -150,12 +152,14 @@ class KlickAccessibilityService : AccessibilityService() {
         Log.d(TAG, "onServiceConnected")
         super.onServiceConnected()
         sharedInstance = this
+        mApp = application as KlickApplication
         loadRecentAppPackageName()
     }
 
     override fun onUnbind(intent: Intent): Boolean {
         Log.d(TAG, "onUnbind")
         sharedInstance = null
+        mApp = null
         return super.onUnbind(intent)
     }
 
@@ -163,67 +167,28 @@ class KlickAccessibilityService : AccessibilityService() {
         val TAG = KlickAccessibilityService::class.java.getSimpleName()
         var sharedInstance: KlickAccessibilityService? = null
         var recentAppPackageName: MutableList<String> = LinkedList()
-        var recentAppPackageNameSnapshot: MutableList<String> = LinkedList()
         var switchToAppPackageName = ""
-        var currentAppPackageName = ""
-
-        fun removeApp(packageName: String) {
-            recentAppPackageNameSnapshot.remove(packageName)
-            recentAppPackageName.remove(packageName)
-        }
-
-        fun switchApp(step: Int): String {
-            var index = recentAppPackageNameSnapshot.indexOf(switchToAppPackageName)
-            index += step
-            if (index < 0) {
-                index = 0
-            }
-            if (index >= recentAppPackageNameSnapshot.size) {
-                index = recentAppPackageNameSnapshot.size - 1
-            }
-            if (index >= 0) {
-                switchToAppPackageName = recentAppPackageNameSnapshot[index]
-            } else {
-                switchToAppPackageName = ""
-            }
-            return if (switchToAppPackageName == currentAppPackageName) "" else switchToAppPackageName
-        }
-
-        fun switchAppForward(): String {
-            switchToAppPackageName = ""
-
-            if (recentAppPackageNameSnapshot.isEmpty()) {
-                recentAppPackageNameSnapshot.addAll(recentAppPackageName)
-            }
-
-            val index = recentAppPackageNameSnapshot.indexOf(currentAppPackageName)
-            if (index > 0) {
-                switchToAppPackageName = recentAppPackageNameSnapshot[index - 1]
-            }
-            Log.d(TAG, "$currentAppPackageName, $switchToAppPackageName, $index")
-            return switchToAppPackageName
-        }
+        var mApp: KlickApplication? = null
+        var currentRootInActiveWindow: AccessibilityNodeInfo? = null
 
         fun switchAppBackward(): String {
-            switchToAppPackageName = ""
+            switchToAppPackageName = currentRootInActiveWindow?.packageName.toString() ?: ""
 
-            if (recentAppPackageNameSnapshot.isEmpty()) {
-                recentAppPackageNameSnapshot.addAll(recentAppPackageName)
-                recentAppPackageNameSnapshot.remove("com.meizu.flyme.launcher")
-            }
+            if (recentAppPackageName.isEmpty()) return switchToAppPackageName
 
-            val index = recentAppPackageNameSnapshot.indexOf(currentAppPackageName)
-            if (index < recentAppPackageNameSnapshot.size - 1) {
-                switchToAppPackageName = recentAppPackageNameSnapshot[index + 1]
-            }
-            for (pkg in recentAppPackageNameSnapshot) {
-                Log.d(TAG, "recentAppPackageNameSnapshot: " + pkg)
-            }
-            for (pkg in recentAppPackageName) {
-                Log.d(TAG, "recentAppPackageName: " + pkg)
-            }
-            Log.d(TAG, "$currentAppPackageName, $switchToAppPackageName, $index")
+            var index = recentAppPackageName.indexOf(switchToAppPackageName)
+            index = if (index < 0) 0 else index + 1
+            index = if (index >= recentAppPackageName.size) recentAppPackageName.size - 1 else index
+
+            switchToAppPackageName = recentAppPackageName[index]
+            Log.d(TAG, "$switchToAppPackageName, $index")
             return switchToAppPackageName
         }
     }
+
+    fun isExcludedApp(pkgName: String?) = "com.meizu.flyme.launcher" == pkgName ||
+            "im.kingway.jin.klick" == pkgName ||
+            "com.android.systemui" == pkgName ||
+            "com.iflytek.inputmethod" == pkgName ||
+            mApp!!.mExcludePackage.contains(pkgName)
 }

@@ -75,7 +75,7 @@ abstract class CategoryAdapter : BaseAdapter() {
         return -1
     }
 
-    override fun getView(position: Int, convertView: View, parent: ViewGroup): View? {
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View? {
         var pos = position
         var categoryIndex = 0
 
@@ -95,6 +95,7 @@ abstract class CategoryAdapter : BaseAdapter() {
         return null
     }
 
-    protected abstract fun getTitleView(caption: String, index: Int, convertView: View, parent: ViewGroup): View
+    protected abstract fun getTitleView(caption: String, index: Int, convertView: View?, parent:
+    ViewGroup): View
 
 }

@@ -597,10 +597,16 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
                                     "quick_action:" + activePkg + ":").map { it.substring(("quick_action:" + activePkg + ":").length) })
                             activeQuickActions.removeAll { null == KlickAccessibilityService
                                     .sharedInstance?.findClickableNodeByText(it) }
+                            if ("com.tencent.mm" == activePkg) {
+                                val newMsgTest = KlickAccessibilityService.sharedInstance?.getTextOfClickableNodeByPostfix(QuickActionListAdapter.POSTFIX_NEW_MSG)
+                                if (!newMsgTest.isNullOrBlank()) {
+                                    activeQuickActions.add(newMsgTest!!)
+                                }
+                            }
                             loopIndexActiveQuickAction =  -1
                             Log.d(TAG, "activePkg: $activePkg QUICK ACTIONS: " + activeQuickActions
                                     .joinToString(" "))
-                            quickActionTipView.text = Html.fromHtml("...<br/><font color=\"red\">...</font><br/>...")
+                            quickActionTipView.text = Html.fromHtml(getQuickActionMsg())
                             quickActionTipView.visibility = View.VISIBLE
                         }
                     }
@@ -693,7 +699,7 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
             if (movement < 0) {
                 movement += 80f
                 loopIndexActiveQuickAction = if (loopIndexActiveQuickAction == -1) {
-                    0
+                    activeQuickActions.size - 1
                 } else {
                     (loopIndexActiveQuickAction - 1 +
                             activeQuickActions.size + 1) %
@@ -708,29 +714,34 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
                             (activeQuickActions.size + 1)
                 }
             }
-            var msg = "..."
-            if (loopIndexActiveQuickAction in 0 until activeQuickActions.size) {
-                Log.d(TAG, "QUICK ACTION: " + activeQuickActions[loopIndexActiveQuickAction])
-                msg = "<font color=\"red\">" + activeQuickActions[loopIndexActiveQuickAction]+ "</font>"
-                if (loopIndexActiveQuickAction > 0) {
-                    msg = activeQuickActions[loopIndexActiveQuickAction - 1] + "<br/>" + msg
-                } else {
-                    msg = "...<br/>" + msg
-                }
-                if (loopIndexActiveQuickAction < activeQuickActions.size - 1) {
-                    msg = msg + "<br/>" + activeQuickActions[loopIndexActiveQuickAction + 1]
-                } else {
-                    msg = msg + "<br/>..."
-                }
-            } else {
-                msg = "...<br/><font color=\"red\">...</font><br/>..."
-                if (activeQuickActions.isNotEmpty()) {
-                    msg =  activeQuickActions.last() + "<br/><font color=\"red\">.." +
-                            ".</font><br/>" + activeQuickActions.first()
-                }
-            }
-            quickActionTipView.text = Html.fromHtml(msg)
+
+            quickActionTipView.text = Html.fromHtml(getQuickActionMsg())
         }
+    }
+
+    private fun getQuickActionMsg(): String {
+        var msg = "..."
+        if (loopIndexActiveQuickAction in 0 until activeQuickActions.size) {
+            Log.d(TAG, "QUICK ACTION: " + activeQuickActions[loopIndexActiveQuickAction])
+            msg = "<font color=\"red\">" + activeQuickActions[loopIndexActiveQuickAction]+ "</font>"
+            if (loopIndexActiveQuickAction > 0) {
+                msg = activeQuickActions[loopIndexActiveQuickAction - 1] + "<br/>" + msg
+            } else {
+                msg = "...<br/>" + msg
+            }
+            if (loopIndexActiveQuickAction < activeQuickActions.size - 1) {
+                msg = msg + "<br/>" + activeQuickActions[loopIndexActiveQuickAction + 1]
+            } else {
+                msg = msg + "<br/>..."
+            }
+        } else {
+            msg = "...<br/><font color=\"red\">...</font><br/>..."
+            if (activeQuickActions.isNotEmpty()) {
+                msg =  activeQuickActions.last() + "<br/><font color=\"red\">.." +
+                        ".</font><br/>" + activeQuickActions.first()
+            }
+        }
+        return msg
     }
 
     private fun hideQuickActionTip() {
@@ -957,6 +968,8 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
                 if (loopIndexActiveQuickAction == -1) {
                     showMoreActionsView(0)
                 } else if (loopIndexActiveQuickAction in 0 until activeQuickActions.size) {
+                    KlickAccessibilityService.sharedInstance?.increaseClickCounter(KlickAccessibilityService.currentRootInActiveWindow?.packageName.toString(),
+                            activeQuickActions[loopIndexActiveQuickAction])
                     KlickAccessibilityService.sharedInstance?.performClickOnViewWithText(activeQuickActions[loopIndexActiveQuickAction])
                 }
                 hideQuickActionTip()

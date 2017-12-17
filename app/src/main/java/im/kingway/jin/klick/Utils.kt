@@ -289,6 +289,8 @@ object Utils {
         val sharedPref = context.getSharedPreferences(context.packageName, Context.MODE_PRIVATE)
         val allEntries = sharedPref.getAll()
         Log.d(TAG, "getSharedprefsKeys: " + allEntries)
-        return allEntries.keys.filter { it.contains(subStr) }
+        return (allEntries.filter { (key, value) -> key.contains(subStr) && value is Int } as
+                Map<String, Int>).toList<String, Int>().sortedByDescending( { it.second } ).map {
+            it.first }
     }
 }

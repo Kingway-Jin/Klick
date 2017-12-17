@@ -71,12 +71,40 @@ class KlickAccessibilityService : AccessibilityService() {
         return count >= 0
     }
 
+    public fun increaseClickCounter(packageName: String, text: String) {
+        val count = (application as KlickApplication).sharedPrefs!!.getInt("quick_action:"
+                + packageName + ":" + text, -1)
+        if (count >= 0) {
+            (application as KlickApplication).sharedPrefs!!.edit().putInt("quick_action:" +
+                    packageName + ":" + text, count + 1).commit()
+        }
+    }
+
     fun performClickOnViewWithText(text: String) {
         val nodeInfo = findClickableNodeByText(text)
         if (nodeInfo != null) {
             Log.d(TAG, "performing click on view: " + nodeInfo.toString())
             nodeInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK)
         }
+    }
+
+    fun getTextOfClickableNodeByPostfix(text: String): String? {
+        val nodeInfoList = LinkedList<AccessibilityNodeInfo>()
+        nodeInfoList.add(currentRootInActiveWindow!!)
+
+        while (nodeInfoList.size > 0) {
+            val nodeInfo = nodeInfoList.removeAt(0)
+
+            if (nodeInfo != null) {
+                if (nodeInfo.text != null && nodeInfo.text.endsWith(text)) {
+                    return nodeInfo.text.toString()
+                }
+                for (j in 0 until nodeInfo.childCount) {
+                    nodeInfoList.add(nodeInfo.getChild(j))
+                }
+            }
+        }
+        return null
     }
 
     fun findClickableNodeByText(text: String): AccessibilityNodeInfo? {

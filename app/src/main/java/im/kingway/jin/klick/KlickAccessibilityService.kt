@@ -40,16 +40,20 @@ class KlickAccessibilityService : AccessibilityService() {
     override fun onAccessibilityEvent(event: AccessibilityEvent) {
         val currentAppPackageName = event.packageName.toString()
         Log.d(TAG, "currentAppPackageName: $currentAppPackageName")
-        if (mApp!!.mAppsMap.containsKey(currentAppPackageName) && !isExcludedApp(currentAppPackageName)) {
+        if (currentAppPackageName == currentRootInActiveWindow?.packageName ||
+                mApp!!.mAppsMap.containsKey(currentAppPackageName) &&
+                !isExcludedApp(currentAppPackageName)) {
+            if (currentAppPackageName != currentRootInActiveWindow?.packageName) {
+                recentAppPackageName.remove(currentAppPackageName)
+                recentAppPackageName.add(0, currentAppPackageName)
+
+                saveRecentAppPackageName()
+
+//                val intent = Intent()
+//                intent.action = KlickApplication.ACTION_HIDE_MORE_ACTION_VIEW
+//                applicationContext.sendBroadcast(intent)
+            }
             currentRootInActiveWindow = rootInActiveWindow
-            recentAppPackageName.remove(currentAppPackageName)
-            recentAppPackageName.add(0, currentAppPackageName)
-
-            saveRecentAppPackageName()
-
-            val intent = Intent()
-            intent.action = KlickApplication.ACTION_HIDE_MORE_ACTION_VIEW
-            applicationContext.sendBroadcast(intent)
         }
     }
 
@@ -62,7 +66,7 @@ class KlickAccessibilityService : AccessibilityService() {
     }
 
     private fun saveRecentAppPackageName() {
-        (application as KlickApplication).sharedPrefs!!.edit().putString("RECENT_APP_PACKAGE_NAME", recentAppPackageName.joinToString(";")).commit()
+        (application as KlickApplication).sharedPrefs!!.edit().putString("RECENT_APP_PACKAGE_NAME", recentAppPackageName.joinToString(";")).apply()
     }
 
     private fun isClickableTextActive(packageName: String, text: String): Boolean {

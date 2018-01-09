@@ -600,7 +600,7 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
                             if ("com.tencent.mm" == activePkg) {
                                 val newMsgTest = KlickAccessibilityService.sharedInstance?.getTextOfClickableNodeByPostfix(QuickActionListAdapter.POSTFIX_NEW_MSG)
                                 if (!newMsgTest.isNullOrBlank()) {
-                                    activeQuickActions.add(newMsgTest!!)
+                                    activeQuickActions.add(0, newMsgTest!!)
                                 }
                             }
                             loopIndexActiveQuickAction =  -1
@@ -1121,6 +1121,7 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
                 startToBreath(1, 3000)
             }
         })
+//        animation.startDelay = 500
         animation.start()
     }
 

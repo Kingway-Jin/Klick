@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <accessibility-service android:description="@string/accessibility"
-    android:accessibilityEventTypes="typeWindowStateChanged|typeWindowContentChanged"
+    android:accessibilityEventTypes="typeWindowStateChanged|typeWindowsChanged|typeTouchInteractionStart|typeGestureDetectionStart|typeViewScrolled|typeViewSelected|typeViewClicked|typeViewFocused|typeViewHoverEnter|typeViewLongClicked"
     android:accessibilityFeedbackType="feedbackAllMask"
     android:notificationTimeout="100"
     android:accessibilityFlags="flagDefault|flagReportViewIds"

@@ -314,6 +314,24 @@ class KlickApplication : Application() {
         return x
     }
 
+    fun getAssistHandlePositionX(actually: Boolean): Int {
+        var x = FLOATING_POSITION_X
+        if (actually) {
+            if (x > 0) {
+                x = 0
+            } else {
+                x = screenRect.width()
+            }
+        } else {
+            if (x > 0) {
+                x = 0
+            } else {
+                x = if (screenRect.height() > screenRect.width()) screenRect.height() else screenRect.width()
+            }
+        }
+        return x
+    }
+
     fun getScreenRect(refresh: Boolean): Rect {
         if (refresh) {
             mWindowManager!!.defaultDisplay.getRectSize(screenRect)

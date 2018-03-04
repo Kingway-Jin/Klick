@@ -23,6 +23,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
 import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.AccelerateInterpolator
 import android.view.animation.LinearInterpolator
 import android.widget.*
 import java.util.*
@@ -31,6 +32,7 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
     private val mHandleLayout: LinearLayout
     private val mWindowParams = WindowManager.LayoutParams()
     private val mHandle: ImageView
+    private val mAssitHandle: View
     var mMoreActionsView: MoreActionsView? = null
     private val mTransAnimation: ValueAnimator
 
@@ -181,9 +183,9 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
                             currPos = KlickApplication.POS_FACE_UP
                         } else if (z < -8) {
                             currPos = KlickApplication.POS_FACE_DOWN
-                        } else if (x > 5 && y < 8 && z < 6) {
+                        } else if (x > 5 && Math.abs(y) < 3 && Math.abs(z) < 3) {
                             currPos = KlickApplication.POS_FACE_LEFT
-                        } else if (x < -5 && y < 8 && z < 6) {
+                        } else if (x < -5 && Math.abs(y) < 3 && Math.abs(z) < 3) {
                             currPos = KlickApplication.POS_FACE_RIGHT
                         } else if (y > 8) {
                             currPos = KlickApplication.POS_STANDING_UP
@@ -192,7 +194,22 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
                         } else {
                             currPos = KlickApplication.POS_IN_BETWEEN
                         }
-                        //                    Log.d(TAG, "currPos-" + currPos + ": " + x + ", " + y + ", " + z);
+//                        if (z > 6 && y < 8 && x <= 1 && x >= -1) {
+//                            currPos = KlickApplication.POS_FACE_UP
+//                        } else if (z < -8) {
+//                            currPos = KlickApplication.POS_FACE_DOWN
+//                        } else if (x > 5 && y < 8 && z < 6) {
+//                            currPos = KlickApplication.POS_FACE_LEFT
+//                        } else if (x < -5 && y < 8 && z < 6) {
+//                            currPos = KlickApplication.POS_FACE_RIGHT
+//                        } else if (y > 8) {
+//                            currPos = KlickApplication.POS_STANDING_UP
+//                        } else if (y < -8 && x <= 1 && z <= 1) {
+//                            currPos = KlickApplication.POS_ON_HEAD
+//                        } else {
+//                            currPos = KlickApplication.POS_IN_BETWEEN
+//                        }
+                        Log.d(TAG, "currPos-" + currPos + ": " + x + ", " + y + ", " + z);
 
                         if (mMoreActionsView != null && mMoreActionsView!!.visibility == View.VISIBLE) {
                             if (mMoreActionsView!!.getmBackgroundView().height != mApp.getScreenRect(true).height()) {
@@ -202,9 +219,22 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
                             return@synchronized
                         }
 
-                        if (KlickApplication.POS_IN_BETWEEN == currPos || !posList.isEmpty() && posList[0].pos == currPos) {
-                            if (switchHandMode && !posList.isEmpty() && (event.timestamp - posList[0]
-                                    .startTime!!) / 1000000000L > 3) {
+//                        if (KlickApplication.POS_IN_BETWEEN == currPos || posList.isNotEmpty() &&
+//                                posList[0].pos == currPos) {
+//                            if (switchHandMode && posList.isNotEmpty() && (event.timestamp -
+//                                    posList[0].startTime!!) / 1000000000L > 3) {
+//                                switchHandMode = false
+//                                if (currHandleOpacity != KlickApplication.ICON_OPACITY) {
+//                                    posList.clear()
+//                                    startTransAnimation(currHandleOpacity, KlickApplication.ICON_OPACITY)
+//                                }
+//                            }
+//                            return@synchronized
+//                        }
+
+                        if (KlickApplication.POS_FACE_LEFT != currPos && KlickApplication
+                                .POS_FACE_RIGHT != currPos) {
+                            if (switchHandMode) {
                                 switchHandMode = false
                                 if (currHandleOpacity != KlickApplication.ICON_OPACITY) {
                                     posList.clear()
@@ -214,9 +244,11 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
                             return@synchronized
                         }
 
-                        posList.add(0, PhonePos(currPos, event.timestamp))
-                        if (posList.size > 3) {
-                            posList.removeAt(3)
+                        if (posList.isEmpty() || currPos != posList[0].pos) {
+                            posList.add(0, PhonePos(currPos, event.timestamp))
+                            if (posList.size > 3) {
+                                posList.removeAt(3)
+                            }
                         }
 
                         if (mApp.shakeFlashLight && !mMoreActionsView!!.isFlashlightOn) {
@@ -249,71 +281,93 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
                             return@synchronized
                         }
 
-                        if (KlickApplication.FACE_RIGHT_LEFT_SWITCH_KLICK_ANCHOR && posList.size >= 2) {
-                            if (switchHandMode && (event.timestamp - posList[1].startTime!!) / 1000000000L > 3) {
-                                switchHandMode = false
-                                if (currHandleOpacity != KlickApplication
-                                        .ICON_OPACITY) {
-                                    posList.clear()
-                                    isAnimating = true
-                                    startTransAnimation(currHandleOpacity, KlickApplication.ICON_OPACITY)
-                                }
-                            }
-
-                            if (!switchHandMode && posList.size >= 2 && posList[1].pos == KlickApplication.POS_FACE_UP && (mApp.getFloattingPositionX(false) == 0 && posList[0].pos == KlickApplication.POS_FACE_LEFT || mApp
-                                    .getFloattingPositionX(false) > 0 && posList[0].pos == KlickApplication.POS_FACE_RIGHT)) {
+                        if (KlickApplication.FACE_RIGHT_LEFT_SWITCH_KLICK_ANCHOR && (currPos ==
+                                KlickApplication.POS_FACE_LEFT || currPos == KlickApplication
+                                .POS_FACE_RIGHT)) {
+                            if (!switchHandMode && (mApp.getFloattingPositionX(false) == 0 &&
+                                    currPos == KlickApplication.POS_FACE_RIGHT || mApp
+                                    .getFloattingPositionX(false) > 0 && currPos == KlickApplication
+                                    .POS_FACE_LEFT)) {
                                 switchHandMode = true
                                 mHandler.removeMessages(KlickApplication.MSG_TRANSPARENT_BACKGROUND)
                                 setHandleOpacity(KlickApplication.FULLY_OPACITY)
                                 mApp.playFeedback(false)
                             }
 
-                            if (switchHandMode && posList.size >= 2 && posList[0].pos == KlickApplication.POS_FACE_UP && (mApp.getFloattingPositionX(false) == 0 && posList[1].pos == KlickApplication.POS_FACE_LEFT || mApp.getFloattingPositionX(false) > 0 && posList[1].pos == KlickApplication.POS_FACE_RIGHT)) {
+                            // && (event.timestamp - posList[0].startTime!!) / 100000000L > 5
+                            if (switchHandMode) {
                                 switchHandMode = false
                                 posList.clear()
-                                unregisterSensorEventListener()
 
-                                mApp.getScreenRect(true)
-                                aniStartX = mApp.getFloattingPositionX(true)
-                                KlickApplication.FLOATING_POSITION_X = if (aniStartX == 0) 1 else 0
-                                aniEndX = mApp.getFloattingPositionX(true)
-                                mWindowParams.y = currentPositionY //mApp.getFloattingPositionY
-                                // (true);
-
-                                val animation = ValueAnimator.ofInt(aniStartX, aniEndX)
-                                animation.duration = 300
-                                animation.interpolator = AccelerateDecelerateInterpolator()
-                                animation.addUpdateListener { animation ->
-                                    mWindowParams.x = animation.animatedValue as Int
-                                    mApp.getmWindowManager()!!.updateViewLayout(this@FloatingView, mWindowParams)
-                                }
-                                animation.addListener(object : AnimatorListener {
-                                    override fun onAnimationStart(animation: Animator) {
-                                        isAnimating = true
-                                    }
-
-                                    override fun onAnimationRepeat(animation: Animator) {}
-
-                                    override fun onAnimationEnd(animation: Animator) {
-                                        mWindowParams.x = mApp.getFloattingPositionX(false)
-                                        mApp.getmWindowManager()!!.updateViewLayout(this@FloatingView, mWindowParams)
-                                        mApp.sharedPrefs!!.edit().putInt(KlickApplication
-                                                .SETTING_FLOATING_POSITION_X, aniEndX).commit()
-                                        KlickApplication.FLOATING_POSITION_X = aniEndX
-                                        //                                    mHandler.sendMessageDelayed(getOpacityMsg(KlickApplication.ICON_OPACITY),
-                                        // KlickApplication.TRANSPARENT_BACKGROUND_THRESHOLD);
-                                        registerSensorEventListener()
-                                        startTransAnimation(currHandleOpacity, KlickApplication.ICON_OPACITY)
-                                    }
-
-                                    override fun onAnimationCancel(animation: Animator) {
-                                        isAnimating = false
-                                        startToBreath(1, 3000)
-                                    }
-                                })
-                                animation.start()
+                                switchHandle()
                             }
                         }
+
+//                        if (KlickApplication.FACE_RIGHT_LEFT_SWITCH_KLICK_ANCHOR && posList.size >= 2) {
+//                            if (switchHandMode && (event.timestamp - posList[1].startTime!!) / 1000000000L > 3) {
+//                                switchHandMode = false
+//                                if (currHandleOpacity != KlickApplication
+//                                        .ICON_OPACITY) {
+//                                    posList.clear()
+//                                    isAnimating = true
+//                                    startTransAnimation(currHandleOpacity, KlickApplication.ICON_OPACITY)
+//                                }
+//                            }
+//
+//                            if (!switchHandMode && posList.size >= 2 && posList[1].pos == KlickApplication.POS_FACE_UP && (mApp.getFloattingPositionX(false) == 0 && posList[0].pos == KlickApplication.POS_FACE_LEFT || mApp
+//                                    .getFloattingPositionX(false) > 0 && posList[0].pos == KlickApplication.POS_FACE_RIGHT)) {
+//                                switchHandMode = true
+//                                mHandler.removeMessages(KlickApplication.MSG_TRANSPARENT_BACKGROUND)
+//                                setHandleOpacity(KlickApplication.FULLY_OPACITY)
+//                                mApp.playFeedback(false)
+//                            }
+//
+//                            if (switchHandMode && posList.size >= 2 && posList[0].pos == KlickApplication.POS_FACE_UP && (mApp.getFloattingPositionX(false) == 0 && posList[1].pos == KlickApplication.POS_FACE_LEFT || mApp.getFloattingPositionX(false) > 0 && posList[1].pos == KlickApplication.POS_FACE_RIGHT)) {
+//                                switchHandMode = false
+//                                posList.clear()
+//                                unregisterSensorEventListener()
+//
+//                                mApp.getScreenRect(true)
+//                                aniStartX = mApp.getFloattingPositionX(true)
+//                                KlickApplication.FLOATING_POSITION_X = if (aniStartX == 0) 1 else 0
+//                                aniEndX = mApp.getFloattingPositionX(true)
+//                                mWindowParams.y = currentPositionY //mApp.getFloattingPositionY
+//                                // (true);
+//
+//                                val animation = ValueAnimator.ofInt(aniStartX, aniEndX)
+//                                animation.duration = 300
+//                                animation.interpolator = AccelerateDecelerateInterpolator()
+//                                animation.addUpdateListener { animation ->
+//                                    mWindowParams.x = animation.animatedValue as Int
+//                                    mApp.getmWindowManager()!!.updateViewLayout(this@FloatingView, mWindowParams)
+//                                }
+//                                animation.addListener(object : AnimatorListener {
+//                                    override fun onAnimationStart(animation: Animator) {
+//                                        isAnimating = true
+//                                    }
+//
+//                                    override fun onAnimationRepeat(animation: Animator) {}
+//
+//                                    override fun onAnimationEnd(animation: Animator) {
+//                                        mWindowParams.x = mApp.getFloattingPositionX(false)
+//                                        mApp.getmWindowManager()!!.updateViewLayout(this@FloatingView, mWindowParams)
+//                                        mApp.sharedPrefs!!.edit().putInt(KlickApplication
+//                                                .SETTING_FLOATING_POSITION_X, aniEndX).commit()
+//                                        KlickApplication.FLOATING_POSITION_X = aniEndX
+//                                        //                                    mHandler.sendMessageDelayed(getOpacityMsg(KlickApplication.ICON_OPACITY),
+//                                        // KlickApplication.TRANSPARENT_BACKGROUND_THRESHOLD);
+//                                        registerSensorEventListener()
+//                                        startTransAnimation(currHandleOpacity, KlickApplication.ICON_OPACITY)
+//                                    }
+//
+//                                    override fun onAnimationCancel(animation: Animator) {
+//                                        isAnimating = false
+//                                        startToBreath(1, 3000)
+//                                    }
+//                                })
+//                                animation.start()
+//                            }
+//                        }
                     }
                     else -> {
                     }
@@ -322,6 +376,53 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
         }
 
         override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}
+    }
+
+    private fun switchHandle() {
+        unregisterSensorEventListener()
+
+        mApp.getScreenRect(true)
+        aniStartX = mApp.getFloattingPositionX(true)
+        KlickApplication.FLOATING_POSITION_X = if (aniStartX == 0) 1 else 0
+        aniEndX = mApp.getFloattingPositionX(true)
+        mWindowParams.y = currentPositionY //mApp.getFloattingPositionY
+        // (true);
+
+        val animation = ValueAnimator.ofInt(aniStartX, aniEndX)
+        animation.duration = 300
+        animation.interpolator = AccelerateInterpolator()
+        animation.addUpdateListener { animation ->
+            mWindowParams.x = animation.animatedValue as Int
+            mApp.getmWindowManager()!!.updateViewLayout(this@FloatingView, mWindowParams)
+        }
+        animation.addListener(object : AnimatorListener {
+            override fun onAnimationStart(animation: Animator) {
+                isAnimating = true
+            }
+
+            override fun onAnimationRepeat(animation: Animator) {}
+
+            override fun onAnimationEnd(animation: Animator) {
+                mWindowParams.x = mApp.getAssistHandlePositionX(false)
+                mApp.getmWindowManager()!!.updateViewLayout(mAssitHandle, mWindowParams)
+                mWindowParams.x = mApp.getFloattingPositionX(false)
+                mApp.getmWindowManager()!!.updateViewLayout(this@FloatingView, mWindowParams)
+                mApp.sharedPrefs!!.edit().putInt(
+                        KlickApplication
+                                .SETTING_FLOATING_POSITION_X, aniEndX).commit()
+                KlickApplication.FLOATING_POSITION_X = aniEndX
+                //                                    mHandler.sendMessageDelayed(getOpacityMsg(KlickApplication.ICON_OPACITY),
+                // KlickApplication.TRANSPARENT_BACKGROUND_THRESHOLD);
+                registerSensorEventListener()
+                startTransAnimation(currHandleOpacity, KlickApplication.ICON_OPACITY)
+            }
+
+            override fun onAnimationCancel(animation: Animator) {
+                isAnimating = false
+                startToBreath(1, 3000)
+            }
+        })
+        animation.start()
     }
 
     private enum class Actions {
@@ -370,6 +471,10 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
         mHandle = view.findViewById(R.id.handle_image) as ImageView
         mHandle.setImageDrawable(mApp.handleDrawable)
         mHandle.setBackgroundDrawable(mApp.handleBgDrawable)
+
+        mAssitHandle = View.inflate(mApp.applicationContext, R.layout.assist_handle, null)
+        mAssitHandle.setOnTouchListener { view, motionEvent -> when (motionEvent.action) {
+            MotionEvent.ACTION_DOWN -> switchHandle() }; true }
 
         quickActionTipView = View.inflate(mApp.applicationContext, R.layout
                 .quick_action_text_view, null) as TextView
@@ -795,6 +900,8 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
             override fun onAnimationEnd(animation: Animator) {
                 isAnimating = false
                 startToBreath(1, 3000)
+                mWindowParams.x = mApp.getAssistHandlePositionX(false)
+                mApp.getmWindowManager()!!.updateViewLayout(mAssitHandle, mWindowParams)
             }
 
             override fun onAnimationCancel(animation: Animator) {
@@ -872,6 +979,8 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
                 } else {
                     KlickApplication.FLOATING_POSITION_X = aniEndX
                     KlickApplication.FLOATING_POSITION_Y = aniEndY
+                    mWindowParams.x = mApp.getAssistHandlePositionX(false)
+                    mApp.getmWindowManager()!!.updateViewLayout(mAssitHandle, mWindowParams)
                     mWindowParams.x = mApp.getFloattingPositionX(false)
                     mApp.getmWindowManager()!!.updateViewLayout(this@FloatingView, mWindowParams)
                     mApp.sharedPrefs!!.edit().putInt(KlickApplication
@@ -1047,6 +1156,9 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
                 isAnimating = false
                 startToBreath(1, 3000)
                 registerSensorEventListener()
+
+                mWindowParams.x = mApp.getAssistHandlePositionX(false)
+                mApp.getmWindowManager()!!.updateViewLayout(mAssitHandle, mWindowParams)
             }
 
             override fun onAnimationCancel(animation: Animator) {
@@ -1114,6 +1226,9 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
                 isAnimating = false
                 startToBreath(1, 3000)
                 registerSensorEventListener()
+
+                mWindowParams.x = mApp.getAssistHandlePositionX(false)
+                mApp.getmWindowManager()!!.updateViewLayout(mAssitHandle, mWindowParams)
             }
 
             override fun onAnimationCancel(animation: Animator) {
@@ -1133,10 +1248,17 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
         setHandleOpacity(KlickApplication.ICON_OPACITY_ACTIVE)
         mHandler.sendMessageDelayed(getOpacityMsg(KlickApplication.ICON_OPACITY), KlickApplication.TRANSPARENT_BACKGROUND_THRESHOLD.toLong())
 
+        addAssitHandleToWindowManager()
         addMoreActionsViewToWindowManager()
 
         startToBreath(1, 3000)
         registerSensorEventListener()
+    }
+
+    fun addAssitHandleToWindowManager() {
+        mWindowParams.x = mApp.getAssistHandlePositionX(false)
+        mWindowParams.y = currentPositionY
+        mApp.getmWindowManager()!!.addView(mAssitHandle, mWindowParams)
     }
 
     fun addMoreActionsViewToWindowManager() {
@@ -1178,6 +1300,7 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
         unregisterSensorEventListener()
         removeMoreActionsViewFromWindowManager()
         mApp.getmWindowManager()!!.removeView(this)
+        mApp.getmWindowManager()!!.removeView(mAssitHandle)
     }
 
     fun removeMoreActionsViewFromWindowManager() {

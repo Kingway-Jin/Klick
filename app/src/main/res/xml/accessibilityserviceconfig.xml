@@ -3,7 +3,7 @@
     android:accessibilityEventTypes="typeWindowStateChanged|typeWindowsChanged|typeTouchInteractionStart|typeGestureDetectionStart|typeViewScrolled|typeViewSelected|typeViewClicked|typeViewFocused|typeViewHoverEnter|typeViewLongClicked"
     android:accessibilityFeedbackType="feedbackAllMask"
     android:notificationTimeout="100"
-    android:accessibilityFlags="flagDefault|flagReportViewIds"
+    android:accessibilityFlags="flagDefault|flagReportViewIds|flagIncludeNotImportantViews"
     android:canRetrieveWindowContent="true"
     android:canRequestEnhancedWebAccessibility="true"
     xmlns:android="http://schemas.android.com/apk/res/android" />

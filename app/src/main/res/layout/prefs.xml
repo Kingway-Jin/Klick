@@ -33,8 +33,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginLeft="20dip"
-            android:layout_marginRight="20dip"
+            android:paddingLeft="20dip"
+            android:paddingRight="20dip"
             android:paddingTop="10dip"
             android:paddingBottom="10dip"
             android:background="@drawable/setting_item_background">
@@ -70,8 +70,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginLeft="20dip"
-            android:layout_marginRight="20dip"
+            android:paddingLeft="20dip"
+            android:paddingRight="20dip"
             android:paddingTop="10dip"
             android:paddingBottom="10dip"
             android:background="@drawable/setting_item_background">
@@ -107,11 +107,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginLeft="20dip"
-            android:layout_marginRight="20dip"
+            android:paddingLeft="20dip"
+            android:paddingRight="20dip"
             android:paddingTop="10dip"
             android:paddingBottom="5dip"
-            android:background="@drawable/top_bottom_border">
+            android:background="@drawable/setting_item_background">
             <TextView
                 android:id="@+id/label_customize_icon_size"
                 android:layout_width="match_parent"
@@ -132,11 +132,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginLeft="20dip"
-            android:layout_marginRight="20dip"
+            android:paddingLeft="20dip"
+            android:paddingRight="20dip"
             android:paddingTop="10dip"
             android:paddingBottom="5dip"
-            android:background="@drawable/top_bottom_border">
+            android:background="@drawable/setting_item_background">
             <TextView
                 android:id="@+id/label_customize_icon_opacity"
                 android:layout_width="match_parent"
@@ -185,8 +185,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginLeft="20dip"
-            android:layout_marginRight="20dip"
+            android:paddingLeft="20dip"
+            android:paddingRight="20dip"
             android:paddingTop="10dip"
             android:paddingBottom="10dip"
             android:background="@drawable/setting_item_background">
@@ -223,8 +223,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginLeft="20dip"
-            android:layout_marginRight="20dip"
+            android:paddingLeft="20dip"
+            android:paddingRight="20dip"
             android:paddingTop="10dip"
             android:paddingBottom="10dip"
             android:background="@drawable/setting_item_background">
@@ -262,8 +262,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginLeft="20dip"
-            android:layout_marginRight="20dip"
+            android:paddingLeft="20dip"
+            android:paddingRight="20dip"
             android:paddingTop="10dip"
             android:paddingBottom="10dip"
             android:background="@drawable/setting_item_background">
@@ -300,8 +300,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginLeft="20dip"
-            android:layout_marginRight="20dip"
+            android:paddingLeft="20dip"
+            android:paddingRight="20dip"
             android:paddingTop="10dip"
             android:paddingBottom="10dip"
             android:background="@drawable/setting_item_background">
@@ -339,8 +339,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginLeft="20dip"
-            android:layout_marginRight="20dip"
+            android:paddingLeft="20dip"
+            android:paddingRight="20dip"
             android:paddingTop="10dip"
             android:paddingBottom="10dip"
             android:background="@drawable/setting_item_background">
@@ -378,8 +378,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginLeft="20dip"
-            android:layout_marginRight="20dip"
+            android:paddingLeft="20dip"
+            android:paddingRight="20dip"
             android:paddingTop="10dip"
             android:paddingBottom="10dip"
             android:background="@drawable/setting_item_background">
@@ -417,8 +417,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginLeft="20dip"
-            android:layout_marginRight="20dip"
+            android:paddingLeft="20dip"
+            android:paddingRight="20dip"
             android:paddingTop="10dip"
             android:paddingBottom="10dip"
             android:background="@drawable/setting_item_background">
@@ -455,8 +455,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginLeft="20dip"
-            android:layout_marginRight="20dip"
+            android:paddingLeft="20dip"
+            android:paddingRight="20dip"
             android:paddingTop="10dip"
             android:paddingBottom="10dip"
             android:background="@drawable/setting_item_background">
@@ -493,8 +493,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginLeft="20dip"
-            android:layout_marginRight="20dip"
+            android:paddingLeft="20dip"
+            android:paddingRight="20dip"
             android:paddingTop="10dip"
             android:paddingBottom="10dip"
             android:background="@drawable/setting_item_background">
@@ -531,8 +531,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginLeft="20dip"
-            android:layout_marginRight="20dip"
+            android:paddingLeft="20dip"
+            android:paddingRight="20dip"
             android:paddingTop="10dip"
             android:paddingBottom="10dip"
             android:background="@drawable/setting_item_background">
@@ -569,8 +569,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginLeft="20dip"
-            android:layout_marginRight="20dip"
+            android:paddingLeft="20dip"
+            android:paddingRight="20dip"
             android:paddingTop="10dip"
             android:paddingBottom="10dip"
             android:background="@drawable/setting_item_background">
@@ -607,8 +607,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginLeft="20dip"
-            android:layout_marginRight="20dip"
+            android:paddingLeft="20dip"
+            android:paddingRight="20dip"
             android:paddingTop="10dip"
             android:paddingBottom="10dip"
             android:background="@drawable/setting_item_background">
@@ -645,8 +645,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginLeft="20dip"
-            android:layout_marginRight="20dip"
+            android:paddingLeft="20dip"
+            android:paddingRight="20dip"
             android:paddingTop="10dip"
             android:paddingBottom="10dip"
             android:background="@drawable/setting_item_background">
@@ -683,8 +683,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginLeft="20dip"
-            android:layout_marginRight="20dip"
+            android:paddingLeft="20dip"
+            android:paddingRight="20dip"
             android:paddingTop="10dip"
             android:paddingBottom="10dip"
             android:background="@drawable/setting_item_background">
@@ -741,8 +741,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginLeft="20dip"
-            android:layout_marginRight="20dip"
+            android:paddingLeft="20dip"
+            android:paddingRight="20dip"
             android:paddingTop="10dip"
             android:paddingBottom="10dip"
             android:background="@drawable/setting_item_background">
@@ -768,8 +768,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginLeft="20dip"
-            android:layout_marginRight="20dip"
+            android:paddingLeft="20dip"
+            android:paddingRight="20dip"
             android:paddingTop="10dip"
             android:paddingBottom="10dip"
             android:background="@drawable/setting_item_background">
@@ -806,8 +806,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginLeft="20dip"
-            android:layout_marginRight="20dip"
+            android:paddingLeft="20dip"
+            android:paddingRight="20dip"
             android:paddingTop="10dip"
             android:paddingBottom="10dip"
             android:visibility="gone"
@@ -865,8 +865,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginLeft="20dip"
-            android:layout_marginRight="20dip"
+            android:paddingLeft="20dip"
+            android:paddingRight="20dip"
             android:paddingTop="10dip"
             android:paddingBottom="10dip"
             android:background="@drawable/setting_item_background">
@@ -892,8 +892,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginLeft="20dip"
-            android:layout_marginRight="20dip"
+            android:paddingLeft="20dip"
+            android:paddingRight="20dip"
             android:paddingTop="10dip"
             android:paddingBottom="10dip"
             android:background="@drawable/setting_item_background">
@@ -930,8 +930,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginLeft="20dip"
-            android:layout_marginRight="20dip"
+            android:paddingLeft="20dip"
+            android:paddingRight="20dip"
             android:paddingTop="10dip"
             android:paddingBottom="10dip"
             android:background="@drawable/setting_item_background">
@@ -968,8 +968,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginLeft="20dip"
-            android:layout_marginRight="20dip"
+            android:paddingLeft="20dip"
+            android:paddingRight="20dip"
             android:paddingTop="10dip"
             android:paddingBottom="10dip"
             android:background="@drawable/setting_item_background">
@@ -1026,11 +1026,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginLeft="20dip"
-            android:layout_marginRight="20dip"
+            android:paddingLeft="20dip"
+            android:paddingRight="20dip"
             android:paddingTop="10dip"
             android:paddingBottom="5dip"
-            android:background="@drawable/top_bottom_border">
+            android:background="@drawable/setting_item_background">
             <TextView
                 android:id="@+id/label_feedback_sound"
                 android:layout_width="match_parent"
@@ -1051,11 +1051,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginLeft="20dip"
-            android:layout_marginRight="20dip"
+            android:paddingLeft="20dip"
+            android:paddingRight="20dip"
             android:paddingTop="10dip"
             android:paddingBottom="5dip"
-            android:background="@drawable/top_bottom_border">
+            android:background="@drawable/setting_item_background">
             <TextView
                 android:id="@+id/label_feedback_vibrate"
                 android:layout_width="match_parent"
@@ -1076,11 +1076,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginLeft="20dip"
-            android:layout_marginRight="20dip"
+            android:paddingLeft="20dip"
+            android:paddingRight="20dip"
             android:paddingTop="10dip"
             android:paddingBottom="5dip"
-            android:background="@drawable/top_bottom_border">
+            android:background="@drawable/setting_item_background">
             <TextView
                 android:id="@+id/label_long_click_feedback_vibrate"
                 android:layout_width="match_parent"
@@ -1101,11 +1101,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginLeft="20dip"
-            android:layout_marginRight="20dip"
+            android:paddingLeft="20dip"
+            android:paddingRight="20dip"
             android:paddingTop="10dip"
             android:paddingBottom="5dip"
-            android:background="@drawable/top_bottom_border">
+            android:background="@drawable/setting_item_background">
             <TextView
                 android:id="@+id/label_long_click_threshold"
                 android:layout_width="match_parent"
@@ -1126,11 +1126,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginLeft="20dip"
-            android:layout_marginRight="20dip"
+            android:paddingLeft="20dip"
+            android:paddingRight="20dip"
             android:paddingTop="10dip"
             android:paddingBottom="5dip"
-            android:background="@drawable/top_bottom_border">
+            android:background="@drawable/setting_item_background">
             <TextView
                 android:id="@+id/label_double_click_threshold"
                 android:layout_width="match_parent"
@@ -1158,11 +1158,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginLeft="20dip"
-            android:layout_marginRight="20dip"
+            android:paddingLeft="20dip"
+            android:paddingRight="20dip"
             android:paddingTop="10dip"
             android:paddingBottom="5dip"
-            android:background="@drawable/top_bottom_border">
+            android:background="@drawable/setting_item_background">
             <TextView
                 android:id="@+id/label_flash_light_on_max_seconds"
                 android:layout_width="match_parent"
@@ -1183,11 +1183,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginLeft="20dip"
-            android:layout_marginRight="20dip"
+            android:paddingLeft="20dip"
+            android:paddingRight="20dip"
             android:paddingTop="10dip"
             android:paddingBottom="5dip"
-            android:background="@drawable/top_bottom_border">
+            android:background="@drawable/setting_item_background">
             <TextView
                 android:id="@+id/label_gesture_detect_sensitivity"
                 android:layout_width="match_parent"
@@ -1228,8 +1228,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginLeft="20dip"
-            android:layout_marginRight="20dip"
+            android:paddingLeft="20dip"
+            android:paddingRight="20dip"
             android:paddingTop="10dip"
             android:paddingBottom="10dip"
             android:background="@drawable/setting_item_background">
@@ -1255,11 +1255,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginLeft="20dip"
-            android:layout_marginRight="20dip"
+            android:paddingLeft="20dip"
+            android:paddingRight="20dip"
             android:paddingTop="10dip"
             android:paddingBottom="10dip"
-            android:background="@drawable/top_bottom_border">
+            android:background="@drawable/setting_item_background">
             <TextView
                 android:id="@+id/label_about"
                 android:layout_width="match_parent"
@@ -1283,8 +1283,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginLeft="20dip"
-            android:layout_marginRight="20dip"
+            android:paddingLeft="20dip"
+            android:paddingRight="20dip"
             android:paddingTop="10dip"
             android:paddingBottom="10dip"
             android:background="@drawable/setting_item_background">

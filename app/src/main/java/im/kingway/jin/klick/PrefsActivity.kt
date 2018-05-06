@@ -225,6 +225,8 @@ class PrefsActivity : Activity() {
         super.onCreate(savedInstanceState)
         mApp = application as KlickApplication
         mApp!!.addActivity(this)
+        actionBar!!.setHomeButtonEnabled(false)
+        actionBar!!.setDisplayHomeAsUpEnabled(false)
         actionBar!!.setDisplayShowHomeEnabled(false)
         actionBar!!.setTitle(R.string.prefs_name)
         setContentView(R.layout.prefs)

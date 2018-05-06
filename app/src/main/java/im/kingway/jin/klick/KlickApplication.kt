@@ -292,6 +292,10 @@ class KlickApplication : Application() {
         return mActivityManager
     }
 
+    fun getmNotificationManager(): NotificationManager? {
+        return mNotificationManager
+    }
+
     fun getFloattingPositionY(actually: Boolean): Int {
         var y = FLOATING_POSITION_Y
         if (actually) {

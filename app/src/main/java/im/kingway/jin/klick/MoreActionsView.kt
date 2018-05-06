@@ -119,15 +119,21 @@ class MoreActionsView(private val mApp: KlickApplication, private var mFloatingV
         iv = mView.findViewById(R.id.volimage) as ImageView
         iv.setOnClickListener {
             mApp.playFeedback(false)
-            val mode = mApp.getmAudioManager()!!.ringerMode
-            if (mode == AudioManager.RINGER_MODE_NORMAL) {
-                mApp.getmAudioManager()!!.ringerMode = AudioManager.RINGER_MODE_SILENT
-            } else if (mode == AudioManager.RINGER_MODE_SILENT) {
-                mApp.getmAudioManager()!!.ringerMode = AudioManager.RINGER_MODE_VIBRATE
-            } else if (mode == AudioManager.RINGER_MODE_VIBRATE) {
-                mApp.getmAudioManager()!!.ringerMode = AudioManager.RINGER_MODE_NORMAL
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                && !mApp.getmNotificationManager()!!.isNotificationPolicyAccessGranted()) {
+                mApp.applicationContext.startActivity(Intent(android.provider.Settings
+                        .ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS))
+            } else {
+                val mode = mApp.getmAudioManager()!!.ringerMode
+                if (mode == AudioManager.RINGER_MODE_NORMAL) {
+                    mApp.getmAudioManager()!!.ringerMode = AudioManager.RINGER_MODE_SILENT
+                } else if (mode == AudioManager.RINGER_MODE_SILENT) {
+                    mApp.getmAudioManager()!!.ringerMode = AudioManager.RINGER_MODE_VIBRATE
+                } else if (mode == AudioManager.RINGER_MODE_VIBRATE) {
+                    mApp.getmAudioManager()!!.ringerMode = AudioManager.RINGER_MODE_NORMAL
+                }
+                updateVolImage()
             }
-            updateVolImage()
         }
 
         iv = mView.findViewById(R.id.cameraimage) as ImageView

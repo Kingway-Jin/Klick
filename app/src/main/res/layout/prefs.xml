@@ -1,1308 +1,1462 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:scrollbars="vertical"
-    android:background="@android:color/white">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="fill_vertical"
+    android:background="@android:color/white"
+    android:gravity="fill_vertical"
+    android:orientation="vertical">
+
     <LinearLayout
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:background="@drawable/setting_item_background"
+        android:orientation="horizontal"
+        android:paddingBottom="15dip"
+        android:paddingLeft="20dip"
+        android:paddingRight="20dip"
+        android:paddingTop="15dip">
 
-        <LinearLayout
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingLeft="20dip"
-            android:paddingRight="20dip"
-            android:paddingTop="30dip"
-            android:paddingBottom="10dip"
-            android:background="@drawable/setting_item_background">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/group_customize_icon"
-                android:gravity="left"
-                android:textStyle="bold"
-                android:textColor="@android:color/black"
-                android:textSize="16sp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/customize_icon"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingLeft="20dip"
-            android:paddingRight="20dip"
-            android:paddingTop="10dip"
-            android:paddingBottom="10dip"
-            android:background="@drawable/setting_item_background">
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-                <TextView
-                    android:id="@+id/label_customize_icon"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/label_customize_icon"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp"/>
-                <TextView
-                    android:id="@+id/info_customize_icon"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/info_customize_icon"
-                    android:textColor="@android:color/darker_gray"
-                    android:paddingTop="5dip"
-                    android:textSize="12sp"/>
-            </LinearLayout>
-            <ImageView android:id="@+id/preview_customize_icon"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:src="@drawable/handle_1"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/customize_icon_bg"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingLeft="20dip"
-            android:paddingRight="20dip"
-            android:paddingTop="10dip"
-            android:paddingBottom="10dip"
-            android:background="@drawable/setting_item_background">
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-                <TextView
-                    android:id="@+id/label_customize_icon_bg"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/label_customize_icon_bg"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp"/>
-                <TextView
-                    android:id="@+id/info_customize_icon_bg"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/info_customize_icon_bg"
-                    android:textColor="@android:color/darker_gray"
-                    android:paddingTop="5dip"
-                    android:textSize="12sp"/>
-            </LinearLayout>
-            <ImageView android:id="@+id/preview_customize_icon_bg"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:src="@color/transparent"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/customize_icon_size"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="20dip"
-            android:paddingRight="20dip"
-            android:paddingTop="10dip"
-            android:paddingBottom="5dip"
-            android:background="@drawable/setting_item_background">
-            <TextView
-                android:id="@+id/label_customize_icon_size"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/label_customize_icon_size"
-                android:textColor="@android:color/black"
-                android:textSize="16sp"/>
-            <SeekBar
-                android:id="@+id/value_customize_icon_size"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/customize_icon_opacity"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="20dip"
-            android:paddingRight="20dip"
-            android:paddingTop="10dip"
-            android:paddingBottom="5dip"
-            android:background="@drawable/setting_item_background">
-            <TextView
-                android:id="@+id/label_customize_icon_opacity"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/label_customize_icon_opacity"
-                android:textColor="@android:color/black"
-                android:textSize="16sp"/>
-            <SeekBar
-                android:id="@+id/value_customize_icon_opacity"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"/>
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="20dip"
-            android:paddingRight="20dip"
-            android:paddingTop="30dip"
-            android:paddingBottom="10dip"
-            android:background="@drawable/setting_item_background">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/group_customize_gesture"
-                android:gravity="left"
-                android:textStyle="bold"
-                    android:textColor="@android:color/black"
-                android:textSize="16sp"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/group_customize_gesture_info"
-                android:gravity="left"
-                android:textStyle="bold"
-                android:textColor="@android:color/black"
-                android:textSize="12sp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/setting_gesture_home"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingLeft="20dip"
-            android:paddingRight="20dip"
-            android:paddingTop="10dip"
-            android:paddingBottom="10dip"
-            android:background="@drawable/setting_item_background">
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:padding="10dp"
-                android:src="@drawable/home"/>
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-                <TextView
-                    android:id="@+id/label_gesture_home"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/label_gesture_home"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp"/>
-                <TextView
-                    android:id="@+id/gesture_home"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/label_gesture_not_set"
-                    android:textColor="@android:color/darker_gray"
-                    android:paddingTop="5dip"
-                    android:textSize="12sp"/>
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/setting_gesture_back"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingLeft="20dip"
-            android:paddingRight="20dip"
-            android:paddingTop="10dip"
-            android:paddingBottom="10dip"
-            android:background="@drawable/setting_item_background">
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:padding="10dp"
-                android:src="@drawable/back"/>
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-                <TextView
-                    android:id="@+id/label_gesture_back"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/label_gesture_back"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp"/>
-                <TextView
-                    android:id="@+id/gesture_back"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/label_gesture_not_set"
-                    android:textColor="@android:color/darker_gray"
-                    android:paddingTop="5dip"
-                    android:textSize="12sp"/>
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:visibility="gone"
-            android:id="@+id/setting_gesture_menu"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingLeft="20dip"
-            android:paddingRight="20dip"
-            android:paddingTop="10dip"
-            android:paddingBottom="10dip"
-            android:background="@drawable/setting_item_background">
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:padding="10dp"
-                android:src="@drawable/menu"/>
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-                <TextView
-                    android:id="@+id/label_gesture_menu"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/label_gesture_menu"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp"/>
-                <TextView
-                    android:id="@+id/gesture_menu"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/label_gesture_not_set"
-                    android:textColor="@android:color/darker_gray"
-                    android:paddingTop="5dip"
-                    android:textSize="12sp"/>
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/setting_gesture_app_switch"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingLeft="20dip"
-            android:paddingRight="20dip"
-            android:paddingTop="10dip"
-            android:paddingBottom="10dip"
-            android:background="@drawable/setting_item_background">
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:padding="10dp"
-                android:src="@drawable/app_switch"/>
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-                <TextView
-                    android:id="@+id/label_gesture_app_switch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/label_gesture_app_switch"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp"/>
-
-                <TextView
-                    android:id="@+id/gesture_app_switch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/label_gesture_not_set"
-                    android:textColor="@android:color/darker_gray"
-                    android:paddingTop="5dip"
-                    android:textSize="12sp"/>
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/setting_gesture_app_switch_forward"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingLeft="20dip"
-            android:paddingRight="20dip"
-            android:paddingTop="10dip"
-            android:paddingBottom="10dip"
-            android:background="@drawable/setting_item_background">
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:padding="10dp"
-                android:src="@drawable/app_switch"/>
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-                <TextView
-                    android:id="@+id/label_gesture_app_switch_forward"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/label_gesture_app_switch_forward"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp"/>
-
-                <TextView
-                    android:id="@+id/gesture_app_switch_forward"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/label_gesture_not_set"
-                    android:textColor="@android:color/darker_gray"
-                    android:paddingTop="5dip"
-                    android:textSize="12sp"/>
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/setting_gesture_app_switch_backward"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingLeft="20dip"
-            android:paddingRight="20dip"
-            android:paddingTop="10dip"
-            android:paddingBottom="10dip"
-            android:background="@drawable/setting_item_background">
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:padding="10dp"
-                android:src="@drawable/app_switch"/>
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-                <TextView
-                    android:id="@+id/label_gesture_app_switch_backward"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/label_gesture_app_switch_backward"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp"/>
-
-                <TextView
-                    android:id="@+id/gesture_app_switch_backward"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/label_gesture_not_set"
-                    android:textColor="@android:color/darker_gray"
-                    android:paddingTop="5dip"
-                    android:textSize="12sp"/>
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/setting_gesture_lock_screen"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingLeft="20dip"
-            android:paddingRight="20dip"
-            android:paddingTop="10dip"
-            android:paddingBottom="10dip"
-            android:background="@drawable/setting_item_background">
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:padding="10dp"
-                android:src="@drawable/lock"/>
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-                <TextView
-                    android:id="@+id/label_gesture_lock_screen"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/label_gesture_lock_screen"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp"/>
-                <TextView
-                    android:id="@+id/gesture_lock_screen"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/label_gesture_not_set"
-                    android:textColor="@android:color/darker_gray"
-                    android:paddingTop="5dip"
-                    android:textSize="12sp"/>
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/setting_gesture_expand_status_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingLeft="20dip"
-            android:paddingRight="20dip"
-            android:paddingTop="10dip"
-            android:paddingBottom="10dip"
-            android:background="@drawable/setting_item_background">
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:padding="10dp"
-                android:src="@drawable/expend_status_bar"/>
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-                <TextView
-                    android:id="@+id/label_gesture_expand_status_bar"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/label_gesture_expand_status_bar"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp"/>
-                <TextView
-                    android:id="@+id/gesture_expand_status_bar"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/label_gesture_not_set"
-                    android:textColor="@android:color/darker_gray"
-                    android:paddingTop="5dip"
-                    android:textSize="12sp"/>
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/setting_gesture_show_more_actions"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingLeft="20dip"
-            android:paddingRight="20dip"
-            android:paddingTop="10dip"
-            android:paddingBottom="10dip"
-            android:background="@drawable/setting_item_background">
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:padding="10dp"
-                android:src="@drawable/more_actions"/>
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-                <TextView
-                    android:id="@+id/label_gesture_show_more_actions"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/label_gesture_show_more_actions_global_action"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp"/>
-                <TextView
-                    android:id="@+id/gesture_show_more_actions"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/label_gesture_not_set"
-                    android:textColor="@android:color/darker_gray"
-                    android:paddingTop="5dip"
-                    android:textSize="12sp"/>
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/setting_gesture_show_more_actions_quick_action"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingLeft="20dip"
-            android:paddingRight="20dip"
-            android:paddingTop="10dip"
-            android:paddingBottom="10dip"
-            android:background="@drawable/setting_item_background">
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:padding="10dp"
-                android:src="@drawable/more_actions"/>
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-                <TextView
-                    android:id="@+id/label_gesture_show_more_actions_quick_action"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/label_gesture_show_more_actions_quick_action"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp"/>
-                <TextView
-                    android:id="@+id/gesture_show_more_actions_quick_action"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/label_gesture_not_set"
-                    android:textColor="@android:color/darker_gray"
-                    android:paddingTop="5dip"
-                    android:textSize="12sp"/>
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/setting_gesture_show_more_actions_quick_launch"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingLeft="20dip"
-            android:paddingRight="20dip"
-            android:paddingTop="10dip"
-            android:paddingBottom="10dip"
-            android:background="@drawable/setting_item_background">
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:padding="10dp"
-                android:src="@drawable/more_actions"/>
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-                <TextView
-                    android:id="@+id/label_gesture_show_more_actions_quick_launch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/label_gesture_show_more_actions_quick_launch"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp"/>
-                <TextView
-                    android:id="@+id/gesture_show_more_actions_quick_launch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/label_gesture_not_set"
-                    android:textColor="@android:color/darker_gray"
-                    android:paddingTop="5dip"
-                    android:textSize="12sp"/>
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/setting_gesture_adjust_music_volume"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingLeft="20dip"
-            android:paddingRight="20dip"
-            android:paddingTop="10dip"
-            android:paddingBottom="10dip"
-            android:background="@drawable/setting_item_background">
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:padding="10dp"
-                android:src="@drawable/vol"/>
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-                <TextView
-                    android:id="@+id/label_gesture_adjust_music_volume"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/label_gesture_adjust_music_volume"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp"/>
-                <TextView
-                    android:id="@+id/gesture_adjust_music_volume"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/label_gesture_not_set"
-                    android:textColor="@android:color/darker_gray"
-                    android:paddingTop="5dip"
-                    android:textSize="12sp"/>
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/setting_gesture_open_camera"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingLeft="20dip"
-            android:paddingRight="20dip"
-            android:paddingTop="10dip"
-            android:paddingBottom="10dip"
-            android:background="@drawable/setting_item_background">
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:padding="10dp"
-                android:src="@drawable/camera"/>
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-                <TextView
-                    android:id="@+id/label_gesture_open_camera"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/label_gesture_open_camera"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp"/>
-                <TextView
-                    android:id="@+id/gesture_open_camera"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/label_gesture_not_set"
-                    android:textColor="@android:color/darker_gray"
-                    android:paddingTop="5dip"
-                    android:textSize="12sp"/>
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/setting_gesture_open_dict"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingLeft="20dip"
-            android:paddingRight="20dip"
-            android:paddingTop="10dip"
-            android:paddingBottom="10dip"
-            android:background="@drawable/setting_item_background">
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:padding="10dp"
-                android:src="@drawable/dict"/>
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-                <TextView
-                    android:id="@+id/label_gesture_open_dict"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/label_gesture_open_dict"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp"/>
-                <TextView
-                    android:id="@+id/gesture_open_dict"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/label_gesture_not_set"
-                    android:textColor="@android:color/darker_gray"
-                    android:paddingTop="5dip"
-                    android:textSize="12sp"/>
-            </LinearLayout>
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingLeft="20dip"
-            android:paddingRight="20dip"
-            android:paddingTop="30dip"
-            android:paddingBottom="10dip"
-            android:background="@drawable/setting_item_background">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/group_customize_more_actions"
-                android:gravity="left"
-                android:textStyle="bold"
-                    android:textColor="@android:color/black"
-                android:textSize="16sp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/app_list_include_recent_task"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="20dip"
-            android:paddingRight="20dip"
-            android:paddingTop="10dip"
-            android:paddingBottom="10dip"
-            android:background="@drawable/setting_item_background">
-            <TextView
-                android:id="@+id/label_app_list_include_recent_task"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/label_app_list_include_recent_task"
-                android:textColor="@android:color/black"
-                android:textSize="16sp"/>
-            <TextView
-                android:id="@+id/value_app_list_include_recent_task"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/value_app_list_include_recent_task"
-                android:textColor="@android:color/darker_gray"
-                android:paddingTop="5dip"
-                android:textSize="12sp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/setting_reorder_apps"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingLeft="20dip"
-            android:paddingRight="20dip"
-            android:paddingTop="10dip"
-            android:paddingBottom="10dip"
-            android:background="@drawable/setting_item_background">
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-                <TextView
-                    android:id="@+id/label_reorder_apps"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/label_reorder_apps"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp"/>
-                <TextView
-                    android:id="@+id/reorder_apps_info"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/reorder_apps_info"
-                    android:textColor="@android:color/darker_gray"
-                    android:paddingTop="5dip"
-                    android:textSize="12sp"/>
-            </LinearLayout>
-            <CheckBox android:id="@+id/reorder_apps"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text=""
-                android:textSize="12sp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/show_first_page_app_by_default"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingLeft="20dip"
-            android:paddingRight="20dip"
-            android:paddingTop="10dip"
-            android:paddingBottom="10dip"
-            android:visibility="gone"
-            android:background="@drawable/setting_item_background">
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-                <TextView
-                    android:id="@+id/label_show_first_page_app_by_default"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/label_show_first_page_app_by_default"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp"/>
-                <TextView
-                    android:id="@+id/info_show_first_page_app_by_default"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/info_show_first_page_app_by_default"
-                    android:textColor="@android:color/darker_gray"
-                    android:paddingTop="5dip"
-                    android:textSize="12sp"/>
-            </LinearLayout>
-            <CheckBox android:id="@+id/value_show_first_page_app_by_default"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text=""
-                android:textSize="12sp"/>
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingLeft="20dip"
-            android:paddingRight="20dip"
-            android:paddingTop="30dip"
-            android:paddingBottom="10dip"
-            android:background="@drawable/setting_item_background">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/group_customize_auto"
-                android:gravity="left"
-                android:textStyle="bold"
-                    android:textColor="@android:color/black"
-                android:textSize="16sp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/lock_phone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="20dip"
-            android:paddingRight="20dip"
-            android:paddingTop="10dip"
-            android:paddingBottom="10dip"
-            android:background="@drawable/setting_item_background">
-            <TextView
-                android:id="@+id/label_lock_phone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/label_lock_phone"
-                android:textColor="@android:color/black"
-                android:textSize="16sp"/>
-            <TextView
-                android:id="@+id/info_lock_phone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/info_lock_phone"
-                android:textColor="@android:color/darker_gray"
-                android:paddingTop="5dip"
-                android:textSize="12sp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/face_right_left_switch_klick_anchor_side"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingLeft="20dip"
-            android:paddingRight="20dip"
-            android:paddingTop="10dip"
-            android:paddingBottom="10dip"
-            android:background="@drawable/setting_item_background">
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-                <TextView
-                    android:id="@+id/label_face_right_left_switch_klick_anchor_side"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/label_face_right_left_switch_klick_anchor_side"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp"/>
-                <TextView
-                    android:id="@+id/info_face_right_left_switch_klick_anchor_side"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/info_face_right_left_switch_klick_anchor_side"
-                    android:textColor="@android:color/darker_gray"
-                    android:paddingTop="5dip"
-                    android:textSize="12sp"/>
-            </LinearLayout>
-            <CheckBox android:id="@+id/value_face_right_left_switch_klick_anchor_side"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text=""
-                android:textSize="12sp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/auto_hide_floating_icon"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingLeft="20dip"
-            android:paddingRight="20dip"
-            android:paddingTop="10dip"
-            android:paddingBottom="10dip"
-            android:background="@drawable/setting_item_background">
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-                <TextView
-                    android:id="@+id/label_hide_floating_icon"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/label_auto_hide_floating_icon"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp"/>
-                <TextView
-                    android:id="@+id/info_hide_floating_icon"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/info_auto_hide_floating_icon"
-                    android:textColor="@android:color/darker_gray"
-                    android:paddingTop="5dip"
-                    android:textSize="12sp"/>
-            </LinearLayout>
-            <CheckBox android:id="@+id/value_auto_hide_floating_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text=""
-                android:textSize="12sp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/shake_switch_flash_light"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingLeft="20dip"
-            android:paddingRight="20dip"
-            android:paddingTop="10dip"
-            android:paddingBottom="10dip"
-            android:background="@drawable/setting_item_background">
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-                <TextView
-                    android:id="@+id/label_shake_switch_flash_light"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/label_shake_switch_flash_light"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp"/>
-                <TextView
-                    android:id="@+id/info_shake_switch_flash_light"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/info_shake_switch_flash_light"
-                    android:textColor="@android:color/darker_gray"
-                    android:paddingTop="5dip"
-                    android:textSize="12sp"/>
-            </LinearLayout>
-            <CheckBox android:id="@+id/value_shake_switch_flash_light"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text=""
-                android:textSize="12sp"/>
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingLeft="20dip"
-            android:paddingRight="20dip"
-            android:paddingTop="30dip"
-            android:paddingBottom="10dip"
-            android:background="@drawable/setting_item_background">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/group_customize_feedback"
-                android:gravity="left"
-                android:textStyle="bold"
-                    android:textColor="@android:color/black"
-                android:textSize="16sp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/setting_feedback_sound"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="20dip"
-            android:paddingRight="20dip"
-            android:paddingTop="10dip"
-            android:paddingBottom="5dip"
-            android:background="@drawable/setting_item_background">
-            <TextView
-                android:id="@+id/label_feedback_sound"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/label_feedback_sound"
-                android:textColor="@android:color/black"
-                android:textSize="16sp"/>
-            <SeekBar
-                android:id="@+id/seekBarVolume"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/setting_feedback_vibrate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="20dip"
-            android:paddingRight="20dip"
-            android:paddingTop="10dip"
-            android:paddingBottom="5dip"
-            android:background="@drawable/setting_item_background">
-            <TextView
-                android:id="@+id/label_feedback_vibrate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/label_feedback_vibrate"
-                android:textColor="@android:color/black"
-                android:textSize="16sp"/>
-            <SeekBar
-                android:id="@+id/seekBarMilliseconds"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/setting_long_click_feedback_vibrate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="20dip"
-            android:paddingRight="20dip"
-            android:paddingTop="10dip"
-            android:paddingBottom="5dip"
-            android:background="@drawable/setting_item_background">
-            <TextView
-                android:id="@+id/label_long_click_feedback_vibrate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/label_long_click_feedback_vibrate"
-                android:textColor="@android:color/black"
-                android:textSize="16sp"/>
-            <SeekBar
-                android:id="@+id/seekBarMillisecondsLongClick"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/setting_long_click_threshold"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="20dip"
-            android:paddingRight="20dip"
-            android:paddingTop="10dip"
-            android:paddingBottom="5dip"
-            android:background="@drawable/setting_item_background">
-            <TextView
-                android:id="@+id/label_long_click_threshold"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/label_long_click_threshold"
-                android:textColor="@android:color/black"
-                android:textSize="16sp"/>
-            <SeekBar
-                android:id="@+id/long_click_threshold"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/setting_double_click_threshold"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="20dip"
-            android:paddingRight="20dip"
-            android:paddingTop="10dip"
-            android:paddingBottom="5dip"
-            android:background="@drawable/setting_item_background">
-            <TextView
-                android:id="@+id/label_double_click_threshold"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/label_double_click_threshold"
-                android:textColor="@android:color/black"
-                android:textSize="16sp"/>
-            <TextView
-                android:id="@+id/label_double_click_threshold_tips"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/label_double_click_threshold_tips"
-                android:textColor="@android:color/holo_red_dark"
-                android:textSize="12sp"/>
-            <SeekBar
-                android:id="@+id/double_click_threshold"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/setting_flash_light_on_max_seconds"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="20dip"
-            android:paddingRight="20dip"
-            android:paddingTop="10dip"
-            android:paddingBottom="5dip"
-            android:background="@drawable/setting_item_background">
-            <TextView
-                android:id="@+id/label_flash_light_on_max_seconds"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/label_flash_light_on_max_seconds"
-                android:textColor="@android:color/black"
-                android:textSize="16sp"/>
-            <SeekBar
-                android:id="@+id/flash_light_on_max_seconds"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/setting_gesture_detect_sensitivity"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="20dip"
-            android:paddingRight="20dip"
-            android:paddingTop="10dip"
-            android:paddingBottom="5dip"
-            android:background="@drawable/setting_item_background">
-            <TextView
-                android:id="@+id/label_gesture_detect_sensitivity"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/label_gesture_detect_sensitivity"
-                android:textColor="@android:color/black"
-                android:textSize="16sp"/>
-            <SeekBar
-                android:id="@+id/gesture_detect_sensitivity"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"/>
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingLeft="20dip"
-            android:paddingRight="20dip"
-            android:paddingTop="30dip"
-            android:paddingBottom="10dip"
-            android:background="@drawable/setting_item_background">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/group_customize_about"
-                android:gravity="left"
-                android:textStyle="bold"
-                    android:textColor="@android:color/black"
-                android:textSize="16sp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/exit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="20dip"
-            android:paddingRight="20dip"
-            android:paddingTop="10dip"
-            android:paddingBottom="10dip"
-            android:background="@drawable/setting_item_background">
-            <TextView
-                android:id="@+id/label_exit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/label_exit"
-                android:textColor="@android:color/black"
-                android:textSize="16sp"/>
-            <TextView
-                android:id="@+id/exit_info"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/exit_info"
-                android:textColor="@android:color/darker_gray"
-                android:paddingTop="5dip"
-                android:textSize="12sp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/setting_about"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="20dip"
-            android:paddingRight="20dip"
-            android:paddingTop="10dip"
-            android:paddingBottom="10dip"
-            android:background="@drawable/setting_item_background">
-            <TextView
-                android:id="@+id/label_about"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/label_about"
-                android:textColor="@android:color/black"
-                android:textSize="16sp"/>
-            <TextView
-                android:id="@+id/about_text"
-                android:autoLink="web|email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/about_text"
-                android:textColor="@android:color/darker_gray"
-                android:paddingTop="5dip"
-                android:textSize="12sp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/setting_donate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="20dip"
-            android:paddingRight="20dip"
-            android:paddingTop="10dip"
-            android:paddingBottom="10dip"
-            android:background="@drawable/setting_item_background">
-            <TextView
-                android:id="@+id/label_donate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/label_donate"
-                android:textColor="@android:color/black"
-                android:textSize="16sp"/>
-            <TextView
-                android:id="@+id/donate_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/donate_text"
-                android:textColor="@android:color/black"
-                android:paddingTop="5dip"
-                android:textSize="12sp"/>
-        </LinearLayout>
+            android:gravity="left"
+            android:text="@string/prefs_name"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            android:textStyle="bold" />
     </LinearLayout>
-</ScrollView>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:scrollbars="vertical">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/setting_item_background"
+                android:orientation="horizontal"
+                android:paddingBottom="10dip"
+                android:paddingLeft="20dip"
+                android:paddingRight="20dip"
+                android:paddingTop="30dip">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:text="@string/group_customize_icon"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/customize_icon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/setting_item_background"
+                android:orientation="horizontal"
+                android:paddingBottom="10dip"
+                android:paddingLeft="20dip"
+                android:paddingRight="20dip"
+                android:paddingTop="10dip">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/label_customize_icon"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_customize_icon"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/info_customize_icon"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="5dip"
+                        android:text="@string/info_customize_icon"
+                        android:textColor="@android:color/darker_gray"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/preview_customize_icon"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/handle_1" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/customize_icon_bg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/setting_item_background"
+                android:orientation="horizontal"
+                android:paddingBottom="10dip"
+                android:paddingLeft="20dip"
+                android:paddingRight="20dip"
+                android:paddingTop="10dip">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/label_customize_icon_bg"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_customize_icon_bg"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/info_customize_icon_bg"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="5dip"
+                        android:text="@string/info_customize_icon_bg"
+                        android:textColor="@android:color/darker_gray"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/preview_customize_icon_bg"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@color/transparent" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/customize_icon_size"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/setting_item_background"
+                android:orientation="vertical"
+                android:paddingBottom="5dip"
+                android:paddingLeft="20dip"
+                android:paddingRight="20dip"
+                android:paddingTop="10dip">
+
+                <TextView
+                    android:id="@+id/label_customize_icon_size"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_customize_icon_size"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
+
+                <SeekBar
+                    android:id="@+id/value_customize_icon_size"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/customize_icon_opacity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/setting_item_background"
+                android:orientation="vertical"
+                android:paddingBottom="5dip"
+                android:paddingLeft="20dip"
+                android:paddingRight="20dip"
+                android:paddingTop="10dip">
+
+                <TextView
+                    android:id="@+id/label_customize_icon_opacity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_customize_icon_opacity"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
+
+                <SeekBar
+                    android:id="@+id/value_customize_icon_opacity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/setting_item_background"
+                android:orientation="vertical"
+                android:paddingBottom="10dip"
+                android:paddingLeft="20dip"
+                android:paddingRight="20dip"
+                android:paddingTop="30dip">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:text="@string/group_customize_gesture"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:text="@string/group_customize_gesture_info"
+                    android:textColor="@android:color/black"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/setting_gesture_home"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/setting_item_background"
+                android:orientation="horizontal"
+                android:paddingBottom="10dip"
+                android:paddingLeft="20dip"
+                android:paddingRight="20dip"
+                android:paddingTop="10dip">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:padding="10dp"
+                    android:src="@drawable/home" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/label_gesture_home"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_gesture_home"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/gesture_home"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="5dip"
+                        android:text="@string/label_gesture_not_set"
+                        android:textColor="@android:color/darker_gray"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/setting_gesture_back"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/setting_item_background"
+                android:orientation="horizontal"
+                android:paddingBottom="10dip"
+                android:paddingLeft="20dip"
+                android:paddingRight="20dip"
+                android:paddingTop="10dip">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:padding="10dp"
+                    android:src="@drawable/back" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/label_gesture_back"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_gesture_back"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/gesture_back"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="5dip"
+                        android:text="@string/label_gesture_not_set"
+                        android:textColor="@android:color/darker_gray"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/setting_gesture_menu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/setting_item_background"
+                android:orientation="horizontal"
+                android:paddingBottom="10dip"
+                android:paddingLeft="20dip"
+                android:paddingRight="20dip"
+                android:paddingTop="10dip"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:padding="10dp"
+                    android:src="@drawable/menu" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/label_gesture_menu"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_gesture_menu"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/gesture_menu"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="5dip"
+                        android:text="@string/label_gesture_not_set"
+                        android:textColor="@android:color/darker_gray"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/setting_gesture_app_switch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/setting_item_background"
+                android:orientation="horizontal"
+                android:paddingBottom="10dip"
+                android:paddingLeft="20dip"
+                android:paddingRight="20dip"
+                android:paddingTop="10dip">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:padding="10dp"
+                    android:src="@drawable/app_switch" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/label_gesture_app_switch"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_gesture_app_switch"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/gesture_app_switch"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="5dip"
+                        android:text="@string/label_gesture_not_set"
+                        android:textColor="@android:color/darker_gray"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/setting_gesture_app_switch_forward"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/setting_item_background"
+                android:orientation="horizontal"
+                android:paddingBottom="10dip"
+                android:paddingLeft="20dip"
+                android:paddingRight="20dip"
+                android:paddingTop="10dip">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:padding="10dp"
+                    android:src="@drawable/app_switch" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/label_gesture_app_switch_forward"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_gesture_app_switch_forward"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/gesture_app_switch_forward"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="5dip"
+                        android:text="@string/label_gesture_not_set"
+                        android:textColor="@android:color/darker_gray"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/setting_gesture_app_switch_backward"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/setting_item_background"
+                android:orientation="horizontal"
+                android:paddingBottom="10dip"
+                android:paddingLeft="20dip"
+                android:paddingRight="20dip"
+                android:paddingTop="10dip">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:padding="10dp"
+                    android:src="@drawable/app_switch" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/label_gesture_app_switch_backward"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_gesture_app_switch_backward"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/gesture_app_switch_backward"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="5dip"
+                        android:text="@string/label_gesture_not_set"
+                        android:textColor="@android:color/darker_gray"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/setting_gesture_lock_screen"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/setting_item_background"
+                android:orientation="horizontal"
+                android:paddingBottom="10dip"
+                android:paddingLeft="20dip"
+                android:paddingRight="20dip"
+                android:paddingTop="10dip">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:padding="10dp"
+                    android:src="@drawable/lock" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/label_gesture_lock_screen"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_gesture_lock_screen"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/gesture_lock_screen"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="5dip"
+                        android:text="@string/label_gesture_not_set"
+                        android:textColor="@android:color/darker_gray"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/setting_gesture_expand_status_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/setting_item_background"
+                android:orientation="horizontal"
+                android:paddingBottom="10dip"
+                android:paddingLeft="20dip"
+                android:paddingRight="20dip"
+                android:paddingTop="10dip">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:padding="10dp"
+                    android:src="@drawable/expend_status_bar" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/label_gesture_expand_status_bar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_gesture_expand_status_bar"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/gesture_expand_status_bar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="5dip"
+                        android:text="@string/label_gesture_not_set"
+                        android:textColor="@android:color/darker_gray"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/setting_gesture_show_more_actions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/setting_item_background"
+                android:orientation="horizontal"
+                android:paddingBottom="10dip"
+                android:paddingLeft="20dip"
+                android:paddingRight="20dip"
+                android:paddingTop="10dip">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:padding="10dp"
+                    android:src="@drawable/more_actions" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/label_gesture_show_more_actions"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_gesture_show_more_actions_global_action"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/gesture_show_more_actions"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="5dip"
+                        android:text="@string/label_gesture_not_set"
+                        android:textColor="@android:color/darker_gray"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/setting_gesture_show_more_actions_quick_action"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/setting_item_background"
+                android:orientation="horizontal"
+                android:paddingBottom="10dip"
+                android:paddingLeft="20dip"
+                android:paddingRight="20dip"
+                android:paddingTop="10dip">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:padding="10dp"
+                    android:src="@drawable/more_actions" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/label_gesture_show_more_actions_quick_action"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_gesture_show_more_actions_quick_action"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/gesture_show_more_actions_quick_action"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="5dip"
+                        android:text="@string/label_gesture_not_set"
+                        android:textColor="@android:color/darker_gray"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/setting_gesture_show_more_actions_quick_launch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/setting_item_background"
+                android:orientation="horizontal"
+                android:paddingBottom="10dip"
+                android:paddingLeft="20dip"
+                android:paddingRight="20dip"
+                android:paddingTop="10dip">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:padding="10dp"
+                    android:src="@drawable/more_actions" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/label_gesture_show_more_actions_quick_launch"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_gesture_show_more_actions_quick_launch"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/gesture_show_more_actions_quick_launch"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="5dip"
+                        android:text="@string/label_gesture_not_set"
+                        android:textColor="@android:color/darker_gray"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/setting_gesture_adjust_music_volume"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/setting_item_background"
+                android:orientation="horizontal"
+                android:paddingBottom="10dip"
+                android:paddingLeft="20dip"
+                android:paddingRight="20dip"
+                android:paddingTop="10dip">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:padding="10dp"
+                    android:src="@drawable/vol" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/label_gesture_adjust_music_volume"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_gesture_adjust_music_volume"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/gesture_adjust_music_volume"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="5dip"
+                        android:text="@string/label_gesture_not_set"
+                        android:textColor="@android:color/darker_gray"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/setting_gesture_open_camera"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/setting_item_background"
+                android:orientation="horizontal"
+                android:paddingBottom="10dip"
+                android:paddingLeft="20dip"
+                android:paddingRight="20dip"
+                android:paddingTop="10dip">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:padding="10dp"
+                    android:src="@drawable/camera" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/label_gesture_open_camera"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_gesture_open_camera"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/gesture_open_camera"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="5dip"
+                        android:text="@string/label_gesture_not_set"
+                        android:textColor="@android:color/darker_gray"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/setting_gesture_open_dict"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/setting_item_background"
+                android:orientation="horizontal"
+                android:paddingBottom="10dip"
+                android:paddingLeft="20dip"
+                android:paddingRight="20dip"
+                android:paddingTop="10dip">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:padding="10dp"
+                    android:src="@drawable/dict" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/label_gesture_open_dict"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_gesture_open_dict"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/gesture_open_dict"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="5dip"
+                        android:text="@string/label_gesture_not_set"
+                        android:textColor="@android:color/darker_gray"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/setting_item_background"
+                android:orientation="horizontal"
+                android:paddingBottom="10dip"
+                android:paddingLeft="20dip"
+                android:paddingRight="20dip"
+                android:paddingTop="30dip">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:text="@string/group_customize_more_actions"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/app_list_include_recent_task"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/setting_item_background"
+                android:orientation="vertical"
+                android:paddingBottom="10dip"
+                android:paddingLeft="20dip"
+                android:paddingRight="20dip"
+                android:paddingTop="10dip">
+
+                <TextView
+                    android:id="@+id/label_app_list_include_recent_task"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_app_list_include_recent_task"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/value_app_list_include_recent_task"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="5dip"
+                    android:text="@string/value_app_list_include_recent_task"
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/setting_reorder_apps"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/setting_item_background"
+                android:orientation="horizontal"
+                android:paddingBottom="10dip"
+                android:paddingLeft="20dip"
+                android:paddingRight="20dip"
+                android:paddingTop="10dip">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/label_reorder_apps"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_reorder_apps"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/reorder_apps_info"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="5dip"
+                        android:text="@string/reorder_apps_info"
+                        android:textColor="@android:color/darker_gray"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <CheckBox
+                    android:id="@+id/reorder_apps"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text=""
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/show_first_page_app_by_default"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/setting_item_background"
+                android:orientation="horizontal"
+                android:paddingBottom="10dip"
+                android:paddingLeft="20dip"
+                android:paddingRight="20dip"
+                android:paddingTop="10dip"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/label_show_first_page_app_by_default"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_show_first_page_app_by_default"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/info_show_first_page_app_by_default"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="5dip"
+                        android:text="@string/info_show_first_page_app_by_default"
+                        android:textColor="@android:color/darker_gray"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <CheckBox
+                    android:id="@+id/value_show_first_page_app_by_default"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text=""
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/setting_item_background"
+                android:orientation="horizontal"
+                android:paddingBottom="10dip"
+                android:paddingLeft="20dip"
+                android:paddingRight="20dip"
+                android:paddingTop="30dip">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:text="@string/group_customize_auto"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/lock_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/setting_item_background"
+                android:orientation="vertical"
+                android:paddingBottom="10dip"
+                android:paddingLeft="20dip"
+                android:paddingRight="20dip"
+                android:paddingTop="10dip">
+
+                <TextView
+                    android:id="@+id/label_lock_phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_lock_phone"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/info_lock_phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="5dip"
+                    android:text="@string/info_lock_phone"
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/face_right_left_switch_klick_anchor_side"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/setting_item_background"
+                android:orientation="horizontal"
+                android:paddingBottom="10dip"
+                android:paddingLeft="20dip"
+                android:paddingRight="20dip"
+                android:paddingTop="10dip">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/label_face_right_left_switch_klick_anchor_side"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_face_right_left_switch_klick_anchor_side"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/info_face_right_left_switch_klick_anchor_side"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="5dip"
+                        android:text="@string/info_face_right_left_switch_klick_anchor_side"
+                        android:textColor="@android:color/darker_gray"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <CheckBox
+                    android:id="@+id/value_face_right_left_switch_klick_anchor_side"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text=""
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/auto_hide_floating_icon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/setting_item_background"
+                android:orientation="horizontal"
+                android:paddingBottom="10dip"
+                android:paddingLeft="20dip"
+                android:paddingRight="20dip"
+                android:paddingTop="10dip">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/label_hide_floating_icon"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_auto_hide_floating_icon"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/info_hide_floating_icon"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="5dip"
+                        android:text="@string/info_auto_hide_floating_icon"
+                        android:textColor="@android:color/darker_gray"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <CheckBox
+                    android:id="@+id/value_auto_hide_floating_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text=""
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/shake_switch_flash_light"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/setting_item_background"
+                android:orientation="horizontal"
+                android:paddingBottom="10dip"
+                android:paddingLeft="20dip"
+                android:paddingRight="20dip"
+                android:paddingTop="10dip">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/label_shake_switch_flash_light"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_shake_switch_flash_light"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/info_shake_switch_flash_light"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="5dip"
+                        android:text="@string/info_shake_switch_flash_light"
+                        android:textColor="@android:color/darker_gray"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <CheckBox
+                    android:id="@+id/value_shake_switch_flash_light"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text=""
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/setting_item_background"
+                android:orientation="horizontal"
+                android:paddingBottom="10dip"
+                android:paddingLeft="20dip"
+                android:paddingRight="20dip"
+                android:paddingTop="30dip">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:text="@string/group_customize_feedback"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/setting_feedback_sound"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/setting_item_background"
+                android:orientation="vertical"
+                android:paddingBottom="5dip"
+                android:paddingLeft="20dip"
+                android:paddingRight="20dip"
+                android:paddingTop="10dip">
+
+                <TextView
+                    android:id="@+id/label_feedback_sound"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_feedback_sound"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
+
+                <SeekBar
+                    android:id="@+id/seekBarVolume"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/setting_feedback_vibrate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/setting_item_background"
+                android:orientation="vertical"
+                android:paddingBottom="5dip"
+                android:paddingLeft="20dip"
+                android:paddingRight="20dip"
+                android:paddingTop="10dip">
+
+                <TextView
+                    android:id="@+id/label_feedback_vibrate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_feedback_vibrate"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
+
+                <SeekBar
+                    android:id="@+id/seekBarMilliseconds"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/setting_long_click_feedback_vibrate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/setting_item_background"
+                android:orientation="vertical"
+                android:paddingBottom="5dip"
+                android:paddingLeft="20dip"
+                android:paddingRight="20dip"
+                android:paddingTop="10dip">
+
+                <TextView
+                    android:id="@+id/label_long_click_feedback_vibrate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_long_click_feedback_vibrate"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
+
+                <SeekBar
+                    android:id="@+id/seekBarMillisecondsLongClick"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/setting_long_click_threshold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/setting_item_background"
+                android:orientation="vertical"
+                android:paddingBottom="5dip"
+                android:paddingLeft="20dip"
+                android:paddingRight="20dip"
+                android:paddingTop="10dip">
+
+                <TextView
+                    android:id="@+id/label_long_click_threshold"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_long_click_threshold"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
+
+                <SeekBar
+                    android:id="@+id/long_click_threshold"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/setting_double_click_threshold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/setting_item_background"
+                android:orientation="vertical"
+                android:paddingBottom="5dip"
+                android:paddingLeft="20dip"
+                android:paddingRight="20dip"
+                android:paddingTop="10dip">
+
+                <TextView
+                    android:id="@+id/label_double_click_threshold"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_double_click_threshold"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/label_double_click_threshold_tips"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_double_click_threshold_tips"
+                    android:textColor="@android:color/holo_red_dark"
+                    android:textSize="12sp" />
+
+                <SeekBar
+                    android:id="@+id/double_click_threshold"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/setting_flash_light_on_max_seconds"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/setting_item_background"
+                android:orientation="vertical"
+                android:paddingBottom="5dip"
+                android:paddingLeft="20dip"
+                android:paddingRight="20dip"
+                android:paddingTop="10dip">
+
+                <TextView
+                    android:id="@+id/label_flash_light_on_max_seconds"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_flash_light_on_max_seconds"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
+
+                <SeekBar
+                    android:id="@+id/flash_light_on_max_seconds"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/setting_gesture_detect_sensitivity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/setting_item_background"
+                android:orientation="vertical"
+                android:paddingBottom="5dip"
+                android:paddingLeft="20dip"
+                android:paddingRight="20dip"
+                android:paddingTop="10dip">
+
+                <TextView
+                    android:id="@+id/label_gesture_detect_sensitivity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_gesture_detect_sensitivity"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
+
+                <SeekBar
+                    android:id="@+id/gesture_detect_sensitivity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/setting_item_background"
+                android:orientation="horizontal"
+                android:paddingBottom="10dip"
+                android:paddingLeft="20dip"
+                android:paddingRight="20dip"
+                android:paddingTop="30dip">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:text="@string/group_customize_about"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/exit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/setting_item_background"
+                android:orientation="vertical"
+                android:paddingBottom="10dip"
+                android:paddingLeft="20dip"
+                android:paddingRight="20dip"
+                android:paddingTop="10dip">
+
+                <TextView
+                    android:id="@+id/label_exit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_exit"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/exit_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="5dip"
+                    android:text="@string/exit_info"
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/setting_about"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/setting_item_background"
+                android:orientation="vertical"
+                android:paddingBottom="10dip"
+                android:paddingLeft="20dip"
+                android:paddingRight="20dip"
+                android:paddingTop="10dip">
+
+                <TextView
+                    android:id="@+id/label_about"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_about"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/about_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autoLink="web|email"
+                    android:paddingTop="5dip"
+                    android:text="@string/about_text"
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/setting_donate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/setting_item_background"
+                android:orientation="vertical"
+                android:paddingBottom="10dip"
+                android:paddingLeft="20dip"
+                android:paddingRight="20dip"
+                android:paddingTop="10dip">
+
+                <TextView
+                    android:id="@+id/label_donate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_donate"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/donate_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="5dip"
+                    android:text="@string/donate_text"
+                    android:textColor="@android:color/black"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

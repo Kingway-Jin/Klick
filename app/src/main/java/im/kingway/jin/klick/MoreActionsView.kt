@@ -7,18 +7,17 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
 import android.content.ComponentName
-import android.content.Context
 import android.content.Intent
 import android.graphics.SurfaceTexture
 import android.hardware.Camera
-import android.hardware.Camera.Parameters
-import android.hardware.camera2.*
-import android.hardware.camera2.params.StreamConfigurationMap
+import android.hardware.camera2.CameraCaptureSession
+import android.hardware.camera2.CameraDevice
+import android.hardware.camera2.CameraManager
+import android.hardware.camera2.CaptureRequest
 import android.media.AudioManager
 import android.os.Build
 import android.provider.Settings
 import android.util.Log
-import android.util.Size
 import android.view.*
 import android.view.GestureDetector.OnGestureListener
 import android.view.accessibility.AccessibilityNodeInfo
@@ -832,160 +831,20 @@ class MoreActionsView(private val mApp: KlickApplication, private var mFloatingV
     }
 
     fun turnFlashLight(on: Boolean) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-            turnFlashLightCamera2(!isFlashlightOn)
-        else
-            turnFlashLightCamera(!isFlashlightOn)
-    }
-
-    fun turnFlashLightCamera(on: Boolean) {
         if (!on) {
-            mFloatingView!!.mHandler.removeMessages(KlickApplication.MSG_TURN_OFF_FLASH_LIGHT)
-            try {
-                mCamera!!.stopPreview()
-                mCamera!!.release()
-                mCamera = null
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
+            FlashlightProvider(mApp.applicationContext).turnFlashlightOff()
 
             isFlashlightOn = false
             (mView.findViewById(R.id.flashlightimage) as ImageView).setImageResource(R.drawable.flashlight_off)
         } else {
-            try {
-                mCamera = Camera.open()
-                val params = mCamera!!.parameters
-                params.flashMode = Parameters.FLASH_MODE_TORCH
-                mCamera!!.parameters = params
-                mCamera!!.startPreview()
-                (mView.findViewById(R.id.flashlightimage) as ImageView).setImageResource(R.drawable.flashlight_on)
-                isFlashlightOn = true
-                mFloatingView!!.mHandler.sendEmptyMessageDelayed(KlickApplication
-                        .MSG_TURN_OFF_FLASH_LIGHT, (KlickApplication.FLASH_LIGHT_ON_MAX_SECONDS * 1000).toLong())
-            } catch (e: Exception) {
-                Log.d(TAG, e.message)
-                Toast.makeText(context, R.string.turn_flashlight_on_failed, Toast.LENGTH_SHORT).show()
-            }
+            FlashlightProvider(mApp.applicationContext).turnFlashlightOn()
+
+            (mView.findViewById(R.id.flashlightimage) as ImageView).setImageResource(R.drawable.flashlight_on)
+            isFlashlightOn = true
+            mFloatingView!!.mHandler.sendEmptyMessageDelayed(KlickApplication
+                    .MSG_TURN_OFF_FLASH_LIGHT, (KlickApplication.FLASH_LIGHT_ON_MAX_SECONDS * 1000).toLong())
 
         }
-    }
-
-    @Synchronized
-    fun turnFlashLightCamera2(on: Boolean) {
-        if (!on) {
-            mFloatingView!!.mHandler.removeMessages(KlickApplication.MSG_TURN_OFF_FLASH_LIGHT)
-            try {
-                mBuilder!!.set(CaptureRequest.FLASH_MODE, CameraMetadata.FLASH_MODE_OFF)
-                mSession!!.setRepeatingRequest(mBuilder!!.build(), null, null)
-                mSession!!.close()
-                mCameraDevice!!.close()
-                mCameraDevice = null
-                mSession = null
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-
-            isFlashlightOn = false
-            (mView.findViewById(R.id.flashlightimage) as ImageView).setImageResource(R.drawable.flashlight_off)
-        } else {
-            try {
-                mCameraManager = mApp.getSystemService(Context.CAMERA_SERVICE) as CameraManager
-                //here to judge if flash is available
-                val cameraCharacteristics = mCameraManager!!.getCameraCharacteristics("0")
-                val flashAvailable = cameraCharacteristics.get(CameraCharacteristics.FLASH_INFO_AVAILABLE)!!
-                if (flashAvailable) {
-                    mCameraManager!!.openCamera("0", MyCameraDeviceStateCallback(), null)
-                } else {
-                    Toast.makeText(mApp, "Flash not available", Toast.LENGTH_SHORT).show()
-                    //todo: throw Exception
-                }
-                mCameraManager!!.openCamera("0", MyCameraDeviceStateCallback(), null)
-
-                //				mBuilder.set(CaptureRequest.FLASH_MODE, CameraMetadata.FLASH_MODE_TORCH);
-                //				mSession.setRepeatingRequest(mBuilder.build(), null, null);
-
-                (mView.findViewById(R.id.flashlightimage) as ImageView).setImageResource(R.drawable.flashlight_on)
-                isFlashlightOn = true
-                mFloatingView!!.mHandler.sendEmptyMessageDelayed(KlickApplication
-                        .MSG_TURN_OFF_FLASH_LIGHT, (KlickApplication.FLASH_LIGHT_ON_MAX_SECONDS * 1000).toLong())
-            } catch (e: Exception) {
-                e.printStackTrace()
-                Toast.makeText(context, R.string.turn_flashlight_on_failed, Toast.LENGTH_SHORT).show()
-            }
-
-        }
-    }
-
-    /**
-     * camera device callback
-     */
-    internal inner class MyCameraDeviceStateCallback : CameraDevice.StateCallback() {
-
-        override fun onOpened(camera: CameraDevice) {
-            mCameraDevice = camera
-            //get builder
-            try {
-                mBuilder = camera.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW)
-                //flash on, default is on
-                mBuilder!!.set(CaptureRequest.CONTROL_AE_MODE, CameraMetadata.CONTROL_AF_MODE_AUTO)
-                mBuilder!!.set(CaptureRequest.FLASH_MODE, CameraMetadata.FLASH_MODE_TORCH)
-                val list = ArrayList<Surface>()
-                mSurfaceTexture = SurfaceTexture(1)
-                val size = getSmallestSize(mCameraDevice!!.id)
-                mSurfaceTexture!!.setDefaultBufferSize(size.width, size.height)
-                mSurface = Surface(mSurfaceTexture)
-                list.add(mSurface as Surface)
-                mBuilder!!.addTarget(mSurface!!)
-                camera.createCaptureSession(list, MyCameraCaptureSessionStateCallback(), null)
-            } catch (e: CameraAccessException) {
-                e.printStackTrace()
-            }
-
-        }
-
-        override fun onDisconnected(camera: CameraDevice) {
-
-        }
-
-        override fun onError(camera: CameraDevice, error: Int) {
-
-        }
-    }
-
-    /**
-     * session callback
-     */
-    internal inner class MyCameraCaptureSessionStateCallback : CameraCaptureSession.StateCallback() {
-
-        override fun onConfigured(session: CameraCaptureSession) {
-            mSession = session
-            try {
-                mSession!!.setRepeatingRequest(mBuilder!!.build(), null, null)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-
-        }
-
-        override fun onConfigureFailed(session: CameraCaptureSession) {
-
-        }
-    }
-
-    @Throws(CameraAccessException::class)
-    private fun getSmallestSize(cameraId: String): Size {
-        val outputSizes = mCameraManager!!.getCameraCharacteristics(cameraId).get<StreamConfigurationMap>(CameraCharacteristics
-                .SCALER_STREAM_CONFIGURATION_MAP)!!.getOutputSizes(SurfaceTexture::class.java)
-        if (outputSizes == null || outputSizes!!.size == 0) {
-            throw IllegalStateException("Camera " + cameraId + "doesn't support any outputSize.")
-        }
-        var chosen = outputSizes!![0]
-        for (s in outputSizes!!) {
-            if (chosen.getWidth() >= s.getWidth() && chosen.getHeight() >= s.getHeight()) {
-                chosen = s
-            }
-        }
-        return chosen
     }
 
     private inner class DoActionListener : View.OnClickListener, View.OnLongClickListener {

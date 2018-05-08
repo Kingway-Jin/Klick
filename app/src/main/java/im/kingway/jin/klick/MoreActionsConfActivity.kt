@@ -22,7 +22,6 @@ class MoreActionsConfActivity : Activity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        actionBar!!.setTitle(R.string.quick_start_conf_title)
         setContentView(R.layout.app_folder_conf)
         mListView = findViewById(R.id.app_list_view) as ListView
 

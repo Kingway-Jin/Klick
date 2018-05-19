@@ -2,9 +2,6 @@ package im.kingway.jin.klick
 
 import android.app.Activity
 import android.app.AlertDialog
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.BitmapDrawable
 import android.media.AudioManager
@@ -35,7 +32,6 @@ class PrefsActivity : Activity() {
             .gesture_show_more_actions, R.id.gesture_adjust_music_volume, R.id.gesture_open_camera, R.id
             .gesture_open_dict, R.id.gesture_app_switch_forward, R.id.gesture_app_switch_backward, R.id
             .gesture_show_more_actions_quick_action, R.id.gesture_show_more_actions_quick_launch)
-
 
     private fun convertGestureToCode(gesture: String): Long {
         Log.d(TAG, "convertGestureToCode: " + gesture)
@@ -152,8 +148,9 @@ class PrefsActivity : Activity() {
             (gestureView!!.findViewById(R.id.txt_gesture) as TextView).tag = g
             (gestureView!!.findViewById(R.id.txt_gesture) as TextView).text = getGestureDesc(g)
 
-            if (!(gestureView!!.findViewById(R.id.rbSingleTap) as RadioButton).isChecked && !(gestureView!!.findViewById(R.id.rbDoubleTap) as RadioButton).isChecked && !(gestureView!!
-                    .findViewById(R.id.rbLongPress) as RadioButton).isChecked) {
+            if (!(gestureView!!.findViewById(R.id.rbSingleTap) as RadioButton).isChecked
+                    && !(gestureView!!.findViewById(R.id.rbDoubleTap) as RadioButton).isChecked
+                    && !(gestureView!!.findViewById(R.id.rbLongPress) as RadioButton).isChecked) {
                 (gestureView!!.findViewById(R.id.rbSingleTap) as RadioButton).isChecked = true
             }
         })
@@ -165,8 +162,9 @@ class PrefsActivity : Activity() {
             (gestureView!!.findViewById(R.id.txt_gesture) as TextView).tag = g
             (gestureView!!.findViewById(R.id.txt_gesture) as TextView).text = getGestureDesc(g)
 
-            if (!(gestureView!!.findViewById(R.id.rbSingleTap) as RadioButton).isChecked && !(gestureView!!.findViewById(R.id.rbDoubleTap) as RadioButton).isChecked && !(gestureView!!
-                    .findViewById(R.id.rbLongPress) as RadioButton).isChecked) {
+            if (!(gestureView!!.findViewById(R.id.rbSingleTap) as RadioButton).isChecked
+                    && !(gestureView!!.findViewById(R.id.rbDoubleTap) as RadioButton).isChecked
+                    && !(gestureView!!.findViewById(R.id.rbLongPress) as RadioButton).isChecked) {
                 (gestureView!!.findViewById(R.id.rbSingleTap) as RadioButton).isChecked = true
             }
         })
@@ -178,8 +176,9 @@ class PrefsActivity : Activity() {
             (gestureView!!.findViewById(R.id.txt_gesture) as TextView).tag = g
             (gestureView!!.findViewById(R.id.txt_gesture) as TextView).text = getGestureDesc(g)
 
-            if (!(gestureView!!.findViewById(R.id.rbSingleTap) as RadioButton).isChecked && !(gestureView!!.findViewById(R.id.rbDoubleTap) as RadioButton).isChecked && !(gestureView!!
-                    .findViewById(R.id.rbLongPress) as RadioButton).isChecked) {
+            if (!(gestureView!!.findViewById(R.id.rbSingleTap) as RadioButton).isChecked
+                    && !(gestureView!!.findViewById(R.id.rbDoubleTap) as RadioButton).isChecked
+                    && !(gestureView!!.findViewById(R.id.rbLongPress) as RadioButton).isChecked) {
                 (gestureView!!.findViewById(R.id.rbSingleTap) as RadioButton).isChecked = true
             }
         })
@@ -191,8 +190,9 @@ class PrefsActivity : Activity() {
             (gestureView!!.findViewById(R.id.txt_gesture) as TextView).tag = g
             (gestureView!!.findViewById(R.id.txt_gesture) as TextView).text = getGestureDesc(g)
 
-            if (!(gestureView!!.findViewById(R.id.rbSingleTap) as RadioButton).isChecked && !(gestureView!!.findViewById(R.id.rbDoubleTap) as RadioButton).isChecked && !(gestureView!!
-                    .findViewById(R.id.rbLongPress) as RadioButton).isChecked) {
+            if (!(gestureView!!.findViewById(R.id.rbSingleTap) as RadioButton).isChecked
+                    && !(gestureView!!.findViewById(R.id.rbDoubleTap) as RadioButton).isChecked
+                    && !(gestureView!!.findViewById(R.id.rbLongPress) as RadioButton).isChecked) {
                 (gestureView!!.findViewById(R.id.rbSingleTap) as RadioButton).isChecked = true
             }
         })
@@ -359,39 +359,6 @@ class PrefsActivity : Activity() {
             adb.show()
         }
 
-        //        ll = (LinearLayout) findViewById(R.id.show_first_page_app_by_default);
-        //        ll.setOnClickListener(new OnClickListener() {
-        //            @Override
-        //            public void onClick(View v) {
-        //                CheckBox cb = (CheckBox) findViewById(R.id.value_show_first_page_app_by_default);
-        //                cb.toggle();
-        //            }
-        //        });
-        //        cb = (CheckBox) findViewById(R.id.value_show_first_page_app_by_default);
-        //        cb.setChecked(mApp.getSharedPrefs().getBoolean(KlickApplication.SHOW_FIRST_APP_PAGE_BY_DEFAULT, false));
-        //        cb.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-        //            @Override
-        //            public void onCheckedChanged(CompoundButton checkBox, boolean value) {
-        //                KlickApplication.DEFAULT_SHOW_THE_FIRST_APP_PAGE = value;
-        //                mApp.getSharedPrefs().edit().putBoolean(KlickApplication.SHOW_FIRST_APP_PAGE_BY_DEFAULT, value)
-        //                        .commit();
-        //            }
-        //        });
-
-        ll = findViewById(R.id.face_right_left_switch_klick_anchor_side) as LinearLayout
-        ll.setOnClickListener {
-            val cb = findViewById(R.id.value_face_right_left_switch_klick_anchor_side) as CheckBox
-            cb.toggle()
-        }
-        cb = findViewById(R.id.value_face_right_left_switch_klick_anchor_side) as CheckBox
-        cb.isChecked = mApp!!.sharedPrefs!!.getBoolean(KlickApplication.SETTING_FACE_RIGHT_LEFT_SWITCH_KLICK_ANCHOR,
-                false)
-        cb.setOnCheckedChangeListener { checkBox, value ->
-            KlickApplication.FACE_RIGHT_LEFT_SWITCH_KLICK_ANCHOR = value
-            mApp!!.sharedPrefs!!.edit().putBoolean(KlickApplication.SETTING_FACE_RIGHT_LEFT_SWITCH_KLICK_ANCHOR,
-                    value).commit()
-        }
-
         if (mApp!!.sharedPrefs!!.getBoolean(KlickApplication.SETTING_AUTO_LOCK_SCREEN_PHONE_ON_HEAD, false))
             (findViewById(R.id.info_lock_phone) as TextView).setText(R.string.info_lock_phone_on_head)
         if (mApp!!.sharedPrefs!!.getBoolean(KlickApplication.SETTING_AUTO_LOCK_SCREEN_PHONE_FACE_DOWN, false))
@@ -426,8 +393,10 @@ class PrefsActivity : Activity() {
                     (findViewById(R.id.info_lock_phone) as TextView).setText(R.string
                             .info_lock_phone)
                 }
-                mApp!!.sharedPrefs!!.edit().putBoolean(KlickApplication
-                        .SETTING_AUTO_LOCK_SCREEN_PHONE_ON_HEAD, KlickApplication.AUTO_LOCK_SCREEN_PHONE_ON_HEAD).putBoolean(KlickApplication.SETTING_AUTO_LOCK_SCREEN_PHONE_FACE_DOWN, KlickApplication.AUTO_LOCK_SCREEN_PHONE_FACE_DOWN).commit()
+                mApp!!.sharedPrefs!!.edit()
+                        .putBoolean(KlickApplication.SETTING_AUTO_LOCK_SCREEN_PHONE_ON_HEAD, KlickApplication.AUTO_LOCK_SCREEN_PHONE_ON_HEAD)
+                        .putBoolean(KlickApplication.SETTING_AUTO_LOCK_SCREEN_PHONE_FACE_DOWN, KlickApplication.AUTO_LOCK_SCREEN_PHONE_FACE_DOWN)
+                        .commit()
                 d.dismiss()
             }
             adb.setPositiveButton(R.string.clear) { d, which ->
@@ -435,37 +404,14 @@ class PrefsActivity : Activity() {
                 KlickApplication.AUTO_LOCK_SCREEN_PHONE_FACE_DOWN = false
                 (findViewById(R.id.info_lock_phone) as TextView).setText(R.string
                         .info_lock_phone)
-                mApp!!.sharedPrefs!!.edit().putBoolean(KlickApplication.SETTING_AUTO_LOCK_SCREEN_PHONE_ON_HEAD, KlickApplication.AUTO_LOCK_SCREEN_PHONE_ON_HEAD).putBoolean(KlickApplication.SETTING_AUTO_LOCK_SCREEN_PHONE_FACE_DOWN, KlickApplication.AUTO_LOCK_SCREEN_PHONE_FACE_DOWN).commit()
+                mApp!!.sharedPrefs!!.edit()
+                        .putBoolean(KlickApplication.SETTING_AUTO_LOCK_SCREEN_PHONE_ON_HEAD, KlickApplication.AUTO_LOCK_SCREEN_PHONE_ON_HEAD)
+                        .putBoolean(KlickApplication.SETTING_AUTO_LOCK_SCREEN_PHONE_FACE_DOWN, KlickApplication.AUTO_LOCK_SCREEN_PHONE_FACE_DOWN)
+                        .commit()
                 d.dismiss()
             }
             adb.setNegativeButton(R.string.cancel) { d, which -> d.dismiss() }
             adb.show()
-        }
-
-        ll = findViewById(R.id.auto_hide_floating_icon) as LinearLayout
-        ll.setOnClickListener {
-            val cb = findViewById(R.id.value_auto_hide_floating_icon) as CheckBox
-            cb.toggle()
-        }
-        cb = findViewById(R.id.value_auto_hide_floating_icon) as CheckBox
-        cb.isChecked = mApp!!.sharedPrefs!!.getBoolean(KlickApplication.SETTING_AUTO_HIDE_FLOATING_ICON, false)
-        cb.setOnCheckedChangeListener { checkBox, value ->
-            KlickApplication.AUTO_HIDE_FLOATING_ICON = value
-            mApp!!.sharedPrefs!!.edit().putBoolean(KlickApplication.SETTING_AUTO_HIDE_FLOATING_ICON, value)
-                    .commit()
-        }
-
-        ll = findViewById(R.id.shake_switch_flash_light) as LinearLayout
-        ll.setOnClickListener {
-            val cb = findViewById(R.id.value_shake_switch_flash_light) as CheckBox
-            cb.toggle()
-        }
-        cb = findViewById(R.id.value_shake_switch_flash_light) as CheckBox
-        cb.isChecked = mApp!!.sharedPrefs!!.getBoolean(KlickApplication.SETTING_SHAKE_SWITCH_FLASH_LIGHT, false)
-        cb.setOnCheckedChangeListener { checkBox, value ->
-            KlickApplication.SHAKE_SWITCH_FLASH_LIGHT = value
-            mApp!!.sharedPrefs!!.edit().putBoolean(KlickApplication.SETTING_SHAKE_SWITCH_FLASH_LIGHT, value)
-                    .commit()
         }
 
         ll = findViewById(R.id.exit) as LinearLayout
@@ -617,9 +563,8 @@ class PrefsActivity : Activity() {
         val sbVol = findViewById(R.id.seekBarVolume) as SeekBar
         sbVol.max = 10
         sbVol.progress = mApp!!.sharedPrefs!!.getInt(KlickApplication.FEEDBACK_SOUND_VOLUME, 0)
-        (findViewById(R.id.label_feedback_sound) as TextView).text = resources.getString(R.string
-                .label_feedback_sound) + " - " + mApp!!.sharedPrefs!!.getInt(KlickApplication.FEEDBACK_SOUND_VOLUME,
-                0) * 10 + resources.getString(R.string.percentage)
+        (findViewById(R.id.label_feedback_sound) as TextView).text = resources.getString(R.string.label_feedback_sound) + " - " +
+                mApp!!.sharedPrefs!!.getInt(KlickApplication.FEEDBACK_SOUND_VOLUME,0) * 10 + resources.getString(R.string.percentage)
         sbVol.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                 KlickApplication.VOL_RATIO = progress.toFloat() / 10f
@@ -637,8 +582,9 @@ class PrefsActivity : Activity() {
         val sbOpacity = findViewById(R.id.value_customize_icon_opacity) as SeekBar
         sbOpacity.max = 20
         sbOpacity.progress = mApp!!.sharedPrefs!!.getInt(KlickApplication.CUSTOMIZE_ICON_OPACITY, 30) / 5
-        (findViewById(R.id.label_customize_icon_opacity) as TextView).text = resources.getString(R.string
-                .label_customize_icon_opacity) + " - " + mApp!!.sharedPrefs!!.getInt(KlickApplication.CUSTOMIZE_ICON_OPACITY, 30) + resources.getString(R.string.percentage)
+        (findViewById(R.id.label_customize_icon_opacity) as TextView).text =
+                resources.getString(R.string.label_customize_icon_opacity) + " - " +
+                mApp!!.sharedPrefs!!.getInt(KlickApplication.CUSTOMIZE_ICON_OPACITY, 30) + resources.getString(R.string.percentage)
 
 
         sbOpacity.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
@@ -774,7 +720,8 @@ class PrefsActivity : Activity() {
                     (findViewById(R.id.preview_customize_icon_bg) as ImageView).setImageDrawable(dd)
                     (findViewById(R.id.info_customize_icon_bg) as TextView).text = backgroundChoiceNames!![which]
 
-                    mApp!!.sharedPrefs!!.edit().putInt(KlickApplication.CUSTOMIZE_ICON_BG_CHOICE, which)
+                    mApp!!.sharedPrefs!!.edit()
+                            .putInt(KlickApplication.CUSTOMIZE_ICON_BG_CHOICE, which)
                             .commit()
 
                     val ciIntent = Intent(KlickApplication.ACTION_CUSTOMIZE_ICON)
@@ -785,14 +732,6 @@ class PrefsActivity : Activity() {
             }
             adb.setNegativeButton(R.string.cancel) { d, which -> d.dismiss() }
             adb.show()
-        }
-
-        ll = findViewById(R.id.setting_donate) as LinearLayout
-        ll.setOnClickListener {
-            val clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-            val clipData = ClipData.newPlainText("AlipayAccount", "kingway.w.jin@gmail.com")
-            clipboardManager.primaryClip = clipData
-            Toast.makeText(this@PrefsActivity, R.string.copy_account, Toast.LENGTH_SHORT).show()
         }
 
         val labelAbout = findViewById(R.id.label_about) as TextView
@@ -813,7 +752,10 @@ class PrefsActivity : Activity() {
                         (findViewById(R.id.preview_customize_icon) as ImageView).setImageDrawable(d)
                         (findViewById(R.id.info_customize_icon) as TextView).text = filePath
 
-                        mApp!!.sharedPrefs!!.edit().putInt(KlickApplication.CUSTOMIZE_ICON_CHOICE, 0).putString(KlickApplication.CUSTOMIZE_ICON_FILE, filePath).commit()
+                        mApp!!.sharedPrefs!!.edit()
+                                .putInt(KlickApplication.CUSTOMIZE_ICON_CHOICE, 0)
+                                .putString(KlickApplication.CUSTOMIZE_ICON_FILE, filePath)
+                                .commit()
 
                         val ciIntent = Intent(KlickApplication.ACTION_CUSTOMIZE_ICON)
                         ciIntent.putExtra(KlickApplication.CUSTOMIZE_ICON_FILE, filePath)
@@ -835,7 +777,10 @@ class PrefsActivity : Activity() {
                         (findViewById(R.id.preview_customize_icon_bg) as ImageView).setImageDrawable(d)
                         (findViewById(R.id.info_customize_icon_bg) as TextView).text = filePath
 
-                        mApp!!.sharedPrefs!!.edit().putInt(KlickApplication.CUSTOMIZE_ICON_BG_CHOICE, 0).putString(KlickApplication.CUSTOMIZE_ICON_BG_FILE, filePath).commit()
+                        mApp!!.sharedPrefs!!.edit()
+                                .putInt(KlickApplication.CUSTOMIZE_ICON_BG_CHOICE, 0)
+                                .putString(KlickApplication.CUSTOMIZE_ICON_BG_FILE, filePath)
+                                .commit()
 
                         val ciIntent = Intent(KlickApplication.ACTION_CUSTOMIZE_ICON)
                         ciIntent.putExtra(KlickApplication.CUSTOMIZE_ICON_BG_FILE, filePath)

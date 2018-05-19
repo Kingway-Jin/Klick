@@ -24,7 +24,6 @@ import java.util.*
 
 class KlickApplication : Application() {
 
-    var shakeFlashLight = false
     var canBreath = false
 
     var sharedPrefs: SharedPreferences? = null
@@ -133,14 +132,10 @@ class KlickApplication : Application() {
         VOL_RATIO = sharedPrefs!!.getInt(FEEDBACK_SOUND_VOLUME, 0).toFloat() / 10f
         VIBRATE_MILLS = sharedPrefs!!.getInt(FEEDBACK_VIBRATE_MILLISECONDS, 0)
         VIBRATE_MILLS_LONG_CLICK = sharedPrefs!!.getInt(FEEDBACK_VIBRATE_MILLISECONDS_LONG_CLICK, 0)
-        FACE_RIGHT_LEFT_SWITCH_KLICK_ANCHOR = sharedPrefs!!.getBoolean(SETTING_FACE_RIGHT_LEFT_SWITCH_KLICK_ANCHOR, false)
         AUTO_LOCK_SCREEN_PHONE_ON_HEAD = sharedPrefs!!.getBoolean(SETTING_AUTO_LOCK_SCREEN_PHONE_ON_HEAD, false)
         AUTO_LOCK_SCREEN_PHONE_FACE_DOWN = sharedPrefs!!.getBoolean(SETTING_AUTO_LOCK_SCREEN_PHONE_FACE_DOWN, false)
-        AUTO_HIDE_FLOATING_ICON = sharedPrefs!!.getBoolean(SETTING_AUTO_HIDE_FLOATING_ICON, false)
-        //        DEFAULT_SHOW_THE_FIRST_APP_PAGE = mSharedPrefs.getBoolean(KlickApplication.SHOW_FIRST_APP_PAGE_BY_DEFAULT, false);
         MODE_INCLUDE_RECENT_TASK = sharedPrefs!!.getInt(KlickApplication.INCLUDE_RECENT_TASK_IN_APP_LIST, 0)
         REORDER_APPS = sharedPrefs!!.getBoolean(KlickApplication.SETTING_REORDER_APPS, false)
-        SHAKE_SWITCH_FLASH_LIGHT = sharedPrefs!!.getBoolean(KlickApplication.SETTING_SHAKE_SWITCH_FLASH_LIGHT, false)
 
         FLOATING_POSITION_X = sharedPrefs!!.getInt(SETTING_FLOATING_POSITION_X, 0)
         FLOATING_POSITION_Y = sharedPrefs!!.getInt(SETTING_FLOATING_POSITION_Y, 0)
@@ -533,10 +528,6 @@ class KlickApplication : Application() {
         val INCLUDE_RECENT_TASK_IN_APP_LIST = "INCLUDE_RECENT_TASK_IN_APP_LIST"
         val SETTING_AUTO_LOCK_SCREEN_PHONE_ON_HEAD = "AUTO_LOCK_SCREEN_PHONE_ON_HEAD"
         val SETTING_AUTO_LOCK_SCREEN_PHONE_FACE_DOWN = "AUTO_LOCK_SCREEN_PHONE_FACE_DOWN"
-        //    public static final String SHOW_FIRST_APP_PAGE_BY_DEFAULT = "SHOW_FIRST_APP_PAGE_BY_DEFAULT";
-        val SETTING_FACE_RIGHT_LEFT_SWITCH_KLICK_ANCHOR = "FACE_RIGHT_LEFT_SWITCH_KLICK_ANCHOR"
-        val SETTING_AUTO_HIDE_FLOATING_ICON = "AUTO_HIDE_FLOATING_ICON"
-        val SETTING_SHAKE_SWITCH_FLASH_LIGHT = "SHAKE_SWITCH_FLASH_LIGHT"
         val CUSTOMIZE_ICON_FILE = "CUSTOMIZE_ICON_FILE"
         val CUSTOMIZE_ICON_BG_FILE = "CUSTOMIZE_ICON_BG_FILE"
         val CUSTOMIZE_ICON_CHOICE = "CUSTOMIZE_ICON_CHOICE"
@@ -546,15 +537,11 @@ class KlickApplication : Application() {
         val CUSTOMIZE_ICON_OPACITY = "CUSTOMIZE_ICON_OPACITY"
         val CUSTOMIZE_ICON_SIZE = "CUSTOMIZE_ICON_SIZE"
 
-        //    public static boolean DEFAULT_SHOW_THE_FIRST_APP_PAGE = false;
         var MODE_INCLUDE_RECENT_TASK = 0
         var REORDER_APPS = false
 
         var AUTO_LOCK_SCREEN_PHONE_ON_HEAD = false
         var AUTO_LOCK_SCREEN_PHONE_FACE_DOWN = false
-        var FACE_RIGHT_LEFT_SWITCH_KLICK_ANCHOR = false
-        var AUTO_HIDE_FLOATING_ICON = false
-        var SHAKE_SWITCH_FLASH_LIGHT = false
         var VIBRATE_MILLS: Int = 0
         var VIBRATE_MILLS_LONG_CLICK = 40
         var VOL_RATIO: Float = 0.toFloat()

@@ -9,7 +9,6 @@ import android.animation.PropertyValuesHolder
 import android.content.ComponentName
 import android.content.Intent
 import android.graphics.SurfaceTexture
-import android.hardware.Camera
 import android.hardware.camera2.CameraCaptureSession
 import android.hardware.camera2.CameraDevice
 import android.hardware.camera2.CameraManager
@@ -29,7 +28,6 @@ import java.util.*
 class MoreActionsView(private val mApp: KlickApplication, private var mFloatingView: FloatingView?) : FrameLayout(mApp.applicationContext), OnGestureListener {
     private val mBackgroundView: LinearLayout
     var mViewFlipper: MyWorkspaceView
-    private var mCamera: Camera? = null
     private var mCameraDevice: CameraDevice? = null
     private var mSession: CameraCaptureSession? = null
     private var mBuilder: CaptureRequest.Builder? = null
@@ -53,8 +51,6 @@ class MoreActionsView(private val mApp: KlickApplication, private var mFloatingV
     private var movement = 0f
 
     private val mView: View
-    //    private Animation mAnimationFadeIn;
-    //    private Animation mAnimationFadeOut;
     private val mAnimationFadeOutListener: MyAnimationListener
 
     private var isShowFirstTime = true
@@ -150,15 +146,6 @@ class MoreActionsView(private val mApp: KlickApplication, private var mFloatingV
                 klickAccessServiceInstance!!.performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK)
             mFloatingView!!.mHandler.sendEmptyMessageDelayed(KlickApplication.MSG_HIDE_MORE_ACTION_VIEW, KlickApplication.MORE_ACTION_VIEW_HIDE_DELAY.toLong())
         }
-
-        //        iv = (ImageView)mView.findViewById(R.id.menuimage);
-        //        iv.setOnClickListener(new OnClickListener() {
-        //            @Override
-        //            public void onClick(View v) {
-        //                mAnimationFadeOutListener.setAction(v.getId(), null);
-        //                mFloatingView.hideMoreActionsView();
-        //            }
-        //        });
 
         iv = mView.findViewById(R.id.settingimage) as ImageView
         iv.setOnClickListener(doActionListener)
@@ -718,7 +705,6 @@ class MoreActionsView(private val mApp: KlickApplication, private var mFloatingV
 
         fun onAnimationEnd() {
             this@MoreActionsView.visibility = View.INVISIBLE
-            //			mApp.getmWindowManager().removeView(MoreActionsView.this);
 
             when (action) {
                 -1 -> {
@@ -733,9 +719,6 @@ class MoreActionsView(private val mApp: KlickApplication, private var mFloatingV
                 R.id.appswitchimage -> if (!KeyEventHandler.getInstance(mApp.applicationContext).inputKeyEvent(KeyEvent
                         .KEYCODE_APP_SWITCH) && klickAccessServiceInstance != null)
                     klickAccessServiceInstance!!.performGlobalAction(AccessibilityService.GLOBAL_ACTION_RECENTS)
-            //            case R.id.menuimage:
-            //                KeyEventHandler.getInstance(mApp.getApplicationContext()).inputKeyEvent(KeyEvent.KEYCODE_MENU);
-            //                break;
                 R.id.settingimage -> {
                     if ("onLongClick" == data) {
                         val prefsIntent = Intent(mApp.applicationContext, PrefsActivity::class.java)

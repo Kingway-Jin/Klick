@@ -86,18 +86,13 @@ class KlickService : Service() {
                 }
             }
             if (Intent.ACTION_SCREEN_ON == intent.action) {
-                mApp!!.shakeFlashLight = KlickApplication.SHAKE_SWITCH_FLASH_LIGHT
                 mFloatingView!!.registerSensorEventListener()
                 mApp!!.canBreath = true
                 mFloatingView!!.startToBreath(1, 3000)
             }
             if (Intent.ACTION_SCREEN_OFF == intent.action) {
-                mApp!!.shakeFlashLight = false
                 mApp!!.canBreath = false
                 mFloatingView!!.unregisterSensorEventListener()
-            }
-            if (Intent.ACTION_USER_PRESENT == intent.action) {
-                mApp!!.shakeFlashLight = false
             }
             if (KlickApplication.ACTION_CUSTOMIZE_ICON == intent.action) {
                 mFloatingView!!.refresh()

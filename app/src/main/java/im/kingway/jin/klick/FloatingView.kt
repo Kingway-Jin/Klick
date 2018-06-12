@@ -159,28 +159,13 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
                         last_y = y
                         last_z = z
 
-                        if (z > 6 && y < 8 && x <= 1 && x >= -1) {
-                            currPos = KlickApplication.POS_FACE_UP
-                        } else if (z < -8) {
-                            currPos = KlickApplication.POS_FACE_DOWN
-                        } else if (x > 5 && Math.abs(y) < 3 && Math.abs(z) < 3) {
-                            currPos = KlickApplication.POS_FACE_LEFT
-                        } else if (x < -5 && Math.abs(y) < 3 && Math.abs(z) < 3) {
-                            currPos = KlickApplication.POS_FACE_RIGHT
-                        } else if (y > 8) {
-                            currPos = KlickApplication.POS_STANDING_UP
-                        } else if (y < -8 && x <= 1 && z <= 1) {
-                            currPos = KlickApplication.POS_ON_HEAD
-                        } else {
-                            currPos = KlickApplication.POS_IN_BETWEEN
-                        }
 //                        if (z > 6 && y < 8 && x <= 1 && x >= -1) {
 //                            currPos = KlickApplication.POS_FACE_UP
 //                        } else if (z < -8) {
 //                            currPos = KlickApplication.POS_FACE_DOWN
-//                        } else if (x > 5 && y < 8 && z < 6) {
+//                        } else if (x > 5 && Math.abs(y) < 3 && Math.abs(z) < 3) {
 //                            currPos = KlickApplication.POS_FACE_LEFT
-//                        } else if (x < -5 && y < 8 && z < 6) {
+//                        } else if (x < -5 && Math.abs(y) < 3 && Math.abs(z) < 3) {
 //                            currPos = KlickApplication.POS_FACE_RIGHT
 //                        } else if (y > 8) {
 //                            currPos = KlickApplication.POS_STANDING_UP
@@ -189,7 +174,22 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
 //                        } else {
 //                            currPos = KlickApplication.POS_IN_BETWEEN
 //                        }
-                        Log.d(TAG, "currPos - $currPos : $x, $y, $z")
+                        if (z > 6 && y < 8 && x <= 1 && x >= -1) {
+                            currPos = KlickApplication.POS_FACE_UP
+                        } else if (z < -8) {
+                            currPos = KlickApplication.POS_FACE_DOWN
+                        } else if (x > 5 && y < 8 && z < 6) {
+                            currPos = KlickApplication.POS_FACE_LEFT
+                        } else if (x < -5 && y < 8 && z < 6) {
+                            currPos = KlickApplication.POS_FACE_RIGHT
+                        } else if (y > 8) {
+                            currPos = KlickApplication.POS_STANDING_UP
+                        } else if (y < -8 && x <= 1 && z <= 1) {
+                            currPos = KlickApplication.POS_ON_HEAD
+                        } else {
+                            currPos = KlickApplication.POS_IN_BETWEEN
+                        }
+                        //Log.d(TAG, "currPos - $currPos : $x, $y, $z")
 
                         if (mMoreActionsView?.visibility == View.VISIBLE) {
                             if (mMoreActionsView?.getmBackgroundView()?.height != mApp.getScreenRect(true).height()) {
@@ -553,7 +553,7 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
                             activeQuickActions.addAll(Utils.getSharedprefsKeys(context,
                                     "quick_action:" + activePkg + ":").map { it.substring(("quick_action:" + activePkg + ":").length) })
                             activeQuickActions.removeAll { null == KlickAccessibilityService
-                                    .sharedInstance?.findClickableNodeByText(it) }
+                                    .sharedInstance?.findClickableNodeByText(KlickAccessibilityService.currentRootInActiveWindow, it, null) }
                             if ("com.tencent.mm" == activePkg) {
                                 val newMsgTest = KlickAccessibilityService.sharedInstance?.getTextOfClickableNodeByPostfix(QuickActionListAdapter.POSTFIX_NEW_MSG)
                                 if (!newMsgTest.isNullOrBlank()) {
@@ -649,7 +649,7 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
 
     private fun switchAppQuickAction(event: MotionEvent) {
         movement += event.rawY - rawXYList[1]
-        Log.d(TAG, "switchAppQuickAction: " + movement)
+//        Log.d(TAG, "switchAppQuickAction: " + movement)
         if (Math.abs(movement) > 80) {
             if (movement < 0) {
                 movement += 80f
@@ -917,7 +917,7 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
                 } else if (loopIndexActiveQuickAction in 0 until activeQuickActions.size) {
                     KlickAccessibilityService.sharedInstance?.increaseClickCounter(KlickAccessibilityService.currentRootInActiveWindow?.packageName.toString(),
                             activeQuickActions[loopIndexActiveQuickAction])
-                    KlickAccessibilityService.sharedInstance?.performClickOnViewWithText(activeQuickActions[loopIndexActiveQuickAction])
+                    KlickAccessibilityService.sharedInstance?.performClickOnViewWithText(KlickAccessibilityService.currentRootInActiveWindow, activeQuickActions[loopIndexActiveQuickAction], null)
                 }
                 hideQuickActionTip()
                 Log.d(TAG, "SEQ_NO_SHOW_MORE_ACTIONS")

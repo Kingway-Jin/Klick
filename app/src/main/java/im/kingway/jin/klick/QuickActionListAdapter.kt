@@ -151,5 +151,6 @@ class QuickActionListAdapter(private val mApp: KlickApplication, private var qui
     companion object {
         val TAG = QuickActionListAdapter::class.java.simpleName
         val POSTFIX_NEW_MSG = "条新消息"
+        val YOUBUTE_SKIP_AD = "跳过广告"
     }
 }

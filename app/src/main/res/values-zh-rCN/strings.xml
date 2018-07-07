@@ -50,7 +50,7 @@
     <string name="label_gesture_show_more_actions_quick_launch">显示快速启动App</string>
     <string name="label_gesture_adjust_music_volume">调整音乐音量</string>
     <string name="label_gesture_open_camera">打开相机</string>
-    <string name="label_gesture_open_dict">打开词典</string>
+    <string name="label_gesture_scroll_top">滚动到顶端</string>
     <string name="label_gesture_not_set">还没设置</string>
 
     <string name="gesture_single_tap">单击</string>

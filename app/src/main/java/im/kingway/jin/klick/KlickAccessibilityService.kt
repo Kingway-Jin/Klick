@@ -3,10 +3,13 @@ package im.kingway.jin.klick
 import android.accessibilityservice.AccessibilityService
 import android.content.Intent
 import android.os.AsyncTask
+import android.os.Bundle
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import java.util.*
+
+
 
 class KlickAccessibilityService : AccessibilityService() {
 
@@ -40,25 +43,20 @@ class KlickAccessibilityService : AccessibilityService() {
 
     override fun onAccessibilityEvent(event: AccessibilityEvent) {
         val currentAppPackageName = event.packageName.toString()
-        Log.d(TAG, "currentAppPackageName: $currentAppPackageName")
-        if (currentAppPackageName == currentRootInActiveWindow?.packageName ||
-                mApp!!.mAppsMap.containsKey(currentAppPackageName) &&
+//        Log.d(TAG, "currentAppPackageName: $currentAppPackageName")
+        if (mApp!!.mAppsMap.containsKey(currentAppPackageName) &&
                 !isExcludedApp(currentAppPackageName)) {
             if (currentAppPackageName != currentRootInActiveWindow?.packageName) {
                 recentAppPackageName.remove(currentAppPackageName)
                 recentAppPackageName.add(0, currentAppPackageName)
-
-                saveRecentAppPackageName()
-
-//                val intent = Intent()
-//                intent.action = KlickApplication.ACTION_HIDE_MORE_ACTION_VIEW
-//                applicationContext.sendBroadcast(intent)
             }
             currentRootInActiveWindow = rootInActiveWindow
         }
 
-        if ("com.tencent.mm" == currentAppPackageName || "com.google.android.youtube" == currentAppPackageName) {
-            AutoClickAsyncTask(Integer(++KlickAccessibilityService.autoClickCounter)).execute(currentRootInActiveWindow)
+        if ((autoClickAsyncTask == null || autoClickAsyncTask!!.status == AsyncTask.Status.FINISHED)
+            && ("com.tencent.mm" == currentAppPackageName || "com.google.android.youtube" == currentAppPackageName)) {
+            autoClickAsyncTask = AutoClickAsyncTask(Integer(++KlickAccessibilityService.autoClickCounter))
+            (autoClickAsyncTask as AutoClickAsyncTask).execute(currentRootInActiveWindow)
         }
     }
 
@@ -68,10 +66,6 @@ class KlickAccessibilityService : AccessibilityService() {
         val pkgArray = pkgs!!.split(";".toRegex()).dropLastWhile({ it.isEmpty() })
                 .toTypedArray().filter { !isExcludedApp(it) }
         recentAppPackageName.addAll(pkgArray)
-    }
-
-    private fun saveRecentAppPackageName() {
-        (application as KlickApplication).sharedPrefs!!.edit().putString("RECENT_APP_PACKAGE_NAME", recentAppPackageName.joinToString(";")).apply()
     }
 
     private fun isClickableTextActive(packageName: String, text: String): Boolean {
@@ -86,6 +80,30 @@ class KlickAccessibilityService : AccessibilityService() {
         if (count >= 0) {
             (application as KlickApplication).sharedPrefs!!.edit().putInt("quick_action:" +
                     packageName + ":" + text, count + 1).commit()
+        }
+    }
+
+    fun scrollToTop(nodeInfo: AccessibilityNodeInfo?) {
+        if (nodeInfo == null) return
+
+        val nodeInfoList = LinkedList<AccessibilityNodeInfo>()
+        nodeInfoList.add(nodeInfo!!)
+
+        while (nodeInfoList.size > 0) {
+            val nodeInfo = nodeInfoList.removeAt(0)
+
+            if (nodeInfo != null) {
+                if (nodeInfo.isScrollable()) {
+                    Log.d(TAG, "performing scroll on view: ${nodeInfo.toString()}")
+                    val arguments = Bundle()
+                    arguments.putInt(AccessibilityNodeInfo.ACTION_ARGUMENT_ROW_INT, 0)
+                    nodeInfo.performAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_SCROLL_TO_POSITION.id, arguments)
+                    return
+                }
+                for (j in 0 until nodeInfo.childCount) {
+                    nodeInfoList.add(nodeInfo.getChild(j))
+                }
+            }
         }
     }
 
@@ -319,6 +337,7 @@ class KlickAccessibilityService : AccessibilityService() {
         var mApp: KlickApplication? = null
         var currentRootInActiveWindow: AccessibilityNodeInfo? = null
         var autoClickCounter = 0
+        private var autoClickAsyncTask: AutoClickAsyncTask? = null
 
         fun switchAppBackward(): String {
             switchToAppPackageName = currentRootInActiveWindow?.packageName.toString() ?: ""

@@ -459,7 +459,7 @@ class KlickApplication : Application() {
         val SEQ_NO_SHOW_MORE_ACTIONS = 6
         val SEQ_NO_ADJUST_MUSIC_VOL = 7
         val SEQ_NO_OPEN_CAMERA = 8
-        val SEQ_NO_OPEN_DICT = 9
+        val SEQ_NO_SCROLL_TOP = 9
         val SEQ_NO_APP_SWITCH_FORWARD = 10
         val SEQ_NO_APP_SWITCH_BACKWARD = 11
         val SEQ_NO_SHOW_MORE_ACTIONS_QUICK_ACTION = 12

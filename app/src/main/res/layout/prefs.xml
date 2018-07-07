@@ -774,7 +774,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/setting_gesture_open_dict"
+                android:id="@+id/setting_gesture_scroll_top"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/setting_item_background"
@@ -788,7 +788,7 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:padding="10dp"
-                    android:src="@drawable/dict" />
+                    android:src="@drawable/scroll_to_top" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -797,15 +797,15 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/label_gesture_open_dict"
+                        android:id="@+id/label_gesture_scroll_top"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/label_gesture_open_dict"
+                        android:text="@string/label_gesture_scroll_top"
                         android:textColor="@android:color/black"
                         android:textSize="16sp" />
 
                     <TextView
-                        android:id="@+id/gesture_open_dict"
+                        android:id="@+id/gesture_scroll_top"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingTop="5dip"

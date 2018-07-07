@@ -274,7 +274,9 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
     }
 
     fun startToBreath(breathing: Int, delayMillis: Long) {
-        Log.d(TAG, "startToBreath")
+//        Log.d(TAG, "startToBreath")
+        if (1 == 1)
+            return
         val msgBreathing = Message()
         val bundle = Bundle()
         bundle.putInt("BREATHING", breathing)
@@ -284,9 +286,9 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
     }
 
     private fun breath(breathing: Int) {
-        Log.d(TAG, "breath: " + breathing + ", currHandleOpacity: " + currHandleOpacity + ", " +
-                "ICON_OPACITY: " + KlickApplication.ICON_OPACITY + ", " +
-                "ICON_OPACITY_ACTIVE: " + KlickApplication.ICON_OPACITY_ACTIVE)
+//        Log.d(TAG, "breath: " + breathing + ", currHandleOpacity: " + currHandleOpacity + ", " +
+//                "ICON_OPACITY: " + KlickApplication.ICON_OPACITY + ", " +
+//                "ICON_OPACITY_ACTIVE: " + KlickApplication.ICON_OPACITY_ACTIVE)
         setHandleOpacity(currHandleOpacity + breathing)
 
         val delayMillis = 300 / (KlickApplication.ICON_OPACITY_ACTIVE - KlickApplication.ICON_OPACITY)
@@ -936,10 +938,8 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
             -> mApp.applicationContext.sendBroadcast(Intent(KlickApplication.ACTION_LOCK_SCREEN))
             KlickApplication.SEQ_NO_OPEN_CAMERA // Open Camera
             -> mMoreActionsView!!.openCamera()
-            KlickApplication.SEQ_NO_OPEN_DICT -> {
-                val intent = Intent()
-                intent.action = KlickApplication.ACTION_LOOKUP_WORD
-                mApp.applicationContext.sendBroadcast(intent)
+            KlickApplication.SEQ_NO_SCROLL_TOP -> {
+                KlickAccessibilityService.sharedInstance?.scrollToTop(KlickAccessibilityService.currentRootInActiveWindow)
             }
             KlickApplication.SEQ_NO_ADJUST_MUSIC_VOL -> {
             }

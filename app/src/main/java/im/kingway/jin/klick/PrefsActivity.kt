@@ -30,7 +30,7 @@ class PrefsActivity : Activity() {
     private val gestureSettingIds = intArrayOf(R.id.gesture_home, R.id.gesture_back, R.id.gesture_menu, R.id
             .gesture_app_switch, R.id.gesture_lock_screen, R.id.gesture_expand_status_bar, R.id
             .gesture_show_more_actions, R.id.gesture_adjust_music_volume, R.id.gesture_open_camera, R.id
-            .gesture_open_dict, R.id.gesture_app_switch_forward, R.id.gesture_app_switch_backward, R.id
+            .gesture_scroll_top, R.id.gesture_app_switch_forward, R.id.gesture_app_switch_backward, R.id
             .gesture_show_more_actions_quick_action, R.id.gesture_show_more_actions_quick_launch)
 
     private fun convertGestureToCode(gesture: String): Long {
@@ -313,13 +313,10 @@ class PrefsActivity : Activity() {
             showGestureDialog(R.string.label_gesture_open_camera)
         }
 
-        (findViewById(R.id.gesture_open_dict) as TextView).text = getGestureDesc(mApp!!.gestures[KlickApplication.SEQ_NO_OPEN_DICT])
-        (findViewById(R.id.setting_gesture_open_dict) as LinearLayout).setOnClickListener {
-            gestureSeq = KlickApplication.SEQ_NO_OPEN_DICT
-            showGestureDialog(R.string.label_gesture_open_dict)
-        }
-        if (!Utils.isPkgInstalled(mApp!!, "im.kingway.movieenglish")) {
-            findViewById(R.id.setting_gesture_open_dict).visibility = View.GONE
+        (findViewById(R.id.gesture_scroll_top) as TextView).text = getGestureDesc(mApp!!.gestures[KlickApplication.SEQ_NO_SCROLL_TOP])
+        (findViewById(R.id.setting_gesture_scroll_top) as LinearLayout).setOnClickListener {
+            gestureSeq = KlickApplication.SEQ_NO_SCROLL_TOP
+            showGestureDialog(R.string.label_gesture_scroll_top)
         }
 
         ll = findViewById(R.id.setting_reorder_apps) as LinearLayout
@@ -416,6 +413,7 @@ class PrefsActivity : Activity() {
 
         ll = findViewById(R.id.exit) as LinearLayout
         ll.setOnClickListener {
+            mApp!!.sharedPrefs!!.edit().putString("RECENT_APP_PACKAGE_NAME", KlickAccessibilityService.recentAppPackageName.joinToString(";"))?.commit()
             stopService(Intent(mApp!!.applicationContext, KlickService::class.java))
             mApp!!.exit()
         }

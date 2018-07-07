@@ -13,6 +13,9 @@ class CrashHandler private constructor() : Thread.UncaughtExceptionHandler {
     }
 
     override fun uncaughtException(thread: Thread, ex: Throwable) {
+        mContext?.getSharedPreferences(mContext?.packageName, 0)?.edit()?.putString("RECENT_APP_PACKAGE_NAME",
+                KlickAccessibilityService
+                        .recentAppPackageName.joinToString(";"))?.commit()
         Utils.logCrash(ex)
         mDefaultHandler?.uncaughtException(thread, ex) ?: System.exit(2)
     }

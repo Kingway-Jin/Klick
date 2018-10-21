@@ -4,37 +4,56 @@ import android.accessibilityservice.AccessibilityService
 import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
+import android.os.Handler
+import android.os.Message
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import java.util.*
 
-
-
 class KlickAccessibilityService : AccessibilityService() {
+
+    var mHandler: Handler = object : Handler() {
+        @Synchronized override fun handleMessage(msg: Message) {
+            when (msg.what) {
+                KlickApplication.MSG_AUTO_CLICK -> {
+                    autoClickAsyncTask = AutoClickAsyncTask(Integer(++KlickAccessibilityService.autoClickCounter))
+                    (autoClickAsyncTask as AutoClickAsyncTask).execute(currentRootInActiveWindow)
+                }
+                else -> {
+                }
+            }
+            super.handleMessage(msg)
+        }
+    }
 
     val allClickableTextAsListAdapter: QuickActionListAdapter
         get() {
             val quickActionItemList = LinkedList<QuickActionItem>()
+            quickActionItemList.clear()
 
-            val nodeInfoList = LinkedList<AccessibilityNodeInfo>()
-            nodeInfoList.add(currentRootInActiveWindow!!)
+            val nodeInfoList = LinkedList<AccessibilityNodeInfo?>()
+            if (null != currentRootInActiveWindow) {
+                nodeInfoList.add(currentRootInActiveWindow)
+            }
 
             while (nodeInfoList.size > 0) {
                 val nodeInfo = nodeInfoList.removeAt(0)
 
-                if (!nodeInfo.text.isNullOrBlank()) {
-                    val clickableNode = getClickableParent(nodeInfo, null)
-                    if (null != clickableNode) {
-                        val quickActionItem = QuickActionItem()
-                        quickActionItem.nodeInfo = clickableNode
-                        quickActionItem.packageName = nodeInfo.packageName.toString()
-                        quickActionItem.text = nodeInfo.text.toString()
-                        quickActionItemList.add(quickActionItem)
+                if (nodeInfo != null) {
+                    if (!nodeInfo.text.isNullOrBlank()) {
+                        val clickableNode = getClickableParent(nodeInfo, null)
+                        if (null != clickableNode) {
+                            val quickActionItem = QuickActionItem()
+                            quickActionItem.nodeInfo = clickableNode
+                            quickActionItem.packageName = nodeInfo.packageName.toString()
+                            quickActionItem.text = nodeInfo.text.toString()
+                            quickActionItemList.add(quickActionItem)
+                        }
                     }
-                }
-                for (j in 0 until nodeInfo.childCount) {
-                    nodeInfoList.add(nodeInfo.getChild(j))
+                    for (j in 0 until nodeInfo.childCount) {
+                        nodeInfoList.add(nodeInfo.getChild(j))
+                    }
                 }
             }
 
@@ -43,21 +62,21 @@ class KlickAccessibilityService : AccessibilityService() {
 
     override fun onAccessibilityEvent(event: AccessibilityEvent) {
         val currentAppPackageName = event.packageName.toString()
-//        Log.d(TAG, "currentAppPackageName: $currentAppPackageName")
-        if (mApp!!.mAppsMap.containsKey(currentAppPackageName) &&
-                !isExcludedApp(currentAppPackageName)) {
-            if (currentAppPackageName != currentRootInActiveWindow?.packageName) {
-                recentAppPackageName.remove(currentAppPackageName)
-                recentAppPackageName.add(0, currentAppPackageName)
-            }
-            currentRootInActiveWindow = rootInActiveWindow
+        Log.d(TAG, "currentAppPackageName: $currentAppPackageName")
+        if (currentAppPackageName != currentRootInActiveWindow?.packageName
+        && !isExcludedApp(currentAppPackageName)) {
+            recentAppPackageName.remove(currentAppPackageName)
+            recentAppPackageName.add(0, currentAppPackageName)
         }
+        currentRootInActiveWindow = rootInActiveWindow
 
-        if ((autoClickAsyncTask == null || autoClickAsyncTask!!.status == AsyncTask.Status.FINISHED)
-            && ("com.tencent.mm" == currentAppPackageName || "com.google.android.youtube" == currentAppPackageName)) {
-            autoClickAsyncTask = AutoClickAsyncTask(Integer(++KlickAccessibilityService.autoClickCounter))
-            (autoClickAsyncTask as AutoClickAsyncTask).execute(currentRootInActiveWindow)
-        }
+//        if ("com.tencent.mm" == currentAppPackageName || "com.google.android.youtube" == currentAppPackageName) {
+//            val msgBreathing = Message()
+//            msgBreathing.what = KlickApplication.MSG_AUTO_CLICK
+//            mHandler.sendMessageDelayed(msgBreathing, 100)
+//        } else {
+//            mHandler.removeMessages(KlickApplication.MSG_AUTO_CLICK)
+//        }
     }
 
     private fun loadRecentAppPackageName() {
@@ -337,6 +356,7 @@ class KlickAccessibilityService : AccessibilityService() {
         var mApp: KlickApplication? = null
         var currentRootInActiveWindow: AccessibilityNodeInfo? = null
         var autoClickCounter = 0
+        var prevAutoClickAsyncTaskStartTime = 0L;
         private var autoClickAsyncTask: AutoClickAsyncTask? = null
 
         fun switchAppBackward(): String {

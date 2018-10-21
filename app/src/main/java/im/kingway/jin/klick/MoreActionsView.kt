@@ -101,6 +101,7 @@ class MoreActionsView(private val mApp: KlickApplication, private var mFloatingV
         }
         quickActionAppNameView = mView.findViewById(R.id.quick_action_app_name) as TextView
         quickActionAppNameView.setOnClickListener {
+            showAppQuickAction()
             if (pageInitSet.contains(0)) {
                 (quickActionListView.adapter as QuickActionListAdapter).toggleOnlyShowActive()
             }
@@ -265,7 +266,8 @@ class MoreActionsView(private val mApp: KlickApplication, private var mFloatingV
         try {
             val kas = KlickAccessibilityService.sharedInstance
             if (kas != null) {
-                quickActionAppNameView.text = Utils.getAppNameByPackageName(mApp, kas.rootInActiveWindow?.packageName.toString())
+                quickActionAppNameView.text = Utils.getAppNameByPackageName(mApp,
+                        KlickAccessibilityService.currentRootInActiveWindow?.packageName.toString())
                 quickActionListView.adapter = kas.allClickableTextAsListAdapter
                 pageInitSet.add(0)
             }

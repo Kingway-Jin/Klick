@@ -50,7 +50,8 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
     private var previousDragDirection: Int = 0
     private var xMovement: Float = 0.toFloat()
     private var yMovement: Float = 0.toFloat()
-    private var movement: Float = 0.toFloat()
+    private var xGestureMovement: Float = 0.toFloat()
+    private var yGestureMovement: Float = 0.toFloat()
     private var direction: Long = 0
     private var previousDirection: Long = 0
     private val rawXYList = LinkedList<Float>()
@@ -423,7 +424,8 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
                 gestureStep = 10
                 direction = 0
                 previousDirection = 0
-                movement = 0f
+                xGestureMovement = 0f
+                yGestureMovement = 0f
 
                 dragDirection = KlickApplication.DRAG_FALL_BACK
                 dragSpeed = 0f
@@ -543,28 +545,7 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
                             quickActionTipView.visibility = View.VISIBLE
                             quickActionTipView.visibility = View.INVISIBLE
 
-                            var sc = 0
-                            var activePkg = KlickAccessibilityService.currentRootInActiveWindow?.packageName
-                            while (mApp.packageName == activePkg && sc < 10) {
-                                activePkg = KlickAccessibilityService.currentRootInActiveWindow?.packageName
-                                Thread.sleep(100)
-                                sc++
-                            }
-
-                            activeQuickActions.clear()
-                            activeQuickActions.addAll(Utils.getSharedprefsKeys(context,
-                                    "quick_action:" + activePkg + ":").map { it.substring(("quick_action:" + activePkg + ":").length) })
-                            activeQuickActions.removeAll { null == KlickAccessibilityService
-                                    .sharedInstance?.findClickableNodeByText(KlickAccessibilityService.currentRootInActiveWindow, it, null) }
-                            if ("com.tencent.mm" == activePkg) {
-                                val newMsgTest = KlickAccessibilityService.sharedInstance?.getTextOfClickableNodeByPostfix(QuickActionListAdapter.POSTFIX_NEW_MSG)
-                                if (!newMsgTest.isNullOrBlank()) {
-                                    activeQuickActions.add(0, newMsgTest!!)
-                                }
-                            }
-                            loopIndexActiveQuickAction =  0
-                            Log.d(TAG, "activePkg: $activePkg QUICK ACTIONS: " + activeQuickActions
-                                    .joinToString(" "))
+                            prepareActiveQuickActions()
                             quickActionTipView.text = Html.fromHtml(getQuickActionMsg())
                             quickActionTipView.visibility = View.VISIBLE
                         }
@@ -635,26 +616,68 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
     }
 
     private fun adjustMusicVol(event: MotionEvent) {
-        movement += event.rawY - rawXYList[1]
-        if (Math.abs(movement) > 30) {
-            if (movement < 0) {
-                movement += 30f
+        yGestureMovement += event.rawY - rawXYList[1]
+        if (Math.abs(yGestureMovement) > 30) {
+            if (yGestureMovement < 0) {
+                yGestureMovement += 30f
                 mApp.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_RAISE, AudioManager
                         .FLAG_SHOW_UI)
-            } else if (movement > 0) {
-                movement -= 30f
+            } else if (yGestureMovement > 0) {
+                yGestureMovement -= 30f
                 mApp.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_LOWER, AudioManager
                         .FLAG_SHOW_UI)
             }
         }
     }
 
+    private fun prepareActiveQuickActions() {
+        var sc = 0
+        var activePkg = KlickAccessibilityService.currentRootInActiveWindow?.packageName
+        while (mApp.packageName == activePkg && sc < 10) {
+            activePkg = KlickAccessibilityService.currentRootInActiveWindow?.packageName
+            Thread.sleep(100)
+            sc++
+        }
+
+        activeQuickActions.clear()
+        activeQuickActions.addAll(Utils.getSharedprefsKeys(context,
+                "quick_action:" + activePkg + ":").map { it.substring(("quick_action:" + activePkg + ":").length) })
+        activeQuickActions.removeAll { null == KlickAccessibilityService
+                .sharedInstance?.findClickableNodeByText(KlickAccessibilityService.currentRootInActiveWindow, it, null) }
+        if ("com.tencent.mm" == activePkg) {
+            val newMsgTest = KlickAccessibilityService.sharedInstance?.getTextOfClickableNodeByPostfix(QuickActionListAdapter.POSTFIX_NEW_MSG)
+            if (!newMsgTest.isNullOrBlank()) {
+                activeQuickActions.add(0, newMsgTest!!)
+            }
+        }
+        loopIndexActiveQuickAction =  0
+        Log.d(TAG, "activePkg: $activePkg QUICK ACTIONS: " + activeQuickActions
+                .joinToString(" "))
+    }
+
     private fun switchAppQuickAction(event: MotionEvent) {
-        movement += event.rawY - rawXYList[1]
-//        Log.d(TAG, "switchAppQuickAction: " + movement)
-        if (Math.abs(movement) > 80) {
-            if (movement < 0) {
-                movement += 80f
+        xGestureMovement += event.rawX - rawXYList[0]
+        yGestureMovement += event.rawY - rawXYList[1]
+        if (Math.abs(xGestureMovement) > 20) {
+            if (xGestureMovement < 0) {
+                xGestureMovement += 20f
+            } else {
+                xGestureMovement -= 20f
+            }
+
+            if (activeQuickActions.isEmpty() && quickActionTipView.visibility == View.VISIBLE) {
+                quickActionTipView.visibility = View.INVISIBLE
+            } else if (activeQuickActions.isEmpty() && quickActionTipView.visibility == View.INVISIBLE) {
+                prepareActiveQuickActions()
+            } else if (activeQuickActions.isNotEmpty() && quickActionTipView.visibility == View.INVISIBLE) {
+                quickActionTipView.visibility = View.VISIBLE
+                quickActionTipView.text = Html.fromHtml(getQuickActionMsg())
+            }
+        }
+
+        if (Math.abs(yGestureMovement) > 80) {
+            if (yGestureMovement < 0) {
+                yGestureMovement += 80f
                 loopIndexActiveQuickAction = if (loopIndexActiveQuickAction == -1) {
                     activeQuickActions.size - 1
                 } else {
@@ -662,8 +685,8 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
                             activeQuickActions.size + 1) %
                             (activeQuickActions.size + 1)
                 }
-            } else if (movement > 0) {
-                movement -= 80f
+            } else if (yGestureMovement > 0) {
+                yGestureMovement -= 80f
                 loopIndexActiveQuickAction = if (loopIndexActiveQuickAction == -1) {
                     0
                 } else {
@@ -885,23 +908,27 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
         when (actSeq) {
             KlickApplication.SEQ_NO_HOME // Home
             -> if (Utils.getKlickAccessServiceInstance(context) != null) {
+                Utils.getKlickAccessServiceInstance(context)!!.mHandler.removeMessages(KlickApplication.MSG_AUTO_CLICK)
                 Utils.getKlickAccessServiceInstance(context)!!.performGlobalAction(AccessibilityService
                         .GLOBAL_ACTION_HOME)
             }
             KlickApplication.SEQ_NO_BACK // Back
             -> if (Utils.getKlickAccessServiceInstance(context) != null) {
+                Utils.getKlickAccessServiceInstance(context)!!.mHandler.removeMessages(KlickApplication.MSG_AUTO_CLICK)
                 Utils.getKlickAccessServiceInstance(context)!!.performGlobalAction(AccessibilityService
                         .GLOBAL_ACTION_BACK)
             }
             KlickApplication.SEQ_NO_APP_SWITCH // APP Switch
             -> showRecentActivity()
             KlickApplication.SEQ_NO_APP_SWITCH_FORWARD -> {
+                Utils.getKlickAccessServiceInstance(context)!!.mHandler.removeMessages(KlickApplication.MSG_AUTO_CLICK)
                 val pkgForward = KlickAccessibilityService.switchAppBackward()
                 Utils.launchApp(mApp, mApp.mAppsMap[pkgForward])
                 Log.d(TAG, "SEQ_NO_APP_SWITCH_FORWARD: " + pkgForward)
                 mHandle.setImageDrawable(mApp.handleDrawable)
             }
             KlickApplication.SEQ_NO_APP_SWITCH_BACKWARD -> {
+                Utils.getKlickAccessServiceInstance(context)!!.mHandler.removeMessages(KlickApplication.MSG_AUTO_CLICK)
                 val pkgBackward = KlickAccessibilityService.switchAppBackward()
                 Utils.launchApp(mApp, mApp.mAppsMap[pkgBackward])
                 Log.d(TAG, "SEQ_NO_APP_SWITCH_BACKWARD: " + pkgBackward)
@@ -937,7 +964,12 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
             KlickApplication.SEQ_NO_LOCK_SCREEN // Lock Screen
             -> mApp.applicationContext.sendBroadcast(Intent(KlickApplication.ACTION_LOCK_SCREEN))
             KlickApplication.SEQ_NO_OPEN_CAMERA // Open Camera
-            -> mMoreActionsView!!.openCamera()
+            -> {
+                mMoreActionsView!!.openCamera()
+                if (Utils.getKlickAccessServiceInstance(context) != null) {
+                    Utils.getKlickAccessServiceInstance(context)!!.mHandler.removeMessages(KlickApplication.MSG_AUTO_CLICK)
+                }
+            }
             KlickApplication.SEQ_NO_SCROLL_TOP -> {
                 KlickAccessibilityService.sharedInstance?.scrollToTop(KlickAccessibilityService.currentRootInActiveWindow)
             }

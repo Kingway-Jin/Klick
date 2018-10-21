@@ -498,6 +498,7 @@ class KlickApplication : Application() {
         val MSG_TRANSPARENT_BACKGROUND = 3
         val MSG_TURN_OFF_FLASH_LIGHT = 5
         val MSG_BREATHING = 6
+        var MSG_AUTO_CLICK = 7
 
         val MAX_ICON_SIZE = 64
         val MIN_ICON_SIZE = 24

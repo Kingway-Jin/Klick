@@ -23,8 +23,7 @@
             android:gravity="left"
             android:text="@string/prefs_name"
             android:textColor="@android:color/black"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textSize="18sp" />
     </LinearLayout>
 
     <ScrollView
@@ -54,8 +53,7 @@
                     android:gravity="left"
                     android:text="@string/group_customize_icon"
                     android:textColor="@android:color/black"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textSize="16sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -213,8 +211,7 @@
                     android:gravity="left"
                     android:text="@string/group_customize_gesture"
                     android:textColor="@android:color/black"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textSize="16sp"/>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -222,8 +219,7 @@
                     android:gravity="left"
                     android:text="@string/group_customize_gesture_info"
                     android:textColor="@android:color/black"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textSize="12sp"/>
             </LinearLayout>
 
             <LinearLayout
@@ -832,8 +828,7 @@
                     android:gravity="left"
                     android:text="@string/group_customize_more_actions"
                     android:textColor="@android:color/black"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textSize="16sp"/>
             </LinearLayout>
 
             <LinearLayout
@@ -969,8 +964,7 @@
                     android:gravity="left"
                     android:text="@string/group_customize_auto"
                     android:textColor="@android:color/black"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textSize="16sp"/>
             </LinearLayout>
 
             <LinearLayout
@@ -1019,8 +1013,7 @@
                     android:gravity="left"
                     android:text="@string/group_customize_feedback"
                     android:textColor="@android:color/black"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textSize="16sp"/>
             </LinearLayout>
 
             <LinearLayout
@@ -1237,8 +1230,7 @@
                     android:gravity="left"
                     android:text="@string/group_customize_about"
                     android:textColor="@android:color/black"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textSize="16sp"/>
             </LinearLayout>
 
             <LinearLayout

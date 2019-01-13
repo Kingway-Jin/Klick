@@ -52,6 +52,7 @@
     <string name="label_gesture_open_camera">Open Camera</string>
     <string name="label_gesture_scroll_top">Scroll to Top</string>
     <string name="label_gesture_not_set">No Set</string>
+    <string name="label_gesture_open_dict">Open Dictionary</string>
 
     <string name="gesture_single_tap">Single Tap</string>
     <string name="gesture_double_tap">Double Tap</string>

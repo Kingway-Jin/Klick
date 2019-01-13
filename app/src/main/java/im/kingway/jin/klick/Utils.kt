@@ -1,5 +1,6 @@
 package im.kingway.jin.klick
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -17,8 +18,12 @@ import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
 import android.provider.Settings
+import android.support.v13.view.ViewCompat
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
+import android.view.Window
+import android.view.WindowManager
 import android.widget.Toast
 import java.io.*
 
@@ -292,5 +297,23 @@ object Utils {
         return (allEntries.filter { (key, value) -> key.contains(subStr) && value is Int } as
                 Map<String, Int>).toList<String, Int>().sortedByDescending( { it.second } ).map {
             it.first }
+    }
+
+    fun setStatusBarUpperAPI21(activity: Activity) {
+        val window = activity.window
+        //取消设置透明状态栏,使 ContentView 内容不再覆盖状态栏
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+
+        //需要设置这个 flag 才能调用 setStatusBarColor 来设置状态栏颜色
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        //设置状态栏颜色
+        //由于setStatusBarColor()这个API最低版本支持21, 本人的是15,所以如果要设置颜色,自行到style中通过配置文件设置
+        window.statusBarColor = activity.resources.getColor(android.R.color.white, null)
+        val mContentView = activity.findViewById(Window.ID_ANDROID_CONTENT) as ViewGroup
+        val mChildView = mContentView.getChildAt(0)
+        if (mChildView != null) {
+            //注意不是设置 ContentView 的 FitsSystemWindows, 而是设置 ContentView 的第一个子 View . 预留出系统 View 的空间.
+            ViewCompat.setFitsSystemWindows(mChildView, true)
+        }
     }
 }

@@ -23,6 +23,7 @@ class MoreActionsConfActivity : Activity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.app_folder_conf)
+        Utils.setStatusBarUpperAPI21(this);
         mListView = findViewById(R.id.app_list_view) as ListView
 
         mApp = application as KlickApplication

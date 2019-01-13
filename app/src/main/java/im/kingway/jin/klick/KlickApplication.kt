@@ -464,6 +464,7 @@ class KlickApplication : Application() {
         val SEQ_NO_APP_SWITCH_BACKWARD = 11
         val SEQ_NO_SHOW_MORE_ACTIONS_QUICK_ACTION = 12
         val SEQ_NO_SHOW_MORE_ACTIONS_QUICK_LAUNCH = 13
+        val SEQ_NO_OPEN_DICT = 14
 
         val ACTION_HOME = "im.kingway.klick.jin.action.KEYCODE_HOME"
         val ACTION_BACK = "im.kingway.klick.jin.action.KEYCODE_BACK"
@@ -557,7 +558,7 @@ class KlickApplication : Application() {
         var FLOATING_POSITION_X: Int = 0
         var FLOATING_POSITION_Y: Int = 0
 
-        var GESTURE_CNT = 14
+        var GESTURE_CNT = 15
 
         fun setIconSizeInDip(context: Context, sizeInDip: Int) {
             HANDLE_HEIGHT_DP = sizeInDip

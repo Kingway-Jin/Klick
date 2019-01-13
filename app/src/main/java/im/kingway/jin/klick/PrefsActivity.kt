@@ -31,7 +31,8 @@ class PrefsActivity : Activity() {
             .gesture_app_switch, R.id.gesture_lock_screen, R.id.gesture_expand_status_bar, R.id
             .gesture_show_more_actions, R.id.gesture_adjust_music_volume, R.id.gesture_open_camera, R.id
             .gesture_scroll_top, R.id.gesture_app_switch_forward, R.id.gesture_app_switch_backward, R.id
-            .gesture_show_more_actions_quick_action, R.id.gesture_show_more_actions_quick_launch)
+            .gesture_show_more_actions_quick_action, R.id.gesture_show_more_actions_quick_launch,
+            R.id.gesture_open_dict)
 
     private fun convertGestureToCode(gesture: String): Long {
         Log.d(TAG, "convertGestureToCode: " + gesture)
@@ -226,6 +227,7 @@ class PrefsActivity : Activity() {
         mApp = application as KlickApplication
         mApp!!.addActivity(this)
         setContentView(R.layout.prefs)
+        Utils.setStatusBarUpperAPI21(this);
 
         valuesIncludeRecentTask = resources.getStringArray(R.array.values_app_list_include_recent_task)
         iconChoiceNames = resources.getStringArray(R.array.icon_choices)
@@ -317,6 +319,15 @@ class PrefsActivity : Activity() {
         (findViewById(R.id.setting_gesture_scroll_top) as LinearLayout).setOnClickListener {
             gestureSeq = KlickApplication.SEQ_NO_SCROLL_TOP
             showGestureDialog(R.string.label_gesture_scroll_top)
+        }
+
+        (findViewById(R.id.gesture_open_dict) as TextView).text = getGestureDesc(mApp!!.gestures[KlickApplication.SEQ_NO_OPEN_DICT])
+        (findViewById(R.id.setting_gesture_open_dict) as LinearLayout).setOnClickListener {
+            gestureSeq = KlickApplication.SEQ_NO_OPEN_DICT
+            showGestureDialog(R.string.label_gesture_open_dict)
+        }
+        if (!Utils.isPkgInstalled(mApp!!, "im.kingway.movieenglish")) {
+            findViewById(R.id.setting_gesture_open_dict).visibility = View.GONE
         }
 
         ll = findViewById(R.id.setting_reorder_apps) as LinearLayout

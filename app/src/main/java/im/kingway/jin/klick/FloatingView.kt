@@ -923,6 +923,7 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
             KlickApplication.SEQ_NO_APP_SWITCH_FORWARD -> {
                 Utils.getKlickAccessServiceInstance(context)!!.mHandler.removeMessages(KlickApplication.MSG_AUTO_CLICK)
                 val pkgForward = KlickAccessibilityService.switchAppBackward()
+                Toast.makeText(mApp, mApp.mAppsMap[pkgForward]!!.name, Toast.LENGTH_SHORT).show()
                 Utils.launchApp(mApp, mApp.mAppsMap[pkgForward])
                 Log.d(TAG, "SEQ_NO_APP_SWITCH_FORWARD: " + pkgForward)
                 mHandle.setImageDrawable(mApp.handleDrawable)
@@ -930,6 +931,7 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
             KlickApplication.SEQ_NO_APP_SWITCH_BACKWARD -> {
                 Utils.getKlickAccessServiceInstance(context)!!.mHandler.removeMessages(KlickApplication.MSG_AUTO_CLICK)
                 val pkgBackward = KlickAccessibilityService.switchAppBackward()
+                Toast.makeText(mApp, mApp.mAppsMap[pkgBackward]!!.name, Toast.LENGTH_SHORT).show()
                 Utils.launchApp(mApp, mApp.mAppsMap[pkgBackward])
                 Log.d(TAG, "SEQ_NO_APP_SWITCH_BACKWARD: " + pkgBackward)
                 mHandle.setImageDrawable(mApp.handleDrawable)
@@ -974,6 +976,11 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
                 KlickAccessibilityService.sharedInstance?.scrollToTop(KlickAccessibilityService.currentRootInActiveWindow)
             }
             KlickApplication.SEQ_NO_ADJUST_MUSIC_VOL -> {
+            }
+            KlickApplication.SEQ_NO_OPEN_DICT -> {
+                val intent = Intent()
+                intent.action = KlickApplication.ACTION_LOOKUP_WORD
+                mApp.applicationContext.sendBroadcast(intent)
             }
             else -> if (noGestureSet) {
                 Toast.makeText(mApp, R.string.no_gesture_set, Toast.LENGTH_LONG).show()

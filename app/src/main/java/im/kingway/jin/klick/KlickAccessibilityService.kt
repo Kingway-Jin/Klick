@@ -362,14 +362,14 @@ class KlickAccessibilityService : AccessibilityService() {
         fun switchAppBackward(): String {
             switchToAppPackageName = currentRootInActiveWindow?.packageName.toString() ?: ""
 
-            if (recentAppPackageName.isEmpty()) return switchToAppPackageName
+            for (pkg in recentAppPackageName) {
+                if (pkg != switchToAppPackageName && mApp!!.mAppsMap?.containsKey(pkg)) {
+                    switchToAppPackageName = pkg
+                    break
+                }
+            }
 
-            var index = recentAppPackageName.indexOf(switchToAppPackageName)
-            index = if (index < 0) 0 else index + 1
-            index = if (index >= recentAppPackageName.size) recentAppPackageName.size - 1 else index
-
-            switchToAppPackageName = recentAppPackageName[index]
-            Log.d(TAG, "$switchToAppPackageName, $index")
+            Log.d(TAG, "Swith to APP: $switchToAppPackageName")
             return switchToAppPackageName
         }
     }

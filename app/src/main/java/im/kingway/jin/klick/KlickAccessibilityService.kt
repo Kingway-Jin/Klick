@@ -240,7 +240,7 @@ class KlickAccessibilityService : AccessibilityService() {
                 return null
             }
 
-            val nodeInfo = nodeInfoList.removeAt(0)
+            val nodeInfo: AccessibilityNodeInfo? = nodeInfoList.removeAt(0)
 
             if (nodeInfo != null) {
                 if (text == nodeInfo.text) {

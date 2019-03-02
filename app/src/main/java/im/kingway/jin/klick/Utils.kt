@@ -165,6 +165,21 @@ object Utils {
         }
     }
 
+    fun writeFile(str: String, filePath: String) {
+        if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) {
+            val f = File(filePath)
+            var out: PrintWriter? = null
+            try {
+                out = PrintWriter(BufferedWriter(FileWriter(f, false)))
+                out.write(str)
+                out.flush()
+            } catch (e: Exception) {
+            } finally {
+                out?.close()
+            }
+        }
+    }
+
     // View宽，高
     fun getLocation(v: View): IntArray {
         val loc = IntArray(4)

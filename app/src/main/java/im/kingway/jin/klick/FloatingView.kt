@@ -31,6 +31,7 @@ import java.util.*
 class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applicationContext) {
     private val mHandleLayout: LinearLayout
     private val mWindowParams = WindowManager.LayoutParams()
+    private val mWindowParamsAssistHandle = WindowManager.LayoutParams()
     private val mHandle: ImageView
     private val mAssitHandle: View
     var mMoreActionsView: MoreActionsView? = null
@@ -224,20 +225,24 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
         override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}
     }
 
-    private fun switchHandle() {
+    private fun switchHandle(toY: Int) {
         unregisterSensorEventListener()
 
         mApp.getScreenRect(true)
         aniStartX = mApp.getFloattingPositionX(true)
         KlickApplication.FLOATING_POSITION_X = if (aniStartX == 0) 1 else 0
         aniEndX = mApp.getFloattingPositionX(true)
-        mWindowParams.y = currentPositionY
+        aniStartY = currentPositionY
+        aniEndY = toY - KlickApplication.HANDLE_HEIGHT_PX / 2
+        aniEndY = if (aniEndY <=0) 0 else aniEndY
 
         val animation = ValueAnimator.ofInt(aniStartX, aniEndX)
         animation.duration = 300
         animation.interpolator = AccelerateInterpolator()
         animation.addUpdateListener { animation ->
             mWindowParams.x = animation.animatedValue as Int
+            mWindowParams.y = Math.abs(animation.animatedValue as Int - aniStartX) * (aniEndY -
+                    aniStartY) / Math.abs (aniEndX - aniStartX) + aniStartY
             mApp.getmWindowManager()!!.updateViewLayout(this@FloatingView, mWindowParams)
         }
         animation.addListener(object : AnimatorListener {
@@ -248,16 +253,17 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
             override fun onAnimationRepeat(animation: Animator) {}
 
             override fun onAnimationEnd(animation: Animator) {
-                mWindowParams.x = mApp.getAssistHandlePositionX(false)
-                mApp.getmWindowManager()!!.updateViewLayout(mAssitHandle, mWindowParams)
+                mWindowParamsAssistHandle.x = mApp.getAssistHandlePositionX(false)
+                mApp.getmWindowManager()!!.updateViewLayout(mAssitHandle, mWindowParamsAssistHandle)
                 mWindowParams.x = mApp.getFloattingPositionX(false)
                 mApp.getmWindowManager()!!.updateViewLayout(this@FloatingView, mWindowParams)
-                mApp.sharedPrefs!!.edit().putInt(
-                        KlickApplication
-                                .SETTING_FLOATING_POSITION_X, aniEndX).commit()
+                mApp.sharedPrefs!!.edit()
+                        .putInt(KlickApplication.SETTING_FLOATING_POSITION_X, aniEndX)
+                        .putInt(KlickApplication.SETTING_FLOATING_POSITION_Y, aniEndY)
+                        .commit()
                 KlickApplication.FLOATING_POSITION_X = aniEndX
-                //                                    mHandler.sendMessageDelayed(getOpacityMsg(KlickApplication.ICON_OPACITY),
-                // KlickApplication.TRANSPARENT_BACKGROUND_THRESHOLD);
+                KlickApplication.FLOATING_POSITION_Y = aniEndY
+                currentPositionY = aniEndY
                 registerSensorEventListener()
                 startTransAnimation(currHandleOpacity, KlickApplication.ICON_OPACITY)
             }
@@ -311,6 +317,14 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
         mWindowParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT
         mWindowParams.gravity = Gravity.LEFT or Gravity.TOP
 
+        mWindowParamsAssistHandle.height = -2
+        mWindowParamsAssistHandle.width = -2
+        mWindowParamsAssistHandle.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams
+                .FLAG_LAYOUT_IN_SCREEN or WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED
+        mWindowParamsAssistHandle.format = PixelFormat.TRANSPARENT
+        mWindowParamsAssistHandle.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT
+        mWindowParamsAssistHandle.gravity = Gravity.LEFT or Gravity.TOP
+
         val layoutparams = FrameLayout.LayoutParams(-1, -1)
         layoutParams = layoutparams
         val view = View.inflate(mApp.applicationContext, R.layout.handle, null)
@@ -321,7 +335,7 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
 
         mAssitHandle = View.inflate(mApp.applicationContext, R.layout.assist_handle, null)
         mAssitHandle.setOnTouchListener { view, motionEvent -> when (motionEvent.action) {
-            MotionEvent.ACTION_DOWN -> switchHandle() }; true }
+            MotionEvent.ACTION_DOWN -> switchHandle(motionEvent.rawY.toInt()) }; true }
 
         quickActionTipView = View.inflate(mApp.applicationContext, R.layout
                 .quick_action_text_view, null) as TextView
@@ -705,20 +719,20 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
             Log.d(TAG, "QUICK ACTION: " + activeQuickActions[loopIndexActiveQuickAction])
             msg = "<font color=\"red\">" + activeQuickActions[loopIndexActiveQuickAction]+ "</font>"
             if (loopIndexActiveQuickAction > 0) {
-                msg = activeQuickActions[loopIndexActiveQuickAction - 1] + "<br/>" + msg
+                msg = activeQuickActions[loopIndexActiveQuickAction - 1] + "<br/><br/>" + msg
             } else {
-                msg = "...<br/>" + msg
+                msg = "...<br/><br/>" + msg
             }
             if (loopIndexActiveQuickAction < activeQuickActions.size - 1) {
-                msg = msg + "<br/>" + activeQuickActions[loopIndexActiveQuickAction + 1]
+                msg = msg + "<br/><br/>" + activeQuickActions[loopIndexActiveQuickAction + 1]
             } else {
-                msg = msg + "<br/>..."
+                msg = msg + "<br/><br/>..."
             }
         } else {
-            msg = "...<br/><font color=\"red\">...</font><br/>..."
+            msg = "...<br/><br/><font color=\"red\">...</font><br/><br/>..."
             if (activeQuickActions.isNotEmpty()) {
-                msg =  activeQuickActions.last() + "<br/><font color=\"red\">.." +
-                        ".</font><br/>" + activeQuickActions.first()
+                msg =  activeQuickActions.last() + "<br/><br/><font color=\"red\">.." +
+                        ".</font><br/><br/>" + activeQuickActions.first()
             }
         }
         return msg
@@ -773,8 +787,8 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
             override fun onAnimationEnd(animation: Animator) {
                 isAnimating = false
                 startToBreath(1, 3000)
-                mWindowParams.x = mApp.getAssistHandlePositionX(false)
-                mApp.getmWindowManager()!!.updateViewLayout(mAssitHandle, mWindowParams)
+                mWindowParamsAssistHandle.x = mApp.getAssistHandlePositionX(false)
+                mApp.getmWindowManager()!!.updateViewLayout(mAssitHandle, mWindowParamsAssistHandle)
             }
 
             override fun onAnimationCancel(animation: Animator) {
@@ -852,8 +866,8 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
                 } else {
                     KlickApplication.FLOATING_POSITION_X = aniEndX
                     KlickApplication.FLOATING_POSITION_Y = aniEndY
-                    mWindowParams.x = mApp.getAssistHandlePositionX(false)
-                    mApp.getmWindowManager()!!.updateViewLayout(mAssitHandle, mWindowParams)
+                    mWindowParamsAssistHandle.x = mApp.getAssistHandlePositionX(false)
+                    mApp.getmWindowManager()!!.updateViewLayout(mAssitHandle, mWindowParamsAssistHandle)
                     mWindowParams.x = mApp.getFloattingPositionX(false)
                     mApp.getmWindowManager()!!.updateViewLayout(this@FloatingView, mWindowParams)
                     mApp.sharedPrefs!!.edit().putInt(KlickApplication
@@ -1033,8 +1047,8 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
                 startToBreath(1, 3000)
                 registerSensorEventListener()
 
-                mWindowParams.x = mApp.getAssistHandlePositionX(false)
-                mApp.getmWindowManager()!!.updateViewLayout(mAssitHandle, mWindowParams)
+                mWindowParamsAssistHandle.x = mApp.getAssistHandlePositionX(false)
+                mApp.getmWindowManager()!!.updateViewLayout(mAssitHandle, mWindowParamsAssistHandle)
             }
 
             override fun onAnimationCancel(animation: Animator) {
@@ -1103,8 +1117,8 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
                 startToBreath(1, 3000)
                 registerSensorEventListener()
 
-                mWindowParams.x = mApp.getAssistHandlePositionX(false)
-                mApp.getmWindowManager()!!.updateViewLayout(mAssitHandle, mWindowParams)
+                mWindowParamsAssistHandle.x = mApp.getAssistHandlePositionX(false)
+                mApp.getmWindowManager()!!.updateViewLayout(mAssitHandle, mWindowParamsAssistHandle)
             }
 
             override fun onAnimationCancel(animation: Animator) {
@@ -1132,9 +1146,16 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
     }
 
     fun addAssitHandleToWindowManager() {
-        mWindowParams.x = mApp.getAssistHandlePositionX(false)
-        mWindowParams.y = currentPositionY
-        mApp.getmWindowManager()!!.addView(mAssitHandle, mWindowParams)
+        mWindowParamsAssistHandle.x = mApp.getAssistHandlePositionX(false)
+        mWindowParamsAssistHandle.y = 0
+        mWindowParamsAssistHandle.height = if (mApp.getScreenRect(true).height() > mApp.screenRect.width()) mApp
+                .screenRect.height() else mApp.screenRect.width()
+        mApp.getmWindowManager()!!.addView(mAssitHandle, mWindowParamsAssistHandle)
+
+        val layoutParams = mAssitHandle.layoutParams;
+        layoutParams.height = if (mApp.getScreenRect(true).height() > mApp.screenRect.width()) mApp
+                .screenRect.height() else mApp.screenRect.width()
+        mAssitHandle.layoutParams = layoutParams
     }
 
     fun addMoreActionsViewToWindowManager() {

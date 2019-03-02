@@ -5,9 +5,16 @@ import android.app.Service
 import android.app.admin.DevicePolicyManager
 import android.content.*
 import android.media.AudioManager
+import android.os.Environment
 import android.os.IBinder
 import android.util.Log
 import android.widget.Toast
+import org.apache.ftpserver.FtpServer
+import org.apache.ftpserver.FtpServerFactory
+import org.apache.ftpserver.ftplet.FtpException
+import org.apache.ftpserver.listener.ListenerFactory
+import org.apache.ftpserver.usermanager.PropertiesUserManagerFactory
+import java.io.File
 
 class KlickService : Service() {
     private var mReceiver: BroadcastReceiver? = null
@@ -31,6 +38,8 @@ class KlickService : Service() {
 
         mFloatingView = FloatingView(mApp as KlickApplication)
         mFloatingView!!.addToWindowManager()
+
+        startFtpServer()
     }
 
     override fun onDestroy() {
@@ -48,6 +57,8 @@ class KlickService : Service() {
 
         sharedInstance = null
         mApp = null
+
+        ftpServer?.stop()
     }
 
     override fun onBind(intent: Intent): IBinder? {
@@ -102,9 +113,15 @@ class KlickService : Service() {
                     if (Utils.isPkgInstalled(mApp!!, "im.kingway.movieenglish")) {
                         var lookupWord = ""
                         val cm = mApp!!.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                        if (cm.primaryClip.itemCount > 0) {
-                            lookupWord = cm.primaryClip.getItemAt(0).text.toString()
+                        if (null != cm && null != cm.primaryClip && cm.primaryClip.itemCount > 0) {
+                            lookupWord = cm.primaryClip.getItemAt(0).text.toString().trim()
                         }
+                        if (lookupWord != previousClipText) {
+                            previousClipText = lookupWord
+                        } else {
+                            lookupWord = ""
+                        }
+
                         val cn = ComponentName("im.kingway.movieenglish", "im.kingway.movieenglish.DictionaryActivity")
                         val lookupIntent = Intent()
                         lookupIntent.component = cn
@@ -116,7 +133,6 @@ class KlickService : Service() {
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
-
             }
             if (Intent.ACTION_PACKAGE_ADDED == intent.action) {
                 var pkg = intent.dataString
@@ -192,8 +208,43 @@ class KlickService : Service() {
         }
     }
 
+    private fun startFtpServer() {
+        val serverFactory = FtpServerFactory()
+        val factory = ListenerFactory()
+        factory.port = 2121
+
+        val sdCardDir = Environment.getExternalStorageDirectory().toString()
+        val ftpServerPropertiesFile = sdCardDir + File.separator + "ftpserver.properties"
+        val propertiesString = "ftpserver.user.admin.username=admin\n" +
+                "ftpserver.user.admin.userpassword=d0913352fdaeb55f798322393d7c2449\n" +
+                "ftpserver.user.admin.homedirectory=" + sdCardDir + "\n" +
+                "ftpserver.user.admin.enableflag=true\n" +
+                "ftpserver.user.admin.writepermission=true\n" +
+                "ftpserver.user.admin.maxloginnumber=250\n" +
+                "ftpserver.user.admin.maxloginperip=250\n" +
+                "ftpserver.user.admin.idletime=300\n" +
+                "ftpserver.user.admin.uploadrate=10000\n" +
+                "ftpserver.user.admin.downloadrate=10000\n"
+        Utils.writeFile(propertiesString, ftpServerPropertiesFile)
+
+        val umf = PropertiesUserManagerFactory()
+        umf.file = File(ftpServerPropertiesFile)
+
+        serverFactory.userManager = umf.createUserManager()
+        serverFactory.addListener("default", factory.createListener())
+        ftpServer?.stop()
+        ftpServer = serverFactory.createServer()
+        try {
+            ftpServer?.start()
+        } catch (e: FtpException) {
+            Log.e(TAG, "Faild to start FTP server", e)
+        }
+    }
+
     companion object {
         private val TAG = "KlickService"
         var sharedInstance: KlickService? = null
+        var previousClipText: String? = null
+        var ftpServer: FtpServer? = null
     }
 }

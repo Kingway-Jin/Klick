@@ -214,21 +214,24 @@ class KlickService : Service() {
         factory.port = 2121
 
         val sdCardDir = Environment.getExternalStorageDirectory().toString()
-        val ftpServerPropertiesFile = sdCardDir + File.separator + "ftpserver.properties"
-        val propertiesString = "ftpserver.user.admin.username=admin\n" +
-                "ftpserver.user.admin.userpassword=d0913352fdaeb55f798322393d7c2449\n" +
-                "ftpserver.user.admin.homedirectory=" + sdCardDir + "\n" +
-                "ftpserver.user.admin.enableflag=true\n" +
-                "ftpserver.user.admin.writepermission=true\n" +
-                "ftpserver.user.admin.maxloginnumber=250\n" +
-                "ftpserver.user.admin.maxloginperip=250\n" +
-                "ftpserver.user.admin.idletime=300\n" +
-                "ftpserver.user.admin.uploadrate=10000\n" +
-                "ftpserver.user.admin.downloadrate=10000\n"
-        Utils.writeFile(propertiesString, ftpServerPropertiesFile)
+        val ftpServerPropertiesFilePath = sdCardDir + File.separator + "ftpserver.properties"
+        val ftpServerPropertiesFile = File(ftpServerPropertiesFilePath)
+        if (!ftpServerPropertiesFile.exists()) {
+            val propertiesString = "ftpserver.user.admin.username=admin\n" +
+                    "ftpserver.user.admin.userpassword=d0913352fdaeb55f798322393d7c2449\n" +
+                    "ftpserver.user.admin.homedirectory=" + sdCardDir + "\n" +
+                    "ftpserver.user.admin.enableflag=true\n" +
+                    "ftpserver.user.admin.writepermission=true\n" +
+                    "ftpserver.user.admin.maxloginnumber=250\n" +
+                    "ftpserver.user.admin.maxloginperip=250\n" +
+                    "ftpserver.user.admin.idletime=0\n" +
+                    "ftpserver.user.admin.uploadrate=0\n" +
+                    "ftpserver.user.admin.downloadrate=0\n"
+            Utils.writeFile(propertiesString, ftpServerPropertiesFilePath)
+        }
 
         val umf = PropertiesUserManagerFactory()
-        umf.file = File(ftpServerPropertiesFile)
+        umf.file = ftpServerPropertiesFile
 
         serverFactory.userManager = umf.createUserManager()
         serverFactory.addListener("default", factory.createListener())

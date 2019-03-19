@@ -38,7 +38,7 @@ class KlickAccessibilityService : AccessibilityService() {
             }
 
             while (nodeInfoList.size > 0) {
-                val nodeInfo = nodeInfoList.removeAt(0)
+                val nodeInfo: AccessibilityNodeInfo? = nodeInfoList.removeAt(0)
 
                 if (nodeInfo != null) {
                     if (!nodeInfo.text.isNullOrBlank()) {
@@ -109,7 +109,7 @@ class KlickAccessibilityService : AccessibilityService() {
         nodeInfoList.add(nodeInfo!!)
 
         while (nodeInfoList.size > 0) {
-            val nodeInfo = nodeInfoList.removeAt(0)
+            val nodeInfo: AccessibilityNodeInfo? = nodeInfoList.removeAt(0)
 
             if (nodeInfo != null) {
                 if (nodeInfo.isScrollable()) {
@@ -153,7 +153,7 @@ class KlickAccessibilityService : AccessibilityService() {
         nodeInfoList.add(currentRootInActiveWindow!!)
 
         while (nodeInfoList.size > 0) {
-            val nodeInfo = nodeInfoList.removeAt(0)
+            val nodeInfo: AccessibilityNodeInfo? = nodeInfoList.removeAt(0)
 
             if (nodeInfo != null) {
                 if (nodeInfo.text != null && nodeInfo.text.endsWith(postfix)) {
@@ -180,7 +180,7 @@ class KlickAccessibilityService : AccessibilityService() {
                 return null
             }
 
-            val nodeInfo = nodeInfoList.removeAt(0)
+            val nodeInfo: AccessibilityNodeInfo? = nodeInfoList.removeAt(0)
 
             if (nodeInfo != null) {
                 if (nodeInfo.text != null && nodeInfo.text.endsWith(postfix)) {
@@ -210,7 +210,7 @@ class KlickAccessibilityService : AccessibilityService() {
                 return null
             }
 
-            val nodeInfo = nodeInfoList.removeAt(0)
+            val nodeInfo: AccessibilityNodeInfo? = nodeInfoList.removeAt(0)
 
             if (nodeInfo != null) {
                 if (nodeInfo.text != null && nodeInfo.text.contains(text)) {
@@ -280,13 +280,15 @@ class KlickAccessibilityService : AccessibilityService() {
         nodeInfoList.add(rootNode)
 
         while (nodeInfoList.size > 0) {
-            val nodeInfo = nodeInfoList.removeAt(0)
+            val nodeInfo: AccessibilityNodeInfo? = nodeInfoList.removeAt(0)
 
-            if (isClickable(nodeInfo) && nodeInfo.text != null) {
-                Log.d(TAG, nodeInfo.text.toString())
-            }
-            for (j in 0 until nodeInfo.childCount) {
-                nodeInfoList.add(nodeInfo.getChild(j))
+            if (nodeInfo != null) {
+                if (isClickable(nodeInfo) && nodeInfo.text != null) {
+                    Log.d(TAG, nodeInfo.text.toString())
+                }
+                for (j in 0 until nodeInfo.childCount) {
+                    nodeInfoList.add(nodeInfo.getChild(j))
+                }
             }
         }
     }

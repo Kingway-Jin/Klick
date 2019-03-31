@@ -14,6 +14,7 @@ import android.hardware.camera2.CameraDevice
 import android.hardware.camera2.CameraManager
 import android.hardware.camera2.CaptureRequest
 import android.media.AudioManager
+import android.os.AsyncTask
 import android.os.Build
 import android.provider.Settings
 import android.util.Log
@@ -259,23 +260,38 @@ class MoreActionsView(private val mApp: KlickApplication, private var mFloatingV
         }
     }
 
-    private fun showAppQuickAction() {
+    private inner class AsyncLoadQuickActionTask : AsyncTask<Int, Int, QuickActionListAdapter>() {
+        protected override fun doInBackground(vararg params: kotlin.Int?): QuickActionListAdapter? {
+            try {
+                val kas = KlickAccessibilityService.sharedInstance
+                if (kas != null) {
+                    return kas.allClickableTextAsListAdapter
+                }
+                Log.d(TAG, "showAppQuickAction")
+            } catch (e: Exception) {
+                Log.e(TAG, "", e)
+            }
+            return null
+        }
+
+        override fun onPostExecute(result: QuickActionListAdapter?) {
+            super.onPostExecute(result)
+            if (result != null) {
+                quickActionAppNameView.text = Utils.getAppNameByPackageName(mApp,
+                        KlickAccessibilityService.currentRootInActiveWindow?.packageName.toString())
+                quickActionListView.adapter = result
+            }
+        }
+    }
+
+    public fun showAppQuickAction() {
         if (pageInitSet.contains(0)) {
             return
         }
-        try {
-            val kas = KlickAccessibilityService.sharedInstance
-            if (kas != null) {
-                quickActionAppNameView.text = Utils.getAppNameByPackageName(mApp,
-                        KlickAccessibilityService.currentRootInActiveWindow?.packageName.toString())
-                quickActionListView.adapter = kas.allClickableTextAsListAdapter
-                pageInitSet.add(0)
-            }
-            Log.d(TAG, "showAppQuickAction")
-        } catch (e: Exception) {
-            Log.e(TAG, "", e)
-        }
 
+        pageInitSet.add(0)
+        val asyncLoadQuickAction = AsyncLoadQuickActionTask();
+        asyncLoadQuickAction.execute(1)
     }
 
     fun clearQuickAction() {
@@ -464,7 +480,7 @@ class MoreActionsView(private val mApp: KlickApplication, private var mFloatingV
                 ll.findViewById(appViewIDs[i]).setOnLongClickListener(null)
             }
         }
-        mApp.clearIcons(mAppList)
+//        mApp.clearIcons(mAppList)
         mAppList.clear()
     }
 

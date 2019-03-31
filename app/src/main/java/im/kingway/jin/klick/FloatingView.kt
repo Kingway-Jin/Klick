@@ -1180,6 +1180,7 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
         //        }
 
         mApp.asyncLoadIcon()
+        mMoreActionsView!!.showAppQuickAction()
         mMoreActionsView!!.init(showPageNumber)
         mTransAnimation.setIntValues(currHandleOpacity, 0)
         mTransAnimation.duration = 50

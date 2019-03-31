@@ -24,13 +24,7 @@ class QuickActionListAdapter(private val mApp: KlickApplication, private var qui
     }
 
     init {
-        for (quickActionItem in quickActionItemList) {
-            quickActionItem.isSelected = isClickableTextActive(quickActionItem.packageName, getText(quickActionItem.text))
-            if (quickActionItem.text!!.endsWith(POSTFIX_NEW_MSG)) {
-                quickActionItem.isSelected = true
-            }
-        }
-        prepareShowList()
+        setQuickActionItemList(quickActionItemList)
     }
 
     private fun prepareShowList() {
@@ -51,6 +45,18 @@ class QuickActionListAdapter(private val mApp: KlickApplication, private var qui
         for (item in showList) {
             Log.d(TAG, item.text!! + item.clickCount)
         }
+    }
+
+    public fun setQuickActionItemList(newQuickActionItemList: MutableList<QuickActionItem>) {
+        quickActionItemList = newQuickActionItemList
+
+        for (quickActionItem in quickActionItemList) {
+            quickActionItem.isSelected = isClickableTextActive(quickActionItem.packageName, getText(quickActionItem.text))
+            if (quickActionItem.text!!.endsWith(POSTFIX_NEW_MSG)) {
+                quickActionItem.isSelected = true
+            }
+        }
+        prepareShowList()
     }
 
     fun toggleOnlyShowActive() {

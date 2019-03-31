@@ -6,6 +6,7 @@
     android:background="@drawable/quick_action_tips_bg"
     android:gravity="center"
     android:minWidth="200dp"
-    android:padding="10dp"
+    android:paddingTop="20dp"
+    android:paddingBottom="20dp"
     android:textSize="16sp"
     android:textColor="@android:color/white"/>

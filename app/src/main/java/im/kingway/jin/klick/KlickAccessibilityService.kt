@@ -61,6 +61,9 @@ class KlickAccessibilityService : AccessibilityService() {
         }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent) {
+        if (event.packageName == null) {
+            return
+        }
         val currentAppPackageName = event.packageName.toString()
         Log.d(TAG, "currentAppPackageName: $currentAppPackageName")
         if (currentAppPackageName != currentRootInActiveWindow?.packageName

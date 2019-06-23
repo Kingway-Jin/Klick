@@ -480,7 +480,7 @@ class MoreActionsView(private val mApp: KlickApplication, private var mFloatingV
                 ll.findViewById(appViewIDs[i]).setOnLongClickListener(null)
             }
         }
-//        mApp.clearIcons(mAppList)
+        mApp.clearIcons(mAppList)
         mAppList.clear()
     }
 
@@ -626,7 +626,8 @@ class MoreActionsView(private val mApp: KlickApplication, private var mFloatingV
             rect.left + Utils.dip2px(mApp,
                     130f) - x).toFloat()
 
-        fy = fy + (KlickApplication.HANDLE_HEIGHT_PX - (Utils.dip2px(mApp, 16f) * scale).toInt()) / 2
+//        fy = fy + (KlickApplication.HANDLE_HEIGHT_PX - (Utils.dip2px(mApp, 16f) * scale).toInt()) / 2
+        fy = fy - (Utils.dip2px(mApp, 16f) * scale).toInt() / 2
         fx = if (fx > 0)
             fx + KlickApplication.HANDLE_WIDTH_PX / 2
         else

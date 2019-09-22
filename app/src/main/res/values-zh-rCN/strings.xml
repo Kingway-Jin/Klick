@@ -42,17 +42,18 @@
     <string name="label_gesture_menu">打开菜单</string>
     <string name="label_gesture_app_switch">开启App切换</string>
     <string name="label_gesture_app_switch_backward">切换到前一个App</string>
-    <string name="label_gesture_app_switch_forward">切换到后一个App</string>
+    <string name="label_gesture_app_switch_forward">显示快速启动App列表</string>
     <string name="label_gesture_lock_screen">锁屏</string>
     <string name="label_gesture_expand_status_bar">打开状态栏</string>
     <string name="label_gesture_show_more_actions_global_action">显示全局快捷键</string>
     <string name="label_gesture_show_more_actions_quick_action">显示App快捷操作</string>
-    <string name="label_gesture_show_more_actions_quick_launch">显示快速启动App</string>
+    <string name="label_gesture_show_more_actions_quick_launch">显示快速启动App九宫格</string>
     <string name="label_gesture_adjust_music_volume">调整音乐音量</string>
     <string name="label_gesture_open_camera">打开相机</string>
     <string name="label_gesture_scroll_top">滚动到顶端</string>
     <string name="label_gesture_not_set">还没设置</string>
     <string name="label_gesture_open_dict">打开词典</string>
+    <string name="label_find_clickable_view_by_pattern">模糊匹配可点击视图文本子串</string>
 
     <string name="gesture_single_tap">单击</string>
     <string name="gesture_double_tap">双击</string>

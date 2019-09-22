@@ -52,8 +52,12 @@ class QuickActionListAdapter(private val mApp: KlickApplication, private var qui
 
         for (quickActionItem in quickActionItemList) {
             quickActionItem.isSelected = isClickableTextActive(quickActionItem.packageName, getText(quickActionItem.text))
-            if (quickActionItem.text!!.endsWith(POSTFIX_NEW_MSG)) {
-                quickActionItem.isSelected = true
+            for (substring in TEXT_PATTERN) {
+                Log.d(TAG, ">>>>>" + quickActionItem.text + " - " + substring)
+                if (quickActionItem.text!!.contains(substring)) {
+                    quickActionItem.isSelected = true
+                    break
+                }
             }
         }
         prepareShowList()
@@ -148,15 +152,19 @@ class QuickActionListAdapter(private val mApp: KlickApplication, private var qui
 
     private fun getText(text: String?): String {
         var txt = text
-        if (txt!!.endsWith(POSTFIX_NEW_MSG)) {
-            txt = POSTFIX_NEW_MSG
+        for (substring in TEXT_PATTERN) {
+            if (txt!!.contains(substring)) {
+                txt = substring
+                break
+            }
         }
-        return txt
+        return txt!!
     }
 
     companion object {
         val TAG = QuickActionListAdapter::class.java.simpleName
         val POSTFIX_NEW_MSG = "条新消息"
         val YOUBUTE_SKIP_AD = "跳过广告"
+        var TEXT_PATTERN = mutableListOf<String>()
     }
 }

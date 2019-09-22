@@ -42,17 +42,20 @@
     <string name="label_gesture_menu">Menu</string>
     <string name="label_gesture_app_switch">Open APP Switch</string>
     <string name="label_gesture_app_switch_backward">Switch App Backward</string>
-    <string name="label_gesture_app_switch_forward">Switch App Forward</string>
+    <string name="label_gesture_app_switch_forward">Show App Quick Launch List</string>
     <string name="label_gesture_lock_screen">Lock Screen</string>
     <string name="label_gesture_expand_status_bar">Expand Status Bar</string>
     <string name="label_gesture_show_more_actions_global_action">Show Global Actions</string>
     <string name="label_gesture_show_more_actions_quick_action">Show App Quick Actions</string>
-    <string name="label_gesture_show_more_actions_quick_launch">Show App Quick Launch</string>
+    <string name="label_gesture_show_more_actions_quick_launch">Show App Quick Launch Grid</string>
     <string name="label_gesture_adjust_music_volume">Adjust Music Volume</string>
     <string name="label_gesture_open_camera">Open Camera</string>
     <string name="label_gesture_scroll_top">Scroll to Top</string>
     <string name="label_gesture_not_set">No Set</string>
     <string name="label_gesture_open_dict">Open Dictionary</string>
+    <string name="label_find_clickable_view_by_pattern">
+        Clickable View Text Matching Pattern
+    </string>
 
     <string name="gesture_single_tap">Single Tap</string>
     <string name="gesture_double_tap">Double Tap</string>

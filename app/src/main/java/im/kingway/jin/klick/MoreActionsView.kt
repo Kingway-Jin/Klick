@@ -41,7 +41,6 @@ class MoreActionsView(private val mApp: KlickApplication, private var mFloatingV
     var isFlashlightOn = false
         private set
     private var cameraComponent: ComponentName? = null
-    private val mAppList = ArrayList<AppItem>()
 
     private val appViewIDs = intArrayOf(R.id.app1, R.id.app2, R.id.app3, R.id.app4, R.id.app5, R.id.app6, R.id.app7, R.id.app8, R.id.app9)
 
@@ -208,7 +207,7 @@ class MoreActionsView(private val mApp: KlickApplication, private var mFloatingV
 
         override fun onLongClick(view: View): Boolean {
             mApp.playFeedback(true)
-            val rmItem = mAppList.removeAt(position)
+            val rmItem = mApp.mOrderedAppList.removeAt(position)
             rmItem.isSelected = false
             rmItem.isExcluded = true
             mApp.mExcludePackage.add(rmItem.component.packageName)
@@ -332,61 +331,7 @@ class MoreActionsView(private val mApp: KlickApplication, private var mFloatingV
     }
 
     private fun showAppQuickLaunch() {
-        mAppList.clear()
-        for (item in mApp.mAppsMap.values) {
-            item.isInRectentTaskList = false
-        }
-
-        val recentTaskPkgs = HashSet<String>()
-        val recentApps = ArrayList<AppItem>()
-        if (KlickApplication.MODE_INCLUDE_RECENT_TASK == 1 || KlickApplication
-                .MODE_INCLUDE_RECENT_TASK == 2) {
-            val recentAppPackageName = KlickAccessibilityService
-                    .recentAppPackageName
-            var i = 0
-            var j = 0
-            while (j < 18 && i < recentAppPackageName.size) {
-                val pkg = recentAppPackageName[i]
-                if (!mApp.mExcludePackage.contains(pkg) && !recentTaskPkgs.contains(pkg) && mApp.mAppsMap.containsKey(pkg)) {
-                    val item = mApp.mAppsMap[pkg] as AppItem
-                    item.isInRectentTaskList = true
-                    recentApps.add(item)
-                    recentTaskPkgs.add(pkg)
-                    j++
-                }
-                i++
-            }
-        }
-
-        for (pkg in mApp.mSelectedPackage) {
-            if (mApp.mAppsMap[pkg] != null) {
-                if (!recentTaskPkgs.contains(pkg)) {
-                    mAppList.add(mApp.mAppsMap[pkg] as AppItem)
-                }
-            } else {
-                mApp.mAppsMap.remove(pkg)
-            }
-        }
-
-        val compApp = Comparator<AppItem> { lhs, rhs ->
-            if (lhs.clickCount > rhs.clickCount) {
-                -1
-            } else if (lhs.clickCount < rhs.clickCount) {
-                1
-            } else {
-                lhs.name!!.compareTo(rhs.name!!)
-            }
-        }
-
-        if (KlickApplication.MODE_INCLUDE_RECENT_TASK == 1) {
-            if (KlickApplication.REORDER_APPS) Collections.sort(mAppList, compApp)
-            mAppList.addAll(0, recentApps)
-        } else if (KlickApplication.MODE_INCLUDE_RECENT_TASK == 2) {
-            mAppList.addAll(0, recentApps)
-            if (KlickApplication.REORDER_APPS) Collections.sort(mAppList, compApp)
-        } else {
-            if (KlickApplication.REORDER_APPS) Collections.sort(mAppList, compApp)
-        }
+        mApp.getAppsInOrder()
 
         while (mViewFlipper.childCount > FIST_APP_PAGE_INDEX) {
             val ll = mViewFlipper.getChildAt(FIST_APP_PAGE_INDEX) as LinearLayout
@@ -399,7 +344,7 @@ class MoreActionsView(private val mApp: KlickApplication, private var mFloatingV
             mViewFlipper.removeViewAt(FIST_APP_PAGE_INDEX)
         }
 
-        val pn = (mAppList.size + 1) / appViewIDs.size + if ((mAppList.size + 1) % appViewIDs.size != 0) 1 else 0
+        val pn = (mApp.mOrderedAppList.size + 1) / appViewIDs.size + if ((mApp.mOrderedAppList.size + 1) % appViewIDs.size != 0) 1 else 0
         for (i in mViewFlipper.childCount - 1 downTo 2) {
             if (i > pn + 1) {
                 mViewFlipper.removeViewAt(i)
@@ -422,8 +367,8 @@ class MoreActionsView(private val mApp: KlickApplication, private var mFloatingV
         var i = 0
         val j = (pageNumber - FIST_APP_PAGE_INDEX) * appViewIDs.size
         val appView = mViewFlipper.getChildAt(pageNumber) as LinearLayout
-        while (i < appViewIDs.size && i + j < mAppList.size) {
-            val appItem = mAppList[i + j]
+        while (i < appViewIDs.size && i + j < mApp.mOrderedAppList.size) {
+            val appItem = mApp.mOrderedAppList[i + j]
             Log.d(TAG, (i + j).toString() + " - " + appItem.key)
             val appItemView = appView.findViewById(appViewIDs[i]) as ImageView
             appItemView.visibility = View.VISIBLE
@@ -480,8 +425,8 @@ class MoreActionsView(private val mApp: KlickApplication, private var mFloatingV
                 ll.findViewById(appViewIDs[i]).setOnLongClickListener(null)
             }
         }
-        mApp.clearIcons(mAppList)
-        mAppList.clear()
+        mApp.clearIcons(mApp.mOrderedAppList)
+        mApp.mOrderedAppList.clear()
     }
 
     fun scrollToDefaultScreenImmediate() {
@@ -774,16 +719,7 @@ class MoreActionsView(private val mApp: KlickApplication, private var mFloatingV
                 }
                 0 -> if (data != null && data is Int) {
                     val position = (data as Int?)!!
-
-                    Utils.launchApp(mApp, mAppList[position])
-
-                    if (mAppList[position].clickCount >= 0) {
-                        mAppList[position].clickCount = mAppList[position].clickCount + 1
-                        val e = mApp.sharedPrefs!!.edit()
-                        e.putInt(KlickApplication.APP_CLICK_COUNT_PREFIX + mAppList[position].key,
-                                mAppList[position].clickCount)
-                        e.commit()
-                    }
+                    mApp.launchApp(mApp.mOrderedAppList[position])
                 }
             }
 
@@ -809,7 +745,7 @@ class MoreActionsView(private val mApp: KlickApplication, private var mFloatingV
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        mAppList.clear()
+        mApp.mOrderedAppList.clear()
         mViewFlipper.removeAllViews()
         mFloatingView = null
         System.gc()

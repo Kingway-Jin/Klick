@@ -516,7 +516,9 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
                     return@run
                 }
 
-                if (gesture == mApp.gestures[KlickApplication.SEQ_NO_SHOW_MORE_ACTIONS_QUICK_ACTION]) {
+                if (gesture == mApp.gestures[KlickApplication
+                                .SEQ_NO_SHOW_MORE_ACTIONS_QUICK_ACTION] ||
+                        gesture == mApp.gestures[KlickApplication.SEQ_NO_APP_SWITCH_FORWARD]) {
                     switchAppQuickAction(event)
                     return@run
                 }
@@ -555,11 +557,18 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
                         }
 
                         if (gesture == mApp.gestures[KlickApplication
-                                .SEQ_NO_SHOW_MORE_ACTIONS_QUICK_ACTION]) {
+                                .SEQ_NO_SHOW_MORE_ACTIONS_QUICK_ACTION] ||
+                                gesture == mApp.gestures[KlickApplication.SEQ_NO_APP_SWITCH_FORWARD]) {
                             quickActionTipView.visibility = View.VISIBLE
                             quickActionTipView.visibility = View.INVISIBLE
 
-                            prepareActiveQuickActions()
+                            if (gesture == mApp.gestures[KlickApplication
+                                            .SEQ_NO_SHOW_MORE_ACTIONS_QUICK_ACTION]) {
+                                prepareActiveQuickActions()
+                            } else {
+                                prepareQuickApps()
+                            }
+
                             quickActionTipView.text = Html.fromHtml(getQuickActionMsg())
                             quickActionTipView.visibility = View.VISIBLE
                         }
@@ -644,6 +653,13 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
         }
     }
 
+    private fun prepareQuickApps() {
+        activeQuickActions.clear()
+        activeQuickActions.addAll(mApp.getAppsInOrder().map {
+            if (it.name == null) "Unknow" else it.name!! })
+        loopIndexActiveQuickAction =  0
+    }
+
     private fun prepareActiveQuickActions() {
         var sc = 0
         var activePkg = KlickAccessibilityService.currentRootInActiveWindow?.packageName
@@ -658,10 +674,10 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
                 "quick_action:" + activePkg + ":").map { it.substring(("quick_action:" + activePkg + ":").length) })
         activeQuickActions.removeAll { null == KlickAccessibilityService
                 .sharedInstance?.findClickableNodeByText(KlickAccessibilityService.currentRootInActiveWindow, it, null) }
-        if ("com.tencent.mm" == activePkg) {
-            val newMsgTest = KlickAccessibilityService.sharedInstance?.getTextOfClickableNodeByPostfix(QuickActionListAdapter.POSTFIX_NEW_MSG)
-            if (!newMsgTest.isNullOrBlank()) {
-                activeQuickActions.add(0, newMsgTest!!)
+        if (KlickAccessibilityService.sharedInstance != null) {
+            for (substring in QuickActionListAdapter.TEXT_PATTERN) {
+                val textList: List<String> = KlickAccessibilityService.sharedInstance!!.getTextOfClickableNodeBySubstring(substring)
+                activeQuickActions.addAll(textList)
             }
         }
         loopIndexActiveQuickAction =  0
@@ -682,7 +698,12 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
             if (activeQuickActions.isEmpty() && quickActionTipView.visibility == View.VISIBLE) {
                 quickActionTipView.visibility = View.INVISIBLE
             } else if (activeQuickActions.isEmpty() && quickActionTipView.visibility == View.INVISIBLE) {
-                prepareActiveQuickActions()
+                if (gesture == mApp.gestures[KlickApplication
+                                .SEQ_NO_SHOW_MORE_ACTIONS_QUICK_ACTION]) {
+                    prepareActiveQuickActions()
+                } else {
+                    prepareQuickApps()
+                }
             } else if (activeQuickActions.isNotEmpty() && quickActionTipView.visibility == View.INVISIBLE) {
                 quickActionTipView.visibility = View.VISIBLE
                 quickActionTipView.text = Html.fromHtml(getQuickActionMsg())
@@ -935,12 +956,13 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
             KlickApplication.SEQ_NO_APP_SWITCH // APP Switch
             -> showRecentActivity()
             KlickApplication.SEQ_NO_APP_SWITCH_FORWARD -> {
-                Utils.getKlickAccessServiceInstance(context)!!.mHandler.removeMessages(KlickApplication.MSG_AUTO_CLICK)
-                val pkgForward = KlickAccessibilityService.switchAppBackward()
-                Toast.makeText(mApp, mApp.mAppsMap[pkgForward]!!.name, Toast.LENGTH_SHORT).show()
-                Utils.launchApp(mApp, mApp.mAppsMap[pkgForward])
-                Log.d(TAG, "SEQ_NO_APP_SWITCH_FORWARD: " + pkgForward)
-                mHandle.setImageDrawable(mApp.handleDrawable)
+                if (isBackToHandle) {
+                    showMoreActionsView(2)
+                } else if (loopIndexActiveQuickAction in 0 until activeQuickActions.size) {
+                    mApp.launchApp(mApp.mOrderedAppList.get(loopIndexActiveQuickAction))
+                }
+                hideQuickActionTip()
+                Log.d(TAG, "SEQ_NO_SHOW_MORE_ACTIONS")
             }
             KlickApplication.SEQ_NO_APP_SWITCH_BACKWARD -> {
                 Utils.getKlickAccessServiceInstance(context)!!.mHandler.removeMessages(KlickApplication.MSG_AUTO_CLICK)

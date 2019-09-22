@@ -147,9 +147,10 @@ class KlickAccessibilityService : AccessibilityService() {
         nodeInfo?.performAction(AccessibilityNodeInfo.ACTION_CLICK)
     }
 
-    fun getTextOfClickableNodeByPostfix(postfix: String): String? {
+    fun getTextOfClickableNodeBySubstring(substring: String): List<String> {
+        val textList = mutableListOf<String>()
         if (currentRootInActiveWindow == null) {
-            return null
+            return textList
         }
 
         val nodeInfoList = LinkedList<AccessibilityNodeInfo>()
@@ -159,15 +160,15 @@ class KlickAccessibilityService : AccessibilityService() {
             val nodeInfo: AccessibilityNodeInfo? = nodeInfoList.removeAt(0)
 
             if (nodeInfo != null) {
-                if (nodeInfo.text != null && nodeInfo.text.endsWith(postfix)) {
-                    return nodeInfo.text.toString()
+                if (nodeInfo.text != null && nodeInfo.text.contains(substring)) {
+                    textList.add(nodeInfo.text.toString())
                 }
                 for (j in 0 until nodeInfo.childCount) {
                     nodeInfoList.add(nodeInfo.getChild(j))
                 }
             }
         }
-        return null
+        return textList
     }
 
     fun findClickableNodeByPostfix(rootNode: AccessibilityNodeInfo?, postfix: String, asyncCounter: Integer?): AccessibilityNodeInfo? {

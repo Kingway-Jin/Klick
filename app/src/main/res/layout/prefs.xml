@@ -990,6 +990,41 @@
                     android:textSize="12sp" />
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/find_clickable_view_by_pattern"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/setting_item_background"
+                android:orientation="horizontal"
+                android:paddingBottom="10dip"
+                android:paddingLeft="20dip"
+                android:paddingRight="20dip"
+                android:paddingTop="10dip">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/label_find_clickable_view_by_pattern"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_find_clickable_view_by_pattern"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/info_find_clickable_view_by_pattern"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="5dip"
+                        android:text=""
+                        android:textColor="@android:color/darker_gray"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"

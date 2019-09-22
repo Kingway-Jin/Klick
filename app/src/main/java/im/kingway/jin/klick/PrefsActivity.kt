@@ -222,6 +222,127 @@ class PrefsActivity : Activity() {
         adb.show()
     }
 
+    private fun loadSetting() {
+        var ll: LinearLayout? = null
+        (findViewById(R.id.gesture_home) as TextView).text = getGestureDesc(mApp!!.gestures[KlickApplication.SEQ_NO_HOME])
+        (findViewById(R.id.gesture_back) as TextView).text = getGestureDesc(mApp!!.gestures[KlickApplication.SEQ_NO_BACK])
+        (findViewById(R.id.gesture_menu) as TextView).text = getGestureDesc(mApp!!.gestures[KlickApplication.SEQ_NO_MENU])
+        (findViewById(R.id.gesture_app_switch) as TextView).text = getGestureDesc(mApp!!
+                .gestures[KlickApplication.SEQ_NO_APP_SWITCH])
+        (findViewById(R.id.gesture_app_switch_forward) as TextView).text = getGestureDesc(mApp!!
+                .gestures[KlickApplication.SEQ_NO_APP_SWITCH_FORWARD])
+        (findViewById(R.id.gesture_app_switch_backward) as TextView).text = getGestureDesc(mApp!!.gestures[KlickApplication.SEQ_NO_APP_SWITCH_BACKWARD])
+        (findViewById(R.id.gesture_lock_screen) as TextView).text = getGestureDesc(mApp!!.gestures[KlickApplication.SEQ_NO_LOCK_SCREEN])
+        (findViewById(R.id.gesture_expand_status_bar) as TextView).text = getGestureDesc(mApp!!.gestures[KlickApplication.SEQ_NO_EXPAND_STATUS_BAR])
+        (findViewById(R.id.gesture_show_more_actions) as TextView).text = getGestureDesc(mApp!!.gestures[KlickApplication.SEQ_NO_SHOW_MORE_ACTIONS])
+        (findViewById(R.id.gesture_show_more_actions_quick_action) as TextView).text = getGestureDesc(mApp!!.gestures[KlickApplication.SEQ_NO_SHOW_MORE_ACTIONS_QUICK_ACTION])
+        (findViewById(R.id.gesture_show_more_actions_quick_launch) as TextView).text = getGestureDesc(mApp!!.gestures[KlickApplication.SEQ_NO_SHOW_MORE_ACTIONS_QUICK_LAUNCH])
+        (findViewById(R.id.gesture_adjust_music_volume) as TextView).text = getGestureDesc(mApp!!.gestures[KlickApplication.SEQ_NO_ADJUST_MUSIC_VOL])
+        (findViewById(R.id.gesture_open_camera) as TextView).text = getGestureDesc(mApp!!.gestures[KlickApplication.SEQ_NO_OPEN_CAMERA])
+        (findViewById(R.id.gesture_scroll_top) as TextView).text = getGestureDesc(mApp!!.gestures[KlickApplication.SEQ_NO_SCROLL_TOP])
+        (findViewById(R.id.gesture_open_dict) as TextView).text = getGestureDesc(mApp!!.gestures[KlickApplication.SEQ_NO_OPEN_DICT])
+        var cb = findViewById(R.id.reorder_apps) as CheckBox
+        cb.isChecked = mApp!!.sharedPrefs!!.getBoolean(KlickApplication.SETTING_REORDER_APPS, false)
+        (findViewById(R.id.value_app_list_include_recent_task) as TextView).text = valuesIncludeRecentTask!![mApp!!
+                .sharedPrefs!!.getInt(KlickApplication.INCLUDE_RECENT_TASK_IN_APP_LIST, 0)]
+        if (mApp!!.sharedPrefs!!.getBoolean(KlickApplication.SETTING_AUTO_LOCK_SCREEN_PHONE_ON_HEAD, false))
+            (findViewById(R.id.info_lock_phone) as TextView).setText(R.string.info_lock_phone_on_head)
+        if (mApp!!.sharedPrefs!!.getBoolean(KlickApplication.SETTING_AUTO_LOCK_SCREEN_PHONE_FACE_DOWN, false))
+            (findViewById(R.id.info_lock_phone) as TextView).setText(R.string.info_lock_phone_face_down)
+
+        val sbLongClickThreshold = findViewById(R.id.long_click_threshold) as SeekBar
+        sbLongClickThreshold.progress = mApp!!.sharedPrefs!!.getInt(KlickApplication.SETTING_LONG_PRESS_THRESHOLD,
+                300) / 10
+        (findViewById(R.id.label_long_click_threshold) as TextView).text = resources.getString(R.string
+                .label_long_click_threshold) + " - " + sbLongClickThreshold.progress * 10 + resources
+                .getString(R.string.milli_second)
+
+        val sbDoubleClickThreshold = findViewById(R.id.double_click_threshold) as SeekBar
+        sbDoubleClickThreshold.progress = mApp!!.sharedPrefs!!.getInt(KlickApplication.SETTING_DOUBLE_TAP_THRESHOLD, 0) / 10
+        (findViewById(R.id.label_double_click_threshold) as TextView).text = resources.getString(R.string
+                .label_double_click_threshold) + " - " + sbDoubleClickThreshold.progress * 10 + resources
+                .getString(R.string.milli_second)
+
+        val sbFlashLightOnMaxSeconds = findViewById(R.id.flash_light_on_max_seconds) as SeekBar
+        sbFlashLightOnMaxSeconds.progress = mApp!!.sharedPrefs!!.getInt(KlickApplication.SETTING_FLASH_LIGHT_ON_MAX_SECONDS, 60) / 10
+        (findViewById(R.id.label_flash_light_on_max_seconds) as TextView).text = resources.getString(R.string
+                .label_flash_light_on_max_seconds) + " - " + sbFlashLightOnMaxSeconds.progress * 10 +
+                resources.getString(R.string.second)
+
+        val sbGestureDetectSensitivity = findViewById(R.id.gesture_detect_sensitivity) as SeekBar
+        sbGestureDetectSensitivity.progress = mApp!!.sharedPrefs!!.getInt(KlickApplication.SETTING_GESTURE_DETECT_SENSITIVITY, 100) / 10
+        (findViewById(R.id.label_gesture_detect_sensitivity) as TextView).text = resources.getString(R.string
+                .label_gesture_detect_sensitivity) + " - " + sbGestureDetectSensitivity.progress * 10 +
+                resources.getString(R.string.pixels)
+
+        var sbVibrate = findViewById(R.id.seekBarMilliseconds) as SeekBar
+        sbVibrate.progress = mApp!!.sharedPrefs!!.getInt(KlickApplication.FEEDBACK_VIBRATE_MILLISECONDS, 0) / 5
+        (findViewById(R.id.label_feedback_vibrate) as TextView).text = resources.getString(R.string
+                .label_feedback_vibrate) + " - " + sbVibrate.progress * 5 + resources.getString(R.string
+                .milli_second)
+
+        sbVibrate = findViewById(R.id.seekBarMillisecondsLongClick) as SeekBar
+        sbVibrate.progress = mApp!!.sharedPrefs!!.getInt(KlickApplication.FEEDBACK_VIBRATE_MILLISECONDS_LONG_CLICK,
+                0) / 5
+        (findViewById(R.id.label_long_click_feedback_vibrate) as TextView).text = resources.getString(R.string
+                .label_long_click_feedback_vibrate) + " - " + sbVibrate.progress * 5 + resources.getString(R.string.milli_second)
+
+        val sbVol = findViewById(R.id.seekBarVolume) as SeekBar
+        sbVol.progress = mApp!!.sharedPrefs!!.getInt(KlickApplication.FEEDBACK_SOUND_VOLUME, 0)
+        (findViewById(R.id.label_feedback_sound) as TextView).text = resources.getString(R.string.label_feedback_sound) + " - " +
+                mApp!!.sharedPrefs!!.getInt(KlickApplication.FEEDBACK_SOUND_VOLUME,0) * 10 + resources.getString(R.string.percentage)
+        val sbOpacity = findViewById(R.id.value_customize_icon_opacity) as SeekBar
+        sbOpacity.progress = mApp!!.sharedPrefs!!.getInt(KlickApplication.CUSTOMIZE_ICON_OPACITY, 30) / 5
+        (findViewById(R.id.label_customize_icon_opacity) as TextView).text =
+                resources.getString(R.string.label_customize_icon_opacity) + " - " +
+                        mApp!!.sharedPrefs!!.getInt(KlickApplication.CUSTOMIZE_ICON_OPACITY, 30) + resources.getString(R.string.percentage)
+
+        val sbSize = findViewById(R.id.value_customize_icon_size) as SeekBar
+        sbSize.progress = mApp!!.sharedPrefs!!.getInt(KlickApplication.CUSTOMIZE_ICON_SIZE, KlickApplication.MAX_ICON_SIZE) - KlickApplication.MIN_ICON_SIZE
+        (findViewById(R.id.label_customize_icon_size) as TextView).text = resources.getString(R.string
+                .label_customize_icon_size) + " - " + (sbSize.progress + KlickApplication.MIN_ICON_SIZE) + "DIP"
+
+        var choice = mApp!!.sharedPrefs!!.getInt(KlickApplication.CUSTOMIZE_ICON_CHOICE, 1)
+        try {
+            if (choice == 0) {
+                val filePath = mApp!!.sharedPrefs!!.getString(KlickApplication.CUSTOMIZE_ICON_FILE, null)
+                val d = BitmapDrawable.createFromPath(filePath) ?: throw Exception()
+                (findViewById(R.id.preview_customize_icon) as ImageView).setImageDrawable(d)
+                (findViewById(R.id.info_customize_icon) as TextView).text = filePath
+            } else {
+                val d = resources.getDrawable(iconChoices[choice]).mutate()
+                d.alpha = KlickApplication.FULLY_OPACITY
+                (findViewById(R.id.preview_customize_icon) as ImageView).setImageDrawable(d)
+                (findViewById(R.id.info_customize_icon) as TextView).text = iconChoiceNames!![choice]
+            }
+        } catch (e: Exception) {
+            val d = resources.getDrawable(iconChoices[1]).mutate()
+            d.alpha = KlickApplication.FULLY_OPACITY
+            (findViewById(R.id.preview_customize_icon) as ImageView).setImageDrawable(d)
+            (findViewById(R.id.info_customize_icon) as TextView).text = iconChoiceNames!![1]
+        }
+
+        choice = mApp!!.sharedPrefs!!.getInt(KlickApplication.CUSTOMIZE_ICON_BG_CHOICE, 1)
+        try {
+            if (choice == 0) {
+                val filePath = mApp!!.sharedPrefs!!.getString(KlickApplication.CUSTOMIZE_ICON_BG_FILE, null)
+                val d = BitmapDrawable.createFromPath(filePath) ?: throw Exception()
+                (findViewById(R.id.preview_customize_icon_bg) as ImageView).setImageDrawable(d)
+                (findViewById(R.id.info_customize_icon_bg) as TextView).text = filePath
+            } else {
+                val d = resources.getDrawable(backgroundChoices[choice]).mutate()
+                d.alpha = KlickApplication.FULLY_OPACITY
+                (findViewById(R.id.preview_customize_icon_bg) as ImageView).setImageDrawable(d)
+                (findViewById(R.id.info_customize_icon_bg) as TextView).text = backgroundChoiceNames!![choice]
+            }
+        } catch (e: Exception) {
+            val d = resources.getDrawable(backgroundChoices[1]).mutate()
+            d.alpha = KlickApplication.FULLY_OPACITY
+            (findViewById(R.id.preview_customize_icon_bg) as ImageView).setImageDrawable(d)
+            (findViewById(R.id.info_customize_icon_bg) as TextView).text = backgroundChoiceNames!![1]
+        }
+    }
+
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mApp = application as KlickApplication
@@ -425,8 +546,19 @@ class PrefsActivity : Activity() {
         ll = findViewById(R.id.exit) as LinearLayout
         ll.setOnClickListener {
             mApp!!.sharedPrefs!!.edit().putString("RECENT_APP_PACKAGE_NAME", KlickAccessibilityService.recentAppPackageName.joinToString(";"))?.commit()
+            val f = File(BACKUP_FILE_PATH)
+            Utils.saveSharedPreferencesToFile(mApp!!.sharedPrefs!!, f)
             stopService(Intent(mApp!!.applicationContext, KlickService::class.java))
             mApp!!.exit()
+        }
+        ll.setOnLongClickListener {
+            val f = File(BACKUP_FILE_PATH)
+            if (f.exists() && f.isFile && f.length() > 0) {
+                Utils.loadSharedPreferencesFromFile(mApp!!.sharedPrefs!!, f)
+            }
+            stopService(Intent(mApp!!.applicationContext, KlickService::class.java))
+            mApp!!.exit()
+            true
         }
 
         val sbLongClickThreshold = findViewById(R.id.long_click_threshold) as SeekBar
@@ -743,6 +875,31 @@ class PrefsActivity : Activity() {
             adb.show()
         }
 
+        (findViewById(R.id.info_find_clickable_view_by_pattern) as TextView).setText(mApp!!
+                .sharedPrefs!!.getString(KlickApplication.SETTING_TEXT_MATCH_PATTERN, ""))
+        ll = findViewById(R.id.find_clickable_view_by_pattern) as LinearLayout
+        ll.setOnClickListener{
+            val textPatternEditText = EditText(this)
+            textPatternEditText.setText(mApp!!
+                    .sharedPrefs!!.getString(KlickApplication.SETTING_TEXT_MATCH_PATTERN, ""))
+            AlertDialog.Builder(this)
+                    .setTitle(R.string.label_find_clickable_view_by_pattern)
+                    .setView(textPatternEditText)
+                    .setPositiveButton(R.string.ok) { d, which ->
+                        QuickActionListAdapter.TEXT_PATTERN.clear()
+                        QuickActionListAdapter.TEXT_PATTERN.addAll(textPatternEditText.toString().split(","))
+                        mApp!!.sharedPrefs!!.edit()
+                                .putString(KlickApplication.SETTING_TEXT_MATCH_PATTERN,
+                                        textPatternEditText.text.toString())
+                                .commit()
+                        d.dismiss()
+                    }
+                    .setNegativeButton(R.string.cancel) { d, which ->
+                        d.dismiss()
+                    }
+                    .show()
+        }
+
         val labelAbout = findViewById(R.id.label_about) as TextView
         labelAbout.text = mApp!!.getResourceStringWithAppVersion(R.string.label_about)
 
@@ -805,8 +962,6 @@ class PrefsActivity : Activity() {
 
     override fun onDestroy() {
         Log.d(TAG, "onDestroy")
-        val f = File(BACKUP_FILE_PATH)
-        Utils.saveSharedPreferencesToFile(mApp!!.sharedPrefs!!, f)
         super.onDestroy()
         (findViewById(R.id.preview_customize_icon_bg) as ImageView).setImageResource(0)
         (findViewById(R.id.preview_customize_icon) as ImageView).setImageResource(0)

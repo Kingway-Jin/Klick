@@ -19,7 +19,6 @@ import android.os.Vibrator
 import android.telephony.TelephonyManager
 import android.util.Log
 import android.view.WindowManager
-import java.io.File
 import java.util.*
 
 class KlickApplication : Application() {
@@ -40,6 +39,7 @@ class KlickApplication : Application() {
     var mAppsMap: MutableMap<String, AppItem> = HashMap()
     var mSelectedPackage: MutableSet<String> = HashSet()
     var mExcludePackage: MutableSet<String> = HashSet()
+    var mOrderedAppList = ArrayList<AppItem>()
     private val appIcons = HashMap<String, Drawable>()
 
     val screenRect = Rect()
@@ -102,12 +102,12 @@ class KlickApplication : Application() {
         CrashHandler.instance.init(this)
 
         sharedPrefs = getSharedPreferences(packageName, 0)
-        if (sharedPrefs!!.all.isEmpty()) {
-            val f = File(PrefsActivity.BACKUP_FILE_PATH)
-            if (f.exists() && f.isFile && f.length() > 0) {
-                Utils.loadSharedPreferencesFromFile(sharedPrefs!!, f)
-            }
-        }
+//        if (sharedPrefs!!.all.isEmpty()) {
+//            val f = File(PrefsActivity.BACKUP_FILE_PATH)
+//            if (f.exists() && f.isFile && f.length() > 0) {
+//                Utils.loadSharedPreferencesFromFile(sharedPrefs!!, f)
+//            }
+//        }
 
         mWindowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
         mSensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
@@ -154,6 +154,9 @@ class KlickApplication : Application() {
 
         reloadAllApps()
         reloadSelectedApps()
+
+        QuickActionListAdapter.TEXT_PATTERN.addAll(sharedPrefs!!.getString(KlickApplication
+                .SETTING_TEXT_MATCH_PATTERN, "").split(","))
     }
 
     fun cancelAllNotification() {
@@ -436,6 +439,77 @@ class KlickApplication : Application() {
         }
     }
 
+    fun launchApp(app: AppItem) {
+        Utils.launchApp(this, app)
+
+        if (app.clickCount >= 0) {
+            app.clickCount = app.clickCount + 1
+            val e = sharedPrefs!!.edit()
+            e.putInt(KlickApplication.APP_CLICK_COUNT_PREFIX + app.key, app.clickCount)
+            e.commit()
+        }
+    }
+
+    fun getAppsInOrder(): List<AppItem> {
+        mOrderedAppList.clear()
+        for (item in mAppsMap.values) {
+            item.isInRectentTaskList = false
+        }
+
+        val recentTaskPkgs = HashSet<String>()
+        val recentApps = ArrayList<AppItem>()
+        if (KlickApplication.MODE_INCLUDE_RECENT_TASK == 1 || KlickApplication
+                        .MODE_INCLUDE_RECENT_TASK == 2) {
+            val recentAppPackageName = KlickAccessibilityService
+                    .recentAppPackageName
+            var i = 0
+            var j = 0
+            while (j < 18 && i < recentAppPackageName.size) {
+                val pkg = recentAppPackageName[i]
+                if (!mExcludePackage.contains(pkg) && !recentTaskPkgs.contains(pkg) && mAppsMap.containsKey(pkg)) {
+                    val item = mAppsMap[pkg] as AppItem
+                    item.isInRectentTaskList = true
+                    recentApps.add(item)
+                    recentTaskPkgs.add(pkg)
+                    j++
+                }
+                i++
+            }
+        }
+
+        for (pkg in mSelectedPackage) {
+            if (mAppsMap[pkg] != null) {
+                if (!recentTaskPkgs.contains(pkg)) {
+                    mOrderedAppList.add(mAppsMap[pkg] as AppItem)
+                }
+            } else {
+                mAppsMap.remove(pkg)
+            }
+        }
+
+        val compApp = Comparator<AppItem> { lhs, rhs ->
+            if (lhs.clickCount > rhs.clickCount) {
+                -1
+            } else if (lhs.clickCount < rhs.clickCount) {
+                1
+            } else {
+                lhs.name!!.compareTo(rhs.name!!)
+            }
+        }
+
+        if (KlickApplication.MODE_INCLUDE_RECENT_TASK == 1) {
+            if (KlickApplication.REORDER_APPS) Collections.sort(mOrderedAppList, compApp)
+            mOrderedAppList.addAll(0, recentApps)
+        } else if (KlickApplication.MODE_INCLUDE_RECENT_TASK == 2) {
+            mOrderedAppList.addAll(0, recentApps)
+            if (KlickApplication.REORDER_APPS) Collections.sort(mOrderedAppList, compApp)
+        } else {
+            if (KlickApplication.REORDER_APPS) Collections.sort(mOrderedAppList, compApp)
+        }
+
+        return mOrderedAppList
+    }
+
     companion object {
         private val TAG = "KlickApplication"
         val SETTING_FLOATING_POSITION_X = "SETTING_FLOATING_POSITION_X"
@@ -449,6 +523,7 @@ class KlickApplication : Application() {
         val SETTING_GESTURE_DETECT_SENSITIVITY = "SETTING_GESTURE_DETECT_SENSITIVITY"
         val SETTING_GESTURE_PREFIX = "GESTURE_"
         val SETTING_HIDE_FROM_SOFT_KEYBOARD_DISTANCE = "SETTING_HIDE_FROM_SOFT_KEYBOARD_DISTANCE"
+        val SETTING_TEXT_MATCH_PATTERN = "SETTING_TEXT_MATCH_PATTERN"
 
         val SEQ_NO_HOME = 0
         val SEQ_NO_BACK = 1

@@ -618,12 +618,20 @@ open class WorkspaceView
                     velocityTracker!!.computeCurrentVelocity(1000, mMaximumVelocity.toFloat())
                     val velocityX = velocityTracker.xVelocity.toInt()
 
-                    if (velocityX > SNAP_VELOCITY && currentScreen > 0) {
-                        // Fling hard enough to move left
-                        scrollToScreen(currentScreen - 1)
-                    } else if (velocityX < -SNAP_VELOCITY && currentScreen < childCount - 1) {
-                        // Fling hard enough to move right
-                        scrollToScreen(currentScreen + 1)
+                    if (velocityX > SNAP_VELOCITY) {
+                        if (currentScreen > 0) {
+                            // Fling hard enough to move left
+                            scrollToScreen(currentScreen - 1)
+                        } else {
+                            scrollToScreenImmediate(childCount - 1)
+                        }
+                    } else if (velocityX < -SNAP_VELOCITY) {
+                        if (currentScreen < childCount - 1) {
+                            // Fling hard enough to move right
+                            scrollToScreen(currentScreen + 1)
+                        } else {
+                            scrollToScreenImmediate(0)
+                        }
                     } else {
                         snapToDestination()
                     }
@@ -732,7 +740,7 @@ open class WorkspaceView
         invalidate()
     }
 
-    fun scrollToScreenImmediate(whichScreen: Int) {
+    open fun scrollToScreenImmediate(whichScreen: Int) {
         scrollToScreen(whichScreen, true)
     }
 

@@ -293,8 +293,12 @@ object Utils {
             val intent = Intent("android.intent.action.MAIN")
             intent.addCategory("android.intent.category.LAUNCHER")
             intent.component = appItem.component
-            intent.flags = Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT or Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED or Intent
-                    .FLAG_ACTIVITY_NEW_TASK
+            if (listOf("com.taobao.taobao", "com.ygkj.chelaile.standard").contains(appItem.component.packageName)) {
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            } else {
+                intent.flags = Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT or Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED or Intent
+                        .FLAG_ACTIVITY_NEW_TASK
+            }
             context.applicationContext.startActivity(intent)
             return true
         } catch (e: Exception) {

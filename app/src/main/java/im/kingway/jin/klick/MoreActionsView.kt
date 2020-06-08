@@ -106,6 +106,12 @@ class MoreActionsView(private val mApp: KlickApplication, private var mFloatingV
                 (quickActionListView.adapter as QuickActionListAdapter).toggleOnlyShowActive()
             }
         }
+        (mView.findViewById(R.id.quick_action_media_play_pause) as TextView).setOnClickListener {
+            mApp.sendMediaKeycode(KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE)
+        }
+        (mView.findViewById(R.id.quick_action_media_play_next) as TextView).setOnClickListener {
+            mApp.sendMediaKeycode(KeyEvent.KEYCODE_MEDIA_NEXT)
+        }
 
         val doActionListener = DoActionListener()
 
@@ -317,7 +323,11 @@ class MoreActionsView(private val mApp: KlickApplication, private var mFloatingV
         val next = pageNumber + 1
         Log.d(TAG, pre.toString() + " - " + pageNumber + " - " + next)
 
-        if (pre == 0) {
+        if (pre == -1) {
+            refreshQuickLaunchPage(mViewFlipper.childCount - 1)
+        }
+
+        if (pre == 0 || next == mViewFlipper.childCount) {
             showAppQuickAction()
         }
 
@@ -331,7 +341,7 @@ class MoreActionsView(private val mApp: KlickApplication, private var mFloatingV
     }
 
     private fun showAppQuickLaunch() {
-        mApp.getAppsInOrder()
+        mApp.getAppsInOrder(KlickApplication.MODE_INCLUDE_RECENT_TASK)
 
         while (mViewFlipper.childCount > FIST_APP_PAGE_INDEX) {
             val ll = mViewFlipper.getChildAt(FIST_APP_PAGE_INDEX) as LinearLayout
@@ -571,8 +581,8 @@ class MoreActionsView(private val mApp: KlickApplication, private var mFloatingV
             rect.left + Utils.dip2px(mApp,
                     130f) - x).toFloat()
 
-        fy = fy + (KlickApplication.HANDLE_HEIGHT_PX - (Utils.dip2px(mApp, 16f) * scale).toInt()) / 2
-//        fy = fy - (Utils.dip2px(mApp, 16f) * scale).toInt() / 2 // for A70
+//        fy = fy + (KlickApplication.HANDLE_HEIGHT_PX - (Utils.dip2px(mApp, 16f) * scale).toInt()) / 2
+        fy = fy - (Utils.dip2px(mApp, 16f) * scale).toInt() / 2 // for A70
         fx = if (fx > 0)
             fx + KlickApplication.HANDLE_WIDTH_PX / 2
         else

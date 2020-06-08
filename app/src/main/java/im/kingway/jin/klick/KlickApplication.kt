@@ -14,10 +14,10 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.hardware.SensorManager
 import android.media.AudioManager
-import android.os.AsyncTask
-import android.os.Vibrator
+import android.os.*
 import android.telephony.TelephonyManager
 import android.util.Log
+import android.view.KeyEvent
 import android.view.WindowManager
 import java.util.*
 
@@ -35,6 +35,7 @@ class KlickApplication : Application() {
     private var mActivityManager: ActivityManager? = null
     private var mNotificationManager: NotificationManager? = null
     private var mNotificationBuilder: Notification.Builder? = null
+    private var mFloatingView: FloatingView? = null
 
     var mAppsMap: MutableMap<String, AppItem> = HashMap()
     var mSelectedPackage: MutableSet<String> = HashSet()
@@ -294,6 +295,14 @@ class KlickApplication : Application() {
         return mNotificationManager
     }
 
+    fun getmFloatingView(): FloatingView? {
+        return mFloatingView
+    }
+
+    fun setmFloatingView(floatgVew: FloatingView) {
+        mFloatingView = floatgVew
+    }
+
     fun getFloattingPositionY(actually: Boolean): Int {
         var y = FLOATING_POSITION_Y
         if (actually) {
@@ -450,7 +459,7 @@ class KlickApplication : Application() {
         }
     }
 
-    fun getAppsInOrder(): List<AppItem> {
+    fun getAppsInOrder(mode: Int): List<AppItem> {
         mOrderedAppList.clear()
         for (item in mAppsMap.values) {
             item.isInRectentTaskList = false
@@ -458,13 +467,13 @@ class KlickApplication : Application() {
 
         val recentTaskPkgs = HashSet<String>()
         val recentApps = ArrayList<AppItem>()
-        if (KlickApplication.MODE_INCLUDE_RECENT_TASK == 1 || KlickApplication
-                        .MODE_INCLUDE_RECENT_TASK == 2) {
+        if (mode > 0) {
             val recentAppPackageName = KlickAccessibilityService
                     .recentAppPackageName
             var i = 0
             var j = 0
-            while (j < 18 && i < recentAppPackageName.size) {
+            val maxRecent = if (mode == 3) 3 else 9
+            while (j < maxRecent && i < recentAppPackageName.size) {
                 val pkg = recentAppPackageName[i]
                 if (!mExcludePackage.contains(pkg) && !recentTaskPkgs.contains(pkg) && mAppsMap.containsKey(pkg)) {
                     val item = mAppsMap[pkg] as AppItem
@@ -497,10 +506,10 @@ class KlickApplication : Application() {
             }
         }
 
-        if (KlickApplication.MODE_INCLUDE_RECENT_TASK == 1) {
+        if (mode == 1 || mode == 3) {
             if (KlickApplication.REORDER_APPS) Collections.sort(mOrderedAppList, compApp)
             mOrderedAppList.addAll(0, recentApps)
-        } else if (KlickApplication.MODE_INCLUDE_RECENT_TASK == 2) {
+        } else if (mode == 2) {
             mOrderedAppList.addAll(0, recentApps)
             if (KlickApplication.REORDER_APPS) Collections.sort(mOrderedAppList, compApp)
         } else {
@@ -508,6 +517,24 @@ class KlickApplication : Application() {
         }
 
         return mOrderedAppList
+    }
+
+    fun sendHideFromSoftKeyboardMsg(curPkgName: String?, curClzName: String?) {
+        val msgHide = Message()
+        val bundle = Bundle()
+        bundle.putString("PackageName", curPkgName)
+        bundle.putString("ClassName", curClzName)
+        msgHide.data = bundle
+        msgHide.what = KlickApplication.MSG_HIDE_FROM_SOFT_KEYBOARD
+        mFloatingView?.mHandler?.sendMessage(msgHide)
+    }
+
+    fun sendMediaKeycode(keycode: Int) {
+        val eventTime: Long = SystemClock.uptimeMillis()
+        val downEvent = KeyEvent(eventTime, eventTime, KeyEvent.ACTION_DOWN, keycode, 0)
+        getmAudioManager()?.dispatchMediaKeyEvent(downEvent)
+        val upEvent = KeyEvent(eventTime, eventTime, KeyEvent.ACTION_UP, keycode, 0)
+        getmAudioManager()?.dispatchMediaKeyEvent(upEvent)
     }
 
     companion object {
@@ -575,6 +602,8 @@ class KlickApplication : Application() {
         val MSG_TURN_OFF_FLASH_LIGHT = 5
         val MSG_BREATHING = 6
         var MSG_AUTO_CLICK = 7
+        var MSG_HIDE_FROM_SOFT_KEYBOARD = 8
+        var MSG_SAVE_HIDE_FROM_SOFT_KEYBOARD_TIMEOUT = 9
 
         val MAX_ICON_SIZE = 64
         val MIN_ICON_SIZE = 24

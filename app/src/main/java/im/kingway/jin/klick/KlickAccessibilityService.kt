@@ -61,11 +61,13 @@ class KlickAccessibilityService : AccessibilityService() {
         }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent) {
-        if (event.packageName == null) {
+        val currentAppPackageName = event.packageName?.toString()
+        val currentAppClassName = event.className?.toString()
+        mApp?.sendHideFromSoftKeyboardMsg(currentAppPackageName, currentAppClassName)
+        if (currentAppPackageName == null) {
             return
         }
-        val currentAppPackageName = event.packageName.toString()
-        Log.d(TAG, "currentAppPackageName: $currentAppPackageName")
+        Log.d(TAG, "currentAppPackageName: $currentAppPackageName, currentAppClassName: $currentAppClassName")
         if (currentAppPackageName != currentRootInActiveWindow?.packageName
         && !isExcludedApp(currentAppPackageName)) {
             recentAppPackageName.remove(currentAppPackageName)

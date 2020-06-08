@@ -12,6 +12,15 @@ class MyWorkspaceView : WorkspaceView {
 
     override fun scrollToScreen(whichScreen: Int) {
         super.scrollToScreen(whichScreen)
+        onWrokSpaceChange(whichScreen)
+    }
+
+    override fun scrollToScreenImmediate(whichScreen: Int) {
+        super.scrollToScreenImmediate(whichScreen)
+        onWrokSpaceChange(whichScreen)
+    }
+
+    private fun onWrokSpaceChange(whichScreen: Int) {
         if (null != workspaceChange)
             workspaceChange!!.onWrokSpaceChange(whichScreen)
     }

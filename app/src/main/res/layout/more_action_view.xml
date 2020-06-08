@@ -39,16 +39,15 @@
         android:layout_width="260dip"
         android:layout_height="260dip">
         <LinearLayout
-            android:gravity="center"
+            android:gravity="fill_vertical"
             android:orientation="vertical"
-            android:padding="10dip"
             android:layout_width="260dip"
             android:layout_height="260dip">
 
             <TextView
                 android:id="@+id/quick_action_app_name"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="30dp"
                 android:gravity="center"
                 android:padding="5dp"
                 android:text="TEXT"
@@ -58,11 +57,36 @@
             <ListView
                 android:id="@+id/quick_action_list"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="190dp"
                 android:listSelector="@drawable/selector_more_action_bg1"
                 android:choiceMode="singleChoice">
-
             </ListView>
+            <LinearLayout
+                android:id="@+id/quick_action_media"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@color/transparent"
+                android:orientation="horizontal"
+                android:choiceMode="singleChoice">
+                <TextView
+                    android:id="@+id/quick_action_media_play_pause"
+                    android:layout_width="130dp"
+                    android:layout_height="match_parent"
+                    android:gravity="right"
+                    android:padding="10dp"
+                    android:text="@string/quick_action_play_pause"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/quick_action_media_play_next"
+                    android:layout_width="130dp"
+                    android:layout_height="match_parent"
+                    android:gravity="left"
+                    android:padding="10dp"
+                    android:text="@string/quick_action_play_next"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold" />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout

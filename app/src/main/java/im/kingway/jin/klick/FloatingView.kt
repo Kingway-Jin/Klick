@@ -4,7 +4,9 @@ import android.accessibilityservice.AccessibilityService
 import android.animation.Animator
 import android.animation.Animator.AnimatorListener
 import android.animation.ValueAnimator
+import android.content.ComponentName
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.graphics.PixelFormat
 import android.graphics.Rect
 import android.hardware.Sensor
@@ -12,6 +14,7 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.media.AudioManager
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
@@ -19,6 +22,8 @@ import android.telephony.TelephonyManager
 import android.text.Html
 import android.util.Log
 import android.view.Gravity
+import android.view.KeyEvent.KEYCODE_MEDIA_NEXT
+import android.view.KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE
 import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
@@ -70,6 +75,8 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
     private var gesture: Long = 0
     private var gestureStep: Long = 10
     private val posList = LinkedList<PhonePos>()
+    private var hidFromSoftKeyboard = false
+    private var toSaveHidFromSoftKeyboard = false
     private var hidFromSoftKeyboardDistance = 0
     private val imeClientCountMap = HashMap<String, Int>()
 
@@ -125,6 +132,18 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
                         }
                     }
                 }
+                KlickApplication.MSG_HIDE_FROM_SOFT_KEYBOARD -> {
+                    val curPkgName = msg.data.getString("PackageName", "unknown")
+                    val curClzName = msg.data.getString("ClassName", "unknown")
+                    if ("com.iflytek.inputmethod".equals(curPkgName) && "android.inputmethodservice.SoftInputWindow".equals(curClzName)) {
+                        hideFromSoftKeyboard(true)
+                    }
+                }
+                KlickApplication.MSG_SAVE_HIDE_FROM_SOFT_KEYBOARD_TIMEOUT -> {
+                    Log.d(TAG, "MSG_SAVE_HIDE_FROM_SOFT_KEYBOARD_TIMEOUT")
+                    toSaveHidFromSoftKeyboard = false
+                    setHandleOpacity(KlickApplication.ICON_OPACITY)
+                }
                 else -> {
                 }
             }
@@ -146,9 +165,9 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
                 return
             }
 
-            if (mMoreActionsView!!.visibility != View.VISIBLE && detectSoftKeyboardShowOrNot()) {
-                return
-            }
+//            if (mMoreActionsView!!.visibility != View.VISIBLE && detectSoftKeyboardShowOrNot()) {
+//                return
+//            }
 
             synchronized(mApp.getmSensorManager()!!) {
                 when (event.sensor.type) {
@@ -387,6 +406,7 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
         quickActionTipView.text = "^_^"
         mApp.getmWindowManager()!!.addView(quickActionTipView, wp)
         quickActionTipView.visibility = View.INVISIBLE
+        mApp.setmFloatingView(this)
     }
 
     private fun startTransAnimation(fromOpacity: Int, toOpacity: Int, duration: Int = 100) {
@@ -571,6 +591,7 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
 
                             quickActionTipView.text = Html.fromHtml(getQuickActionMsg())
                             quickActionTipView.visibility = View.VISIBLE
+                            quickActionTipView.setTag(R.id.quick_action_text_view, 1)
                         }
                     }
                 }
@@ -596,21 +617,32 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
 
                 if (action == Actions.tap) {
                     mApp.playFeedback(false)
-                    if (KlickApplication.DOUBLE_TAP_THRESHOLD > 0) {
-                        mHandler.sendEmptyMessageDelayed(KlickApplication
-                                .MSG_DOUBLE_TAP_TIMEOUT, KlickApplication.DOUBLE_TAP_THRESHOLD.toLong())
+                    hidFromSoftKeyboard = false
+                    if (toSaveHidFromSoftKeyboard && mApp.getScreenRect(true).width() < mApp.getScreenRect(false).height()) {
+                        mHandler.removeMessages(KlickApplication.MSG_SAVE_HIDE_FROM_SOFT_KEYBOARD_TIMEOUT)
+                        toSaveHidFromSoftKeyboard = false
+                        KlickApplication.HIDE_FROM_SOFT_KEYBOARD_DISTANCE = currentPositionY
+                        mApp.sharedPrefs!!.edit().putInt(KlickApplication
+                                .SETTING_HIDE_FROM_SOFT_KEYBOARD_DISTANCE, KlickApplication.HIDE_FROM_SOFT_KEYBOARD_DISTANCE).commit()
+                        Log.d(TAG, "HIDE_FROM_SOFT_KEYBOARD_DISTANCE: " + KlickApplication.HIDE_FROM_SOFT_KEYBOARD_DISTANCE)
                     } else {
-                        onAction(gesture)
-                        action = null
+                        if (KlickApplication.DOUBLE_TAP_THRESHOLD > 0) {
+                            mHandler.sendEmptyMessageDelayed(KlickApplication
+                                    .MSG_DOUBLE_TAP_TIMEOUT, KlickApplication.DOUBLE_TAP_THRESHOLD.toLong())
+                        } else {
+                            onAction(gesture)
+                            action = null
+                        }
                     }
                 } else if (action == Actions.drag) {
                     hideMoreActionsView()
                     stopDragging()
                 } else {
+                    hidFromSoftKeyboard = false
                     onAction(gesture)
                 }
 
-                if (gesture != mApp.gestures[KlickApplication.SEQ_NO_SHOW_MORE_ACTIONS] &&
+                if (!toSaveHidFromSoftKeyboard && gesture != mApp.gestures[KlickApplication.SEQ_NO_SHOW_MORE_ACTIONS] &&
                         gesture != mApp.gestures[KlickApplication.SEQ_NO_SHOW_MORE_ACTIONS_QUICK_LAUNCH] &&
                         (gesture != mApp.gestures[KlickApplication.SEQ_NO_SHOW_MORE_ACTIONS_QUICK_ACTION] ||
                                 loopIndexActiveQuickAction != -1) &&
@@ -655,8 +687,8 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
 
     private fun prepareQuickApps() {
         activeQuickActions.clear()
-        activeQuickActions.addAll(mApp.getAppsInOrder().map {
-            if (it.name == null) "Unknow" else it.name!! })
+        activeQuickActions.addAll(mApp.getAppsInOrder(3).map {
+            if (it.name == null) "Unknow" else it.name!! }.subList(0, 9))
         loopIndexActiveQuickAction =  0
     }
 
@@ -674,13 +706,15 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
                 "quick_action:" + activePkg + ":").map { it.substring(("quick_action:" + activePkg + ":").length) })
         activeQuickActions.removeAll { null == KlickAccessibilityService
                 .sharedInstance?.findClickableNodeByText(KlickAccessibilityService.currentRootInActiveWindow, it, null) }
+        activeQuickActions.add(0, this.resources.getString(R.string.quick_action_play_next))
+        activeQuickActions.add(1, this.resources.getString(R.string.quick_action_play_pause))
         if (KlickAccessibilityService.sharedInstance != null) {
             for (substring in QuickActionListAdapter.TEXT_PATTERN) {
                 val textList: List<String> = KlickAccessibilityService.sharedInstance!!.getTextOfClickableNodeBySubstring(substring)
                 activeQuickActions.addAll(textList)
             }
         }
-        loopIndexActiveQuickAction =  0
+        loopIndexActiveQuickAction =  2
         Log.d(TAG, "activePkg: $activePkg QUICK ACTIONS: " + activeQuickActions
                 .joinToString(" "))
     }
@@ -694,19 +728,23 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
             } else {
                 xGestureMovement -= 20f
             }
+            val showCount = quickActionTipView.getTag(R.id.quick_action_text_view) as Int
+            quickActionTipView.setTag(R.id.quick_action_text_view, showCount + 1)
+            if (showCount <= 3 || showCount > 5) {
+                return
+            }
 
-            if (activeQuickActions.isEmpty() && quickActionTipView.visibility == View.VISIBLE) {
+            if (activeQuickActions.size <= 2 && quickActionTipView.visibility == View.VISIBLE) {
                 quickActionTipView.visibility = View.INVISIBLE
-            } else if (activeQuickActions.isEmpty() && quickActionTipView.visibility == View.INVISIBLE) {
+            } else if (activeQuickActions.size <= 2 && quickActionTipView.visibility == View.INVISIBLE) {
                 if (gesture == mApp.gestures[KlickApplication
                                 .SEQ_NO_SHOW_MORE_ACTIONS_QUICK_ACTION]) {
                     prepareActiveQuickActions()
                 } else {
                     prepareQuickApps()
                 }
-            } else if (activeQuickActions.isNotEmpty() && quickActionTipView.visibility == View.INVISIBLE) {
-                quickActionTipView.visibility = View.VISIBLE
                 quickActionTipView.text = Html.fromHtml(getQuickActionMsg())
+                quickActionTipView.visibility = View.VISIBLE
             }
         }
 
@@ -821,6 +859,10 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
     }
 
     private fun stopDragging() {
+        if (hidFromSoftKeyboard) {
+            toSaveHidFromSoftKeyboard = true
+        }
+
         aniStartX = (screenX - touchStartX).toInt()
         aniStartY = (screenY - touchStartY).toInt()
         aniEndX = aniStartX
@@ -867,15 +909,10 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
                 currentPositionX = aniEndX
                 currentPositionY = aniEndY
 
-                if (hidFromSoftKeyboardDistance > 0 && mApp.getScreenRect(true).width() < mApp.getScreenRect(false)
-                        .height() && mApp.getScreenRect(false).centerY() - currentPositionY >= 0 && mApp
-                        .getScreenRect(false).centerY() - currentPositionY <= KlickApplication
-                        .HANDLE_HEIGHT_PX * 3) {
-                    hidFromSoftKeyboardDistance += previousPositionY - currentPositionY
-                    KlickApplication.HIDE_FROM_SOFT_KEYBOARD_DISTANCE = mApp
-                            .getScreenRect(false).centerY() - currentPositionY
-                    mApp.sharedPrefs!!.edit().putInt(KlickApplication
-                            .SETTING_HIDE_FROM_SOFT_KEYBOARD_DISTANCE, KlickApplication.HIDE_FROM_SOFT_KEYBOARD_DISTANCE).commit()
+                Log.d(TAG, "hidFromSoftKeyboard: " + hidFromSoftKeyboard)
+                if (hidFromSoftKeyboard) {
+                    mHandler.removeMessages(KlickApplication.MSG_SAVE_HIDE_FROM_SOFT_KEYBOARD_TIMEOUT)
+                    mHandler.sendEmptyMessageDelayed(KlickApplication.MSG_SAVE_HIDE_FROM_SOFT_KEYBOARD_TIMEOUT, 5000)
                 }
 
                 if (currentPositionY < KlickApplication.HANDLE_WIDTH_PX) {
@@ -981,10 +1018,13 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
             -> {
                 if (isBackToHandle) {
                     showMoreActionsView(0)
-                } else if (loopIndexActiveQuickAction in 0 until activeQuickActions.size) {
+                } else if (loopIndexActiveQuickAction in 2 until activeQuickActions.size) {
                     KlickAccessibilityService.sharedInstance?.increaseClickCounter(KlickAccessibilityService.currentRootInActiveWindow?.packageName.toString(),
                             activeQuickActions[loopIndexActiveQuickAction])
                     KlickAccessibilityService.sharedInstance?.performClickOnViewWithText(KlickAccessibilityService.currentRootInActiveWindow, activeQuickActions[loopIndexActiveQuickAction], null)
+                } else if (loopIndexActiveQuickAction in 0 until 2) {
+                    val keycode = if (loopIndexActiveQuickAction == 0) KEYCODE_MEDIA_NEXT else KEYCODE_MEDIA_PLAY_PAUSE
+                    mApp.sendMediaKeycode(keycode)
                 }
                 hideQuickActionTip()
                 Log.d(TAG, "SEQ_NO_SHOW_MORE_ACTIONS")
@@ -1083,6 +1123,7 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
 
     fun hideFromSoftKeyboard(hide: Boolean) {
         Log.d(TAG, "hideFromSoftKeyboard: " + hide)
+        hidFromSoftKeyboard = hide
 
         var fromY = 0
         var toY = 0
@@ -1092,9 +1133,9 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
             if (mApp.getScreenRect(true).width() > mApp.getScreenRect(false).height()) {
                 fromY = currentPositionY
                 toY = 0
-            } else if (currentPositionY > mApp.getScreenRect(false).centerY() - KlickApplication.HIDE_FROM_SOFT_KEYBOARD_DISTANCE) {
+            } else if (currentPositionY != KlickApplication.HIDE_FROM_SOFT_KEYBOARD_DISTANCE) {
                 fromY = currentPositionY
-                toY = mApp.getScreenRect(true).centerY() - KlickApplication.HIDE_FROM_SOFT_KEYBOARD_DISTANCE
+                toY = KlickApplication.HIDE_FROM_SOFT_KEYBOARD_DISTANCE
             } else {
                 hidFromSoftKeyboardDistance = 0
                 return

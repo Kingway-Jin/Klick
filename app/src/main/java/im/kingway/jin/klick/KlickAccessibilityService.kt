@@ -10,15 +10,20 @@ import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import java.util.*
+import kotlin.collections.HashMap
 
 class KlickAccessibilityService : AccessibilityService() {
+
+    init {
+        klickAccessibilityService = this
+    }
 
     var mHandler: Handler = object : Handler() {
         @Synchronized override fun handleMessage(msg: Message) {
             when (msg.what) {
                 KlickApplication.MSG_AUTO_CLICK -> {
                     autoClickAsyncTask = AutoClickAsyncTask(Integer(++KlickAccessibilityService.autoClickCounter))
-                    (autoClickAsyncTask as AutoClickAsyncTask).execute(currentRootInActiveWindow)
+                    (autoClickAsyncTask as AutoClickAsyncTask).execute(rootInActiveWindow)
                 }
                 else -> {
                 }
@@ -33,8 +38,8 @@ class KlickAccessibilityService : AccessibilityService() {
             quickActionItemList.clear()
 
             val nodeInfoList = LinkedList<AccessibilityNodeInfo?>()
-            if (null != currentRootInActiveWindow) {
-                nodeInfoList.add(currentRootInActiveWindow)
+            if (null != rootInActiveWindow) {
+                nodeInfoList.add(rootInActiveWindow)
             }
 
             while (nodeInfoList.size > 0) {
@@ -68,12 +73,19 @@ class KlickAccessibilityService : AccessibilityService() {
             return
         }
         Log.d(TAG, "currentAppPackageName: $currentAppPackageName, currentAppClassName: $currentAppClassName")
-        if (currentAppPackageName != currentRootInActiveWindow?.packageName
-        && !isExcludedApp(currentAppPackageName)) {
+        if (!isExcludedApp(currentAppPackageName)) {
             recentAppPackageName.remove(currentAppPackageName)
             recentAppPackageName.add(0, currentAppPackageName)
+//            rootInActiveWindow = rootInActiveWindow
+
+            if (mApp!!.sharedPrefs!!.getInt(KlickApplication.CUSTOMIZE_ICON_CHOICE, 0) == 4) {
+                mApp!!.sharedPrefs!!.edit()
+                        .putString(KlickApplication.CUSTOMIZE_ICON_APP, currentAppPackageName)
+                        .commit()
+                val intent = Intent(KlickApplication.ACTION_CUSTOMIZE_ICON)
+                sendBroadcast(intent)
+            }
         }
-        currentRootInActiveWindow = rootInActiveWindow
 
 //        if ("com.tencent.mm" == currentAppPackageName || "com.google.android.youtube" == currentAppPackageName) {
 //            val msgBreathing = Message()
@@ -90,12 +102,6 @@ class KlickAccessibilityService : AccessibilityService() {
         val pkgArray = pkgs!!.split(";".toRegex()).dropLastWhile({ it.isEmpty() })
                 .toTypedArray().filter { !isExcludedApp(it) }
         recentAppPackageName.addAll(pkgArray)
-    }
-
-    private fun isClickableTextActive(packageName: String, text: String): Boolean {
-        val count = (application as KlickApplication).sharedPrefs!!.getInt("quick_action:"
-                + packageName + ":" + text, -1)
-        return count >= 0
     }
 
     public fun increaseClickCounter(packageName: String, text: String) {
@@ -131,10 +137,27 @@ class KlickAccessibilityService : AccessibilityService() {
         }
     }
 
-    fun performClickOnViewWithText(rootNode: AccessibilityNodeInfo?, text: String, asyncCounter: Integer?) {
-        val nodeInfo = findClickableNodeByText(rootNode, text, asyncCounter)
-        Log.d(TAG, "performing click on view: ${nodeInfo.toString()} with text ${text}")
+    fun performClickOn(nodeInfo: AccessibilityNodeInfo?) {
+        Log.d(TAG, "performing click on view: ${nodeInfo.toString()}")
         nodeInfo?.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+    }
+
+    fun performClickOnViewWithText(rootNode: AccessibilityNodeInfo?, text: String, asyncCounter: Integer?) {
+        if (rootNode == null) {
+            return
+        }
+        if (text in QuickActionListAdapter.TEXT_PATTERN) {
+            performClickOnViewContainsText(rootNode, text, asyncCounter)
+        } else {
+            val cacheKey = rootNode.packageName.toString() + ":" + text
+            var nodeInfo = findClickableNodeByText(rootNode, text, asyncCounter)
+            if (nodeInfo == null && nodePathCache.containsKey(cacheKey)) {
+                nodePathCache.remove(cacheKey)
+                nodeInfo = findClickableNodeByText(rootNode, text, asyncCounter)
+            }
+            Log.d(TAG, "performing click on view: ${nodeInfo.toString()} with text ${text}")
+            nodeInfo?.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+        }
     }
 
     fun performClickOnViewByPostfix(rootNode: AccessibilityNodeInfo?, postfix: String, asyncCounter: Integer?) {
@@ -149,28 +172,28 @@ class KlickAccessibilityService : AccessibilityService() {
         nodeInfo?.performAction(AccessibilityNodeInfo.ACTION_CLICK)
     }
 
-    fun getTextOfClickableNodeBySubstring(substring: String): List<String> {
-        val textList = mutableListOf<String>()
-        if (currentRootInActiveWindow == null) {
-            return textList
+    fun getNodeListBySubstring(substring: String): List<AccessibilityNodeInfo> {
+        val matchedNodeList = mutableListOf<AccessibilityNodeInfo>()
+        if (rootInActiveWindow == null) {
+            return matchedNodeList
         }
 
         val nodeInfoList = LinkedList<AccessibilityNodeInfo>()
-        nodeInfoList.add(currentRootInActiveWindow!!)
+        nodeInfoList.add(rootInActiveWindow!!)
 
         while (nodeInfoList.size > 0) {
             val nodeInfo: AccessibilityNodeInfo? = nodeInfoList.removeAt(0)
 
             if (nodeInfo != null) {
                 if (nodeInfo.text != null && nodeInfo.text.contains(substring)) {
-                    textList.add(nodeInfo.text.toString())
+                    matchedNodeList.add(nodeInfo)
                 }
                 for (j in 0 until nodeInfo.childCount) {
                     nodeInfoList.add(nodeInfo.getChild(j))
                 }
             }
         }
-        return textList
+        return matchedNodeList
     }
 
     fun findClickableNodeByPostfix(rootNode: AccessibilityNodeInfo?, postfix: String, asyncCounter: Integer?): AccessibilityNodeInfo? {
@@ -238,32 +261,72 @@ class KlickAccessibilityService : AccessibilityService() {
             return null
         }
 
+        val cacheKey = rootNode.packageName.toString() + ":" + text
         val nodeInfoList = LinkedList<AccessibilityNodeInfo>()
-        nodeInfoList.add(rootNode!!)
+        var nodePath: MutableList<Int> = nodePathCache.getOrDefault(cacheKey, LinkedList())
+        nodeInfoList.add(rootNode)
+        Log.d(TAG, nodePath.joinToString())
 
-        while (nodeInfoList.size > 0) {
-            if (!(asyncCounter?.equals(KlickAccessibilityService.autoClickCounter) ?: true)) {
-                return null
-            }
+        if (nodePath.isNotEmpty()) {
+            for (index in 0..nodePath.lastIndex) {
+                if (!(asyncCounter?.equals(KlickAccessibilityService.autoClickCounter) ?: true)) {
+                    return null
+                }
 
-            val nodeInfo: AccessibilityNodeInfo? = nodeInfoList.removeAt(0)
-
-            if (nodeInfo != null) {
+                val childIndex = nodePath[index]
+                if (childIndex >= nodeInfoList[index].childCount) {
+                    return null
+                }
+                val nodeInfo: AccessibilityNodeInfo = nodeInfoList[index].getChild(childIndex)
                 if (text == nodeInfo.text) {
                     return getClickableParent(nodeInfo, asyncCounter)
-                }
-                for (j in 0 until nodeInfo.childCount) {
-                    if (!(asyncCounter?.equals(KlickAccessibilityService.autoClickCounter) ?: true)) {
-                        return null
+                } else if (index == nodePath.lastIndex) {
+                    for (j in 0 until nodeInfoList[index].childCount) {
+                        if (!(asyncCounter?.equals(KlickAccessibilityService.autoClickCounter) ?: true)) {
+                            return null
+                        }
+                        val nodeInfo: AccessibilityNodeInfo = nodeInfoList[index].getChild(j)
+                        if (text == nodeInfo.text) {
+                            return getClickableParent(nodeInfo, asyncCounter)
+                        }
                     }
-                    nodeInfoList.add(nodeInfo.getChild(j))
+                }
+                nodeInfoList.add(nodeInfo)
+            }
+        } else {
+            nodePath.add(0)
+            while (nodePath.size > 0 && nodePath[0] < rootNode.childCount) {
+                if (!(asyncCounter?.equals(KlickAccessibilityService.autoClickCounter) ?: true)) {
+                    return null
+                }
+
+                val index = nodePath.size - 1
+                val childIndex = nodePath[index]
+                if (childIndex >= nodeInfoList[index].childCount) {
+                    nodePath.removeAt(index)
+                    nodePath[index - 1] += 1
+                    nodeInfoList.removeAt(index)
+                    continue
+                }
+
+                val nodeInfo: AccessibilityNodeInfo = nodeInfoList[index].getChild(childIndex)
+
+                if (text == nodeInfo.text) {
+                    nodePathCache[cacheKey] = nodePath
+                    return getClickableParent(nodeInfo, asyncCounter)
+                }
+                if (nodeInfo.childCount > 0) {
+                    nodePath.add(0)
+                    nodeInfoList.add(nodeInfo)
+                } else {
+                    nodePath[index] += 1
                 }
             }
         }
         return null
     }
 
-    private fun getClickableParent(nodeInfo: AccessibilityNodeInfo, asyncCounter: Integer?): AccessibilityNodeInfo? {
+    fun getClickableParent(nodeInfo: AccessibilityNodeInfo, asyncCounter: Integer?): AccessibilityNodeInfo? {
         var childNodeInfo = nodeInfo
         if (childNodeInfo.isClickable) {
             return childNodeInfo
@@ -362,13 +425,15 @@ class KlickAccessibilityService : AccessibilityService() {
         var recentAppPackageName: MutableList<String> = LinkedList()
         var switchToAppPackageName = ""
         var mApp: KlickApplication? = null
-        var currentRootInActiveWindow: AccessibilityNodeInfo? = null
+//        var rootInActiveWindow: AccessibilityNodeInfo? = null
+        var klickAccessibilityService: KlickAccessibilityService? = null
         var autoClickCounter = 0
         var prevAutoClickAsyncTaskStartTime = 0L;
+        var nodePathCache: MutableMap<String, MutableList<Int>> = HashMap()
         private var autoClickAsyncTask: AutoClickAsyncTask? = null
 
         fun switchAppBackward(): String {
-            switchToAppPackageName = currentRootInActiveWindow?.packageName.toString() ?: ""
+            switchToAppPackageName = klickAccessibilityService?.rootInActiveWindow?.packageName.toString() ?: ""
 
             for (pkg in recentAppPackageName) {
                 if (pkg != switchToAppPackageName && mApp!!.mAppsMap?.containsKey(pkg)) {

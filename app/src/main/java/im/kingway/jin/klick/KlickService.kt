@@ -153,11 +153,11 @@ class KlickService : Service() {
                 mApp!!.appReplaced(pkg)
             }
 
-            if (Intent.ACTION_HEADSET_PLUG == intent.action) {
-                if (intent.getIntExtra("state", 0) == 0) {
-                    mApp!!.getmAudioManager()!!.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0)
-                }
-            }
+//            if (Intent.ACTION_HEADSET_PLUG == intent.action) {
+//                if (intent.getIntExtra("state", 0) == 0) {
+//                    mApp!!.getmAudioManager()!!.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0)
+//                }
+//            }
         }
     }
 
@@ -189,8 +189,8 @@ class KlickService : Service() {
         intentfilter.addAction(Intent.ACTION_PACKAGE_REPLACED)
         registerReceiver(mReceiver, intentfilter)
 
-        intentfilter = IntentFilter(Intent.ACTION_HEADSET_PLUG)
-        registerReceiver(mReceiver, intentfilter)
+//        intentfilter = IntentFilter(Intent.ACTION_HEADSET_PLUG)
+//        registerReceiver(mReceiver, intentfilter)
 
         intentfilter = IntentFilter(KlickApplication.ACTION_HIDE_MORE_ACTION_VIEW)
         registerReceiver(mReceiver, intentfilter)

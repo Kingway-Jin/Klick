@@ -283,7 +283,7 @@ class MoreActionsView(private val mApp: KlickApplication, private var mFloatingV
             super.onPostExecute(result)
             if (result != null) {
                 quickActionAppNameView.text = Utils.getAppNameByPackageName(mApp,
-                        KlickAccessibilityService.currentRootInActiveWindow?.packageName.toString())
+                        KlickAccessibilityService.klickAccessibilityService?.rootInActiveWindow?.packageName.toString())
                 quickActionListView.adapter = result
             }
         }

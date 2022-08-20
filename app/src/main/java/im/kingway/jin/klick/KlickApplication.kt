@@ -67,6 +67,10 @@ class KlickApplication : Application() {
                 d = resources.getDrawable(R.drawable.handle_2)
             else if (choice == 3)
                 d = resources.getDrawable(R.drawable.handle_3)
+            else if (choice == 4) {
+                val packageName = sharedPrefs!!.getString(CUSTOMIZE_ICON_APP, null)
+                d = getAppIcon(mAppsMap.get(packageName))?: resources.getDrawable(R.drawable.handle_3)
+            }
             else
                 d = resources.getDrawable(R.drawable.handle_1)
 
@@ -567,6 +571,7 @@ class KlickApplication : Application() {
         val SEQ_NO_SHOW_MORE_ACTIONS_QUICK_ACTION = 12
         val SEQ_NO_SHOW_MORE_ACTIONS_QUICK_LAUNCH = 13
         val SEQ_NO_OPEN_DICT = 14
+        val SEQ_NO_REMOTE_TOUCH = 15
 
         val ACTION_HOME = "im.kingway.klick.jin.action.KEYCODE_HOME"
         val ACTION_BACK = "im.kingway.klick.jin.action.KEYCODE_BACK"
@@ -634,6 +639,7 @@ class KlickApplication : Application() {
         val INCLUDE_RECENT_TASK_IN_APP_LIST = "INCLUDE_RECENT_TASK_IN_APP_LIST"
         val SETTING_AUTO_LOCK_SCREEN_PHONE_ON_HEAD = "AUTO_LOCK_SCREEN_PHONE_ON_HEAD"
         val SETTING_AUTO_LOCK_SCREEN_PHONE_FACE_DOWN = "AUTO_LOCK_SCREEN_PHONE_FACE_DOWN"
+        val CUSTOMIZE_ICON_APP = "CUSTOMIZE_ICON_APP"
         val CUSTOMIZE_ICON_FILE = "CUSTOMIZE_ICON_FILE"
         val CUSTOMIZE_ICON_BG_FILE = "CUSTOMIZE_ICON_BG_FILE"
         val CUSTOMIZE_ICON_CHOICE = "CUSTOMIZE_ICON_CHOICE"
@@ -662,7 +668,7 @@ class KlickApplication : Application() {
         var FLOATING_POSITION_X: Int = 0
         var FLOATING_POSITION_Y: Int = 0
 
-        var GESTURE_CNT = 15
+        var GESTURE_CNT = 16
 
         fun setIconSizeInDip(context: Context, sizeInDip: Int) {
             HANDLE_HEIGHT_DP = sizeInDip

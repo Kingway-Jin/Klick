@@ -20,7 +20,7 @@ class PrefsActivity : Activity() {
     private var mApp: KlickApplication? = null
 
     private var valuesIncludeRecentTask: Array<String>? = null
-    private val iconChoices = intArrayOf(0, R.drawable.handle_1, R.drawable.handle_2, R.drawable.handle_3)
+    private val iconChoices = intArrayOf(0, R.drawable.handle_1, R.drawable.handle_2, R.drawable.handle_3, R.drawable.more_actions)
     private var iconChoiceNames: Array<String>? = null
     private val backgroundChoices = intArrayOf(0, R.color.transparent, R.drawable.handle_bg)
     private var backgroundChoiceNames: Array<String>? = null
@@ -32,7 +32,7 @@ class PrefsActivity : Activity() {
             .gesture_show_more_actions, R.id.gesture_adjust_music_volume, R.id.gesture_open_camera, R.id
             .gesture_scroll_top, R.id.gesture_app_switch_forward, R.id.gesture_app_switch_backward, R.id
             .gesture_show_more_actions_quick_action, R.id.gesture_show_more_actions_quick_launch,
-            R.id.gesture_open_dict)
+            R.id.gesture_open_dict, R.id.gesture_remote_touch)
 
     private fun convertGestureToCode(gesture: String): Long {
         Log.d(TAG, "convertGestureToCode: " + gesture)
@@ -241,6 +241,7 @@ class PrefsActivity : Activity() {
         (findViewById(R.id.gesture_open_camera) as TextView).text = getGestureDesc(mApp!!.gestures[KlickApplication.SEQ_NO_OPEN_CAMERA])
         (findViewById(R.id.gesture_scroll_top) as TextView).text = getGestureDesc(mApp!!.gestures[KlickApplication.SEQ_NO_SCROLL_TOP])
         (findViewById(R.id.gesture_open_dict) as TextView).text = getGestureDesc(mApp!!.gestures[KlickApplication.SEQ_NO_OPEN_DICT])
+        (findViewById(R.id.gesture_remote_touch) as TextView).text = getGestureDesc(mApp!!.gestures[KlickApplication.SEQ_NO_REMOTE_TOUCH])
         var cb = findViewById(R.id.reorder_apps) as CheckBox
         cb.isChecked = mApp!!.sharedPrefs!!.getBoolean(KlickApplication.SETTING_REORDER_APPS, false)
         (findViewById(R.id.value_app_list_include_recent_task) as TextView).text = valuesIncludeRecentTask!![mApp!!
@@ -449,6 +450,12 @@ class PrefsActivity : Activity() {
         }
         if (!Utils.isPkgInstalled(mApp!!, "im.kingway.movieenglish")) {
             findViewById(R.id.setting_gesture_open_dict).visibility = View.GONE
+        }
+
+        (findViewById(R.id.gesture_remote_touch) as TextView).text = getGestureDesc(mApp!!.gestures[KlickApplication.SEQ_NO_REMOTE_TOUCH])
+        (findViewById(R.id.setting_gesture_remote_touch) as LinearLayout).setOnClickListener {
+            gestureSeq = KlickApplication.SEQ_NO_REMOTE_TOUCH
+            showGestureDialog(R.string.label_gesture_remote_touch)
         }
 
         ll = findViewById(R.id.setting_reorder_apps) as LinearLayout
@@ -887,11 +894,12 @@ class PrefsActivity : Activity() {
                     .setView(textPatternEditText)
                     .setPositiveButton(R.string.ok) { d, which ->
                         QuickActionListAdapter.TEXT_PATTERN.clear()
-                        QuickActionListAdapter.TEXT_PATTERN.addAll(textPatternEditText.toString().split(","))
+                        QuickActionListAdapter.TEXT_PATTERN.addAll(textPatternEditText.text.toString().split(","))
                         mApp!!.sharedPrefs!!.edit()
                                 .putString(KlickApplication.SETTING_TEXT_MATCH_PATTERN,
                                         textPatternEditText.text.toString())
                                 .commit()
+                        (findViewById(R.id.info_find_clickable_view_by_pattern) as TextView).setText(textPatternEditText.text.toString())
                         d.dismiss()
                     }
                     .setNegativeButton(R.string.cancel) { d, which ->

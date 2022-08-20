@@ -123,6 +123,7 @@
         <item>内置图标之一</item>
         <item>内置图标之二</item>
         <item>内置图标之三</item>
+        <item>当前APP图标</item>
     </string-array>
     
     <string-array name="bg_choices">
@@ -165,4 +166,5 @@
     <string name="label_donate">捐赠 - 点击这里 复制 支付宝帐号</string>
     <string name="donate_text">支付宝帐号：kingway.w.jin@gmail.com</string>
     <string name="copy_account">已复制支付宝帐号：\nkingway.w.jin@gmail.com</string>
+    <string name="label_gesture_remote_touch">遥点</string>
 </resources>

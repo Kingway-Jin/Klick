@@ -1,12 +1,13 @@
 package im.kingway.jin.klick
 
 import android.accessibilityservice.AccessibilityService
+import android.accessibilityservice.GestureDescription
+import android.accessibilityservice.GestureDescription.StrokeDescription
 import android.animation.Animator
 import android.animation.Animator.AnimatorListener
 import android.animation.ValueAnimator
-import android.content.ComponentName
 import android.content.Intent
-import android.content.pm.ActivityInfo
+import android.graphics.Path
 import android.graphics.PixelFormat
 import android.graphics.Rect
 import android.hardware.Sensor
@@ -14,7 +15,6 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.media.AudioManager
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
@@ -22,11 +22,10 @@ import android.telephony.TelephonyManager
 import android.text.Html
 import android.util.Log
 import android.view.Gravity
-import android.view.KeyEvent.KEYCODE_MEDIA_NEXT
-import android.view.KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE
 import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
+import android.view.accessibility.AccessibilityNodeInfo
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.LinearInterpolator
@@ -37,11 +36,14 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
     private val mHandleLayout: LinearLayout
     private val mWindowParams = WindowManager.LayoutParams()
     private val mWindowParamsAssistHandle = WindowManager.LayoutParams()
+    private val mWindowParamsBottomHandle = WindowManager.LayoutParams()
     private val mHandle: ImageView
-    private val mAssitHandle: View
+    private val mAssistHandle: View
+    private val mBottomHandle: View
     var mMoreActionsView: MoreActionsView? = null
     private val mTransAnimation: ValueAnimator
 
+    private var originLocation = IntArray(2)
     private var previousPositionX: Int = 0
     private var previousPositionY: Int = 0
     private var currentPositionX: Int = 0
@@ -81,8 +83,12 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
     private val imeClientCountMap = HashMap<String, Int>()
 
     private var activeQuickActions = mutableListOf<String>()
+    private var activeQuickActionsNodes = mutableListOf<AccessibilityNodeInfo>()
     private var loopIndexActiveQuickAction = 0
     private var quickActionTipView: TextView
+
+    private var remoteTouchX: Int = 0
+    private var remoteTouchY: Int = 0
 
     private var isBackToHandle = false
 
@@ -245,6 +251,7 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
     }
 
     private fun switchHandle(toY: Int) {
+        Log.d(TAG, "switchHandle")
         unregisterSensorEventListener()
 
         mApp.getScreenRect(true)
@@ -273,7 +280,7 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
 
             override fun onAnimationEnd(animation: Animator) {
                 mWindowParamsAssistHandle.x = mApp.getAssistHandlePositionX(false)
-                mApp.getmWindowManager()!!.updateViewLayout(mAssitHandle, mWindowParamsAssistHandle)
+                mApp.getmWindowManager()!!.updateViewLayout(mAssistHandle, mWindowParamsAssistHandle)
                 mWindowParams.x = mApp.getFloattingPositionX(false)
                 mApp.getmWindowManager()!!.updateViewLayout(this@FloatingView, mWindowParams)
                 mApp.sharedPrefs!!.edit()
@@ -330,10 +337,11 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
     init {
         mWindowParams.height = -2
         mWindowParams.width = -2
-        mWindowParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams
-                .FLAG_LAYOUT_IN_SCREEN or WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED
+        mWindowParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
+                WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
+                WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED
         mWindowParams.format = PixelFormat.TRANSPARENT
-        mWindowParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT
+        mWindowParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ERROR
         mWindowParams.gravity = Gravity.LEFT or Gravity.TOP
 
         mWindowParamsAssistHandle.height = -2
@@ -341,8 +349,16 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
         mWindowParamsAssistHandle.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams
                 .FLAG_LAYOUT_IN_SCREEN or WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED
         mWindowParamsAssistHandle.format = PixelFormat.TRANSPARENT
-        mWindowParamsAssistHandle.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT
+        mWindowParamsAssistHandle.type = WindowManager.LayoutParams.TYPE_SYSTEM_ERROR
         mWindowParamsAssistHandle.gravity = Gravity.LEFT or Gravity.TOP
+
+        mWindowParamsBottomHandle.height = -2
+        mWindowParamsBottomHandle.width = -2
+        mWindowParamsBottomHandle.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams
+                .FLAG_LAYOUT_IN_SCREEN or WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED
+        mWindowParamsBottomHandle.format = PixelFormat.TRANSPARENT
+        mWindowParamsBottomHandle.type = WindowManager.LayoutParams.TYPE_SYSTEM_ERROR
+        mWindowParamsBottomHandle.gravity = Gravity.LEFT or Gravity.BOTTOM
 
         val layoutparams = FrameLayout.LayoutParams(-1, -1)
         layoutParams = layoutparams
@@ -352,9 +368,11 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
         mHandle.setImageDrawable(mApp.handleDrawable)
         mHandle.setBackgroundDrawable(mApp.handleBgDrawable)
 
-        mAssitHandle = View.inflate(mApp.applicationContext, R.layout.assist_handle, null)
-        mAssitHandle.setOnTouchListener { view, motionEvent -> when (motionEvent.action) {
+        mAssistHandle = View.inflate(mApp.applicationContext, R.layout.assist_handle, null)
+        mAssistHandle.setOnTouchListener { view, motionEvent -> when (motionEvent.action) {
             MotionEvent.ACTION_DOWN -> switchHandle(motionEvent.rawY.toInt()) }; true }
+
+        mBottomHandle = View.inflate(mApp.applicationContext, R.layout.bottom_handle, null)
 
         quickActionTipView = View.inflate(mApp.applicationContext, R.layout
                 .quick_action_text_view, null) as TextView
@@ -400,7 +418,7 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
         wp.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams
                 .FLAG_LAYOUT_IN_SCREEN or WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED
         wp.format = PixelFormat.TRANSPARENT
-        wp.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT
+        wp.type = WindowManager.LayoutParams.TYPE_SYSTEM_ERROR
         wp.gravity = Gravity.CENTER
         wp.y = -200
         quickActionTipView.text = "^_^"
@@ -438,6 +456,7 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
                 mHandler.removeMessages(KlickApplication.MSG_DOUBLE_TAP_TIMEOUT)
                 mHandler.removeMessages(KlickApplication.MSG_TRANSPARENT_BACKGROUND)
 
+                mHandle.getLocationOnScreen(originLocation)
                 preTapStartAt = tapStartAt
                 tapStartAt = Date().time
                 touchState = MotionEvent.ACTION_DOWN
@@ -543,6 +562,24 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
                     return@run
                 }
 
+                if (gesture == mApp.gestures[KlickApplication.SEQ_NO_REMOTE_TOUCH]) {
+                    val xDistance = screenX - downRawX
+                    val yDistance = screenY - downRawY
+                    Log.d(TAG, "remote touch xDistance: " + xDistance + ", yDistance: " + yDistance)
+                    remoteTouchX = (if (originLocation[0] > 0) mApp.screenRect.width() else 0) + (xDistance * 5).toInt()
+                    remoteTouchY = mApp.getScreenRect(true).centerY() + (yDistance * 7).toInt()
+                    Log.d(TAG, "remote touch origin remoteTouchX: " + remoteTouchX + ", remoteTouchY: " + remoteTouchY)
+                    remoteTouchX = if (remoteTouchX < 0) 0 else if (remoteTouchX > mApp.getScreenRect(true).right) mApp.screenRect.right
+                    else remoteTouchX
+                    remoteTouchY = if (remoteTouchY < 0) 0 else if (remoteTouchY > mApp.screenRect.bottom) mApp.screenRect.bottom
+                    else remoteTouchY
+                    Log.d(TAG, "remote touch remoteTouchX: " + remoteTouchX + ", remoteTouchY: " + remoteTouchY)
+                    mWindowParams.x = remoteTouchX - Utils.dip2px(mApp, 10f).toInt()
+                    mWindowParams.y = remoteTouchY - Utils.dip2px(mApp, 10f).toInt()
+                    mApp.getmWindowManager()!!.updateViewLayout(this, mWindowParams)
+                    return@run
+                }
+
                 if (gesture < 10 && (Math.abs(xMovement) >= KlickApplication.DRAG_START_THRESHOLD || Math.abs(yMovement) >= KlickApplication.DRAG_START_THRESHOLD)) {
                     var startDrag = true
                     for (g in mApp.gestures) {
@@ -592,6 +629,12 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
                             quickActionTipView.text = Html.fromHtml(getQuickActionMsg())
                             quickActionTipView.visibility = View.VISIBLE
                             quickActionTipView.setTag(R.id.quick_action_text_view, 1)
+                        }
+
+                        if (gesture == mApp.gestures[KlickApplication.SEQ_NO_REMOTE_TOUCH]) {
+                            remoteTouchY = mApp.screenRect.centerY()
+                            remoteTouchX = if (originLocation[0] > 0) mApp.screenRect.width() else 0
+                            this@FloatingView.changeToRemoteTouchPoint()
                         }
                     }
                 }
@@ -687,6 +730,7 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
 
     private fun prepareQuickApps() {
         activeQuickActions.clear()
+        activeQuickActionsNodes.clear()
         activeQuickActions.addAll(mApp.getAppsInOrder(3).map {
             if (it.name == null) "Unknow" else it.name!! }.subList(0, 9))
         loopIndexActiveQuickAction =  0
@@ -694,27 +738,44 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
 
     private fun prepareActiveQuickActions() {
         var sc = 0
-        var activePkg = KlickAccessibilityService.currentRootInActiveWindow?.packageName
+        var activePkg = KlickAccessibilityService.klickAccessibilityService?.rootInActiveWindow?.packageName
         while (mApp.packageName == activePkg && sc < 10) {
-            activePkg = KlickAccessibilityService.currentRootInActiveWindow?.packageName
+            activePkg = KlickAccessibilityService.klickAccessibilityService?.rootInActiveWindow?.packageName
             Thread.sleep(100)
             sc++
         }
 
         activeQuickActions.clear()
-        activeQuickActions.addAll(Utils.getSharedprefsKeys(context,
-                "quick_action:" + activePkg + ":").map { it.substring(("quick_action:" + activePkg + ":").length) })
-        activeQuickActions.removeAll { null == KlickAccessibilityService
-                .sharedInstance?.findClickableNodeByText(KlickAccessibilityService.currentRootInActiveWindow, it, null) }
-        activeQuickActions.add(0, this.resources.getString(R.string.quick_action_play_next))
-        activeQuickActions.add(1, this.resources.getString(R.string.quick_action_play_pause))
-        if (KlickAccessibilityService.sharedInstance != null) {
-            for (substring in QuickActionListAdapter.TEXT_PATTERN) {
-                val textList: List<String> = KlickAccessibilityService.sharedInstance!!.getTextOfClickableNodeBySubstring(substring)
-                activeQuickActions.addAll(textList)
+        activeQuickActionsNodes.clear()
+        activeQuickActions.addAll(QuickActionListAdapter.TEXT_PATTERN)
+//        activeQuickActions.add(0, this.resources.getString(R.string.quick_action_play_next))
+//        activeQuickActions.add(1, this.resources.getString(R.string.quick_action_play_pause))
+//        if (KlickAccessibilityService.sharedInstance != null) {
+//            for (substring in QuickActionListAdapter.TEXT_PATTERN) {
+//                val nodeList: List<AccessibilityNodeInfo> = KlickAccessibilityService.sharedInstance!!.getNodeListBySubstring(substring)
+//                for (nodeInfo in nodeList) {
+//                    val clickableNode = KlickAccessibilityService.sharedInstance!!.getClickableParent(nodeInfo, null)
+//                    if (clickableNode != null) {
+//                        activeQuickActions.add(nodeInfo.text.toString())
+//                        activeQuickActionsNodes.add(clickableNode)
+//                    }
+//                }
+//            }
+//        }
+        var textNotFound: MutableList<String> = LinkedList()
+        for (text in Utils.getSharedprefsKeys(context, "quick_action:" + activePkg + ":").map { it.substring(("quick_action:" + activePkg
+                + ":").length) }) {
+            val nodeInfo = KlickAccessibilityService.sharedInstance?.findClickableNodeByText(KlickAccessibilityService
+                    .klickAccessibilityService?.rootInActiveWindow, text, null)
+            if (nodeInfo != null) {
+                activeQuickActions.add(text)
+                activeQuickActionsNodes.add(nodeInfo)
+            } else {
+                textNotFound.add(text)
             }
         }
-        loopIndexActiveQuickAction =  2
+        activeQuickActions.addAll(textNotFound)
+        loopIndexActiveQuickAction =  QuickActionListAdapter.TEXT_PATTERN.size
         Log.d(TAG, "activePkg: $activePkg QUICK ACTIONS: " + activeQuickActions
                 .joinToString(" "))
     }
@@ -722,31 +783,31 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
     private fun switchAppQuickAction(event: MotionEvent) {
         xGestureMovement += event.rawX - rawXYList[0]
         yGestureMovement += event.rawY - rawXYList[1]
-        if (Math.abs(xGestureMovement) > 20) {
-            if (xGestureMovement < 0) {
-                xGestureMovement += 20f
-            } else {
-                xGestureMovement -= 20f
-            }
-            val showCount = quickActionTipView.getTag(R.id.quick_action_text_view) as Int
-            quickActionTipView.setTag(R.id.quick_action_text_view, showCount + 1)
-            if (showCount <= 3 || showCount > 5) {
-                return
-            }
-
-            if (activeQuickActions.size <= 2 && quickActionTipView.visibility == View.VISIBLE) {
-                quickActionTipView.visibility = View.INVISIBLE
-            } else if (activeQuickActions.size <= 2 && quickActionTipView.visibility == View.INVISIBLE) {
-                if (gesture == mApp.gestures[KlickApplication
-                                .SEQ_NO_SHOW_MORE_ACTIONS_QUICK_ACTION]) {
-                    prepareActiveQuickActions()
-                } else {
-                    prepareQuickApps()
-                }
-                quickActionTipView.text = Html.fromHtml(getQuickActionMsg())
-                quickActionTipView.visibility = View.VISIBLE
-            }
-        }
+//        if (Math.abs(xGestureMovement) > 20) {
+//            if (xGestureMovement < 0) {
+//                xGestureMovement += 20f
+//            } else {
+//                xGestureMovement -= 20f
+//            }
+//            val showCount = quickActionTipView.getTag(R.id.quick_action_text_view) as Int
+//            quickActionTipView.setTag(R.id.quick_action_text_view, showCount + 1)
+//            if (showCount <= 3 || showCount > 5) {
+//                return
+//            }
+//
+//            if (activeQuickActions.size <= 2 && quickActionTipView.visibility == View.VISIBLE) {
+//                quickActionTipView.visibility = View.INVISIBLE
+//            } else if (activeQuickActions.size <= 2 && quickActionTipView.visibility == View.INVISIBLE) {
+//                if (gesture == mApp.gestures[KlickApplication
+//                                .SEQ_NO_SHOW_MORE_ACTIONS_QUICK_ACTION]) {
+//                    prepareActiveQuickActions()
+//                } else {
+//                    prepareQuickApps()
+//                }
+//                quickActionTipView.text = Html.fromHtml(getQuickActionMsg())
+//                quickActionTipView.visibility = View.VISIBLE
+//            }
+//        }
 
         if (Math.abs(yGestureMovement) > 80) {
             if (yGestureMovement < 0) {
@@ -828,37 +889,43 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
 
         aniEndX = (screenX - touchStartX).toInt()
         aniEndY = (screenY - touchStartY).toInt()
-        val animation = ValueAnimator.ofFloat(0f, 1f)
-        animation.duration = 100
-        animation.interpolator = LinearInterpolator()
-        animation.addUpdateListener { animation ->
-            mWindowParams.x = aniStartX + ((aniEndX - aniStartX) * animation.animatedValue as Float).toInt()
-            mWindowParams.y = aniStartY + ((aniEndY - aniStartY) * animation.animatedValue as Float).toInt()
-            mApp.getmWindowManager()!!.updateViewLayout(this@FloatingView, mWindowParams)
-        }
-        animation.addListener(object : AnimatorListener {
-            override fun onAnimationStart(animation: Animator) {
-                isAnimating = true
-            }
 
-            override fun onAnimationRepeat(animation: Animator) {}
+        mWindowParams.x = aniEndX
+        mWindowParams.y = aniEndY
+        mApp.getmWindowManager()!!.updateViewLayout(this@FloatingView, mWindowParams)
 
-            override fun onAnimationEnd(animation: Animator) {
-                isAnimating = false
-                startToBreath(1, 3000)
-                mWindowParamsAssistHandle.x = mApp.getAssistHandlePositionX(false)
-                mApp.getmWindowManager()!!.updateViewLayout(mAssitHandle, mWindowParamsAssistHandle)
-            }
-
-            override fun onAnimationCancel(animation: Animator) {
-                isAnimating = false
-                startToBreath(1, 3000)
-            }
-        })
-        animation.start()
+//        val animation = ValueAnimator.ofFloat(0f, 1f)
+//        animation.duration = 100
+//        animation.interpolator = LinearInterpolator()
+//        animation.addUpdateListener { animation ->
+//            mWindowParams.x = aniStartX + ((aniEndX - aniStartX) * animation.animatedValue as Float).toInt()
+//            mWindowParams.y = aniStartY + ((aniEndY - aniStartY) * animation.animatedValue as Float).toInt()
+//            mApp.getmWindowManager()!!.updateViewLayout(this@FloatingView, mWindowParams)
+//        }
+//        animation.addListener(object : AnimatorListener {
+//            override fun onAnimationStart(animation: Animator) {
+//                isAnimating = true
+//            }
+//
+//            override fun onAnimationRepeat(animation: Animator) {}
+//
+//            override fun onAnimationEnd(animation: Animator) {
+//                isAnimating = false
+//                startToBreath(1, 3000)
+//                mWindowParamsAssistHandle.x = mApp.getAssistHandlePositionX(false)
+//                mApp.getmWindowManager()!!.updateViewLayout(mAssitHandle, mWindowParamsAssistHandle)
+//            }
+//
+//            override fun onAnimationCancel(animation: Animator) {
+//                isAnimating = false
+//                startToBreath(1, 3000)
+//            }
+//        })
+//        animation.start()
     }
 
     private fun stopDragging() {
+        Log.d(TAG, "stopDragging")
         if (hidFromSoftKeyboard) {
             toSaveHidFromSoftKeyboard = true
         }
@@ -925,7 +992,7 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
                     KlickApplication.FLOATING_POSITION_X = aniEndX
                     KlickApplication.FLOATING_POSITION_Y = aniEndY
                     mWindowParamsAssistHandle.x = mApp.getAssistHandlePositionX(false)
-                    mApp.getmWindowManager()!!.updateViewLayout(mAssitHandle, mWindowParamsAssistHandle)
+                    mApp.getmWindowManager()!!.updateViewLayout(mAssistHandle, mWindowParamsAssistHandle)
                     mWindowParams.x = mApp.getFloattingPositionX(false)
                     mApp.getmWindowManager()!!.updateViewLayout(this@FloatingView, mWindowParams)
                     mApp.sharedPrefs!!.edit().putInt(KlickApplication
@@ -934,6 +1001,56 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
                 isAnimating = false
                 startToBreath(1, 3000)
                 registerSensorEventListener()
+            }
+
+            override fun onAnimationCancel(animation: Animator) {
+                isAnimating = false
+                startToBreath(1, 3000)
+            }
+        })
+        animation.start()
+    }
+
+    private fun performRemoteTouch() {
+        Log.d(TAG, "performRemoteTouch originLocation：" + originLocation[0] + ", " + originLocation[1])
+
+        currentPositionX = originLocation[0]
+        currentPositionY = originLocation[1]
+        aniStartX = remoteTouchX - Utils.dip2px(mApp, 10f).toInt()
+        aniStartY = remoteTouchY - Utils.dip2px(mApp, 10f).toInt()
+        val animation = ValueAnimator.ofFloat(0f, 1f)
+        animation.duration = 100
+        animation.interpolator = LinearInterpolator()
+        animation.addUpdateListener { animation ->
+            mWindowParams.x = aniStartX + ((originLocation[0] - aniStartX) * animation.animatedValue as Float).toInt()
+            mWindowParams.y = aniStartY + ((originLocation[1] - aniStartY) * animation.animatedValue as Float).toInt()
+            mApp.getmWindowManager()!!.updateViewLayout(this@FloatingView, mWindowParams)
+        }
+        animation.addListener(object : AnimatorListener {
+            override fun onAnimationStart(animation: Animator) {
+                isAnimating = true
+            }
+
+            override fun onAnimationRepeat(animation: Animator) {}
+
+            override fun onAnimationEnd(animation: Animator) {
+                isAnimating = false
+                this@FloatingView.refresh()
+                startToBreath(1, 3000)
+
+                var gestureBuilder = GestureDescription.Builder()
+                var path = Path()
+                path.moveTo(remoteTouchX.toFloat(), remoteTouchY.toFloat());
+                gestureBuilder.addStroke(StrokeDescription(path, 0, 1))
+                Utils.getKlickAccessServiceInstance(mApp)?.dispatchGesture(gestureBuilder.build(), object : AccessibilityService.GestureResultCallback() {
+                    override fun onCompleted(gestureDescription: GestureDescription?) {
+                        Log.d(TAG, "Gesture Completed")
+                        super.onCompleted(gestureDescription)
+                    }
+                }, null)
+
+                mHandle.getLocationOnScreen(originLocation)
+                Log.d(TAG, "end performRemoteTouch originLocation：" + originLocation[0] + ", " + originLocation[1])
             }
 
             override fun onAnimationCancel(animation: Animator) {
@@ -962,6 +1079,16 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
         mWindowParams.x = currentPositionX
         mWindowParams.y = currentPositionY
         mApp.getmWindowManager()!!.updateViewLayout(this, mWindowParams)
+    }
+
+    fun changeToRemoteTouchPoint() {
+        mHandle.setImageDrawable(resources.getDrawable(R.drawable.remote_touch_point))
+        mHandle.background = resources.getDrawable(R.drawable.remote_touch_point)
+        this.setHandleOpacity(KlickApplication.ICON_OPACITY_ACTIVE)
+        this.setIconSizeInDip(20, 20)
+//        mWindowParams.x = remoteTouchX
+//        mWindowParams.y = remoteTouchY
+//        mApp.getmWindowManager()!!.updateViewLayout(this, mWindowParams)
     }
 
     fun onAction(gesture: Long) {
@@ -1018,15 +1145,26 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
             -> {
                 if (isBackToHandle) {
                     showMoreActionsView(0)
-                } else if (loopIndexActiveQuickAction in 2 until activeQuickActions.size) {
-                    KlickAccessibilityService.sharedInstance?.increaseClickCounter(KlickAccessibilityService.currentRootInActiveWindow?.packageName.toString(),
+                } else if (loopIndexActiveQuickAction in QuickActionListAdapter.TEXT_PATTERN.size until activeQuickActions.size) {
+                    KlickAccessibilityService.sharedInstance?.increaseClickCounter(KlickAccessibilityService.klickAccessibilityService?.rootInActiveWindow?.packageName.toString(),
                             activeQuickActions[loopIndexActiveQuickAction])
-                    KlickAccessibilityService.sharedInstance?.performClickOnViewWithText(KlickAccessibilityService.currentRootInActiveWindow, activeQuickActions[loopIndexActiveQuickAction], null)
-                } else if (loopIndexActiveQuickAction in 0 until 2) {
-                    val keycode = if (loopIndexActiveQuickAction == 0) KEYCODE_MEDIA_NEXT else KEYCODE_MEDIA_PLAY_PAUSE
-                    mApp.sendMediaKeycode(keycode)
+                    if (loopIndexActiveQuickAction - QuickActionListAdapter.TEXT_PATTERN.size < activeQuickActionsNodes.size) {
+                        KlickAccessibilityService.sharedInstance?.performClickOn(activeQuickActionsNodes[loopIndexActiveQuickAction - QuickActionListAdapter.TEXT_PATTERN.size])
+                    } else {
+                        KlickAccessibilityService.sharedInstance?.performClickOnViewWithText(KlickAccessibilityService
+                                .klickAccessibilityService?.rootInActiveWindow,
+                                activeQuickActions[loopIndexActiveQuickAction], null)
+                    }
+                } else if (loopIndexActiveQuickAction in 0 until QuickActionListAdapter.TEXT_PATTERN.size) {
+//                    val keycode = if (loopIndexActiveQuickAction == 0) KEYCODE_MEDIA_NEXT else KEYCODE_MEDIA_PLAY_PAUSE
+//                    mApp.sendMediaKeycode(keycode)
+                    KlickAccessibilityService.sharedInstance?.performClickOnViewWithText(KlickAccessibilityService
+                            .klickAccessibilityService?.rootInActiveWindow,
+                            activeQuickActions[loopIndexActiveQuickAction], null)
                 }
                 hideQuickActionTip()
+                activeQuickActionsNodes.clear()
+                activeQuickActions.clear()
                 Log.d(TAG, "SEQ_NO_SHOW_MORE_ACTIONS")
             }
             KlickApplication.SEQ_NO_SHOW_MORE_ACTIONS_QUICK_LAUNCH // Show More Actions
@@ -1049,7 +1187,24 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
                 }
             }
             KlickApplication.SEQ_NO_SCROLL_TOP -> {
-                KlickAccessibilityService.sharedInstance?.scrollToTop(KlickAccessibilityService.currentRootInActiveWindow)
+//                KlickAccessibilityService.sharedInstance?.scrollToTop(KlickAccessibilityService.klickAccessibilityService?.rootInActiveWindow)
+                var gestureBuilder = GestureDescription.Builder()
+                var path = Path()
+                path.moveTo(550f, 120f);
+                gestureBuilder.addStroke(StrokeDescription(path, 0, 1))
+                Utils.getKlickAccessServiceInstance(mApp)?.dispatchGesture(gestureBuilder.build(), object : AccessibilityService.GestureResultCallback() {
+                    override fun onCompleted(gestureDescription: GestureDescription?) {
+                        Log.d(TAG, "Gesture Completed")
+                        super.onCompleted(gestureDescription)
+
+                        Utils.getKlickAccessServiceInstance(mApp)?.dispatchGesture(gestureBuilder.build(), object : AccessibilityService.GestureResultCallback() {
+                            override fun onCompleted(gestureDescription: GestureDescription?) {
+                                Log.d(TAG, "Gesture Completed")
+                                super.onCompleted(gestureDescription)
+                            }
+                        }, null)
+                    }
+                }, null)
             }
             KlickApplication.SEQ_NO_ADJUST_MUSIC_VOL -> {
             }
@@ -1057,6 +1212,9 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
                 val intent = Intent()
                 intent.action = KlickApplication.ACTION_LOOKUP_WORD
                 mApp.applicationContext.sendBroadcast(intent)
+            }
+            KlickApplication.SEQ_NO_REMOTE_TOUCH -> {
+                performRemoteTouch()
             }
             else -> if (noGestureSet) {
                 Toast.makeText(mApp, R.string.no_gesture_set, Toast.LENGTH_LONG).show()
@@ -1070,8 +1228,9 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
 
     fun showRecentActivity() {
         Log.d(TAG, "Show recent activity")
-        val localIntent = Intent("com.android.systemui.recents.TOGGLE_RECENTS")
-        mApp.applicationContext.sendBroadcast(localIntent)
+//        val localIntent = Intent("com.android.systemui.TOGGLE_RECENTS")
+//        mApp.applicationContext.sendBroadcast(localIntent)
+        Utils.getKlickAccessServiceInstance(context)!!.performGlobalAction(AccessibilityService.GLOBAL_ACTION_RECENTS)
     }
 
     fun unhide() {
@@ -1110,7 +1269,7 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
                 registerSensorEventListener()
 
                 mWindowParamsAssistHandle.x = mApp.getAssistHandlePositionX(false)
-                mApp.getmWindowManager()!!.updateViewLayout(mAssitHandle, mWindowParamsAssistHandle)
+                mApp.getmWindowManager()!!.updateViewLayout(mAssistHandle, mWindowParamsAssistHandle)
             }
 
             override fun onAnimationCancel(animation: Animator) {
@@ -1181,7 +1340,7 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
                 registerSensorEventListener()
 
                 mWindowParamsAssistHandle.x = mApp.getAssistHandlePositionX(false)
-                mApp.getmWindowManager()!!.updateViewLayout(mAssitHandle, mWindowParamsAssistHandle)
+                mApp.getmWindowManager()!!.updateViewLayout(mAssistHandle, mWindowParamsAssistHandle)
             }
 
             override fun onAnimationCancel(animation: Animator) {
@@ -1203,6 +1362,7 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
 
         addAssitHandleToWindowManager()
         addMoreActionsViewToWindowManager()
+        addBottomHandleToWindowManager()
 
         startToBreath(1, 3000)
         registerSensorEventListener()
@@ -1213,12 +1373,27 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
         mWindowParamsAssistHandle.y = 0
         mWindowParamsAssistHandle.height = if (mApp.getScreenRect(true).height() > mApp.screenRect.width()) mApp
                 .screenRect.height() else mApp.screenRect.width()
-        mApp.getmWindowManager()!!.addView(mAssitHandle, mWindowParamsAssistHandle)
+        mApp.getmWindowManager()!!.addView(mAssistHandle, mWindowParamsAssistHandle)
 
-        val layoutParams = mAssitHandle.layoutParams;
+        val layoutParams = mAssistHandle.layoutParams;
         layoutParams.height = if (mApp.getScreenRect(true).height() > mApp.screenRect.width()) mApp
                 .screenRect.height() else mApp.screenRect.width()
-        mAssitHandle.layoutParams = layoutParams
+        mAssistHandle.layoutParams = layoutParams
+    }
+
+    fun addBottomHandleToWindowManager() {
+        val maxWidth = if (mApp.getScreenRect(true).height() > mApp.screenRect.width()) mApp
+                .screenRect.height() else mApp.screenRect.width()
+        mWindowParamsBottomHandle.x = 0
+        mWindowParamsBottomHandle.y = 0
+        mWindowParamsBottomHandle.width = maxWidth
+        mWindowParamsBottomHandle.height = Utils.dip2px(mApp, 10f).toInt()
+        mApp.getmWindowManager()!!.addView(mBottomHandle, mWindowParamsBottomHandle)
+
+        val layoutParams = mBottomHandle.layoutParams;
+        layoutParams.width = maxWidth
+        layoutParams.height = Utils.dip2px(mApp, 10f).toInt()
+        mBottomHandle.layoutParams = layoutParams
     }
 
     fun addMoreActionsViewToWindowManager() {
@@ -1261,7 +1436,7 @@ class FloatingView(private val mApp: KlickApplication) : FrameLayout(mApp.applic
         unregisterSensorEventListener()
         removeMoreActionsViewFromWindowManager()
         mApp.getmWindowManager()!!.removeView(this)
-        mApp.getmWindowManager()!!.removeView(mAssitHandle)
+        mApp.getmWindowManager()!!.removeView(mAssistHandle)
     }
 
     fun removeMoreActionsViewFromWindowManager() {

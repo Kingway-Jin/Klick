@@ -6,4 +6,5 @@
     android:accessibilityFlags="flagDefault|flagReportViewIds"
     android:canRetrieveWindowContent="true"
     android:canRequestEnhancedWebAccessibility="false"
+    android:canPerformGestures="true"
     xmlns:android="http://schemas.android.com/apk/res/android" />

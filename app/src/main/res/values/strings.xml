@@ -125,6 +125,7 @@
         <item>Build in Icon 1</item>
         <item>Build in Icon 2</item>
         <item>Build in Icon 3</item>
+        <item>Current APP Icon</item>
     </string-array>
     
     <string-array name="bg_choices">
@@ -175,4 +176,5 @@ And Klick provides the following functions.\n\
     <string name="label_donate">Donate - Tap to copy the account.</string>
     <string name="donate_text">Alipay Account：kingway.w.jin@gmail.com</string>
     <string name="copy_account">Copied Alipay account：\nkingway.w.jin@gmail.com</string>
+    <string name="label_gesture_remote_touch">Remote Touch</string>
 </resources>
